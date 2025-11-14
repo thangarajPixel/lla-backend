@@ -5,10 +5,10 @@
   },
   "options": {},
   "attributes": {
-    "title": {
+    "Title": {
       "type": "string"
     },
-    "video": {
+    "Video": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [

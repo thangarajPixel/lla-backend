@@ -6,6 +6,9 @@ export interface AboutAbout extends Struct.ComponentSchema {
     displayName: 'about';
   };
   attributes: {
+    description: Schema.Attribute.Text;
+    heading: Schema.Attribute.String;
+    img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     title: Schema.Attribute.String;
   };
 }
@@ -214,11 +217,11 @@ export interface HomeAbout extends Struct.ComponentSchema {
     displayName: 'about';
   };
   attributes: {
-    btn_txt: Schema.Attribute.String;
-    description: Schema.Attribute.Text;
-    heading: Schema.Attribute.String;
-    img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios', true>;
-    title: Schema.Attribute.String;
+    Btn_txt: Schema.Attribute.String;
+    Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.String;
+    Img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios', true>;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -228,8 +231,8 @@ export interface HomeBanner extends Struct.ComponentSchema {
     displayName: 'banner';
   };
   attributes: {
-    title: Schema.Attribute.String;
-    video: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Title: Schema.Attribute.String;
+    Video: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
   };
 }
 
@@ -239,11 +242,11 @@ export interface HomeCampus extends Struct.ComponentSchema {
     displayName: 'campus';
   };
   attributes: {
-    bg_img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    btn_txt: Schema.Attribute.String;
-    description: Schema.Attribute.Text;
-    heading: Schema.Attribute.String;
-    title: Schema.Attribute.String;
+    Bg_img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Btn_txt: Schema.Attribute.String;
+    Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -253,13 +256,10 @@ export interface HomeCard extends Struct.ComponentSchema {
     displayName: 'card';
   };
   attributes: {
-    btn_txt: Schema.Attribute.String;
-    description: Schema.Attribute.Text;
-    img1: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
-    title: Schema.Attribute.String;
+    Btn_txt: Schema.Attribute.String;
+    Description: Schema.Attribute.Text;
+    Img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios', true>;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -270,8 +270,8 @@ export interface HomeCourse extends Struct.ComponentSchema {
   };
   attributes: {
     card: Schema.Attribute.Component<'home.card', true>;
-    description: Schema.Attribute.Text;
-    title: Schema.Attribute.String;
+    Description: Schema.Attribute.Text;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -281,11 +281,11 @@ export interface HomeFaculty extends Struct.ComponentSchema {
     displayName: 'faculty';
   };
   attributes: {
-    btn_txt: Schema.Attribute.String;
+    Btn_txt: Schema.Attribute.String;
     card: Schema.Attribute.Component<'home.card', true>;
-    description: Schema.Attribute.Text;
-    heading: Schema.Attribute.String;
-    title: Schema.Attribute.String;
+    Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -295,10 +295,10 @@ export interface HomeGallery extends Struct.ComponentSchema {
     displayName: 'gallery';
   };
   attributes: {
-    btn_txt: Schema.Attribute.String;
-    heading: Schema.Attribute.String;
-    img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios', true>;
-    title: Schema.Attribute.String;
+    Btn_txt: Schema.Attribute.String;
+    Heading: Schema.Attribute.String;
+    Img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios', true>;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -308,11 +308,11 @@ export interface HomeLife extends Struct.ComponentSchema {
     displayName: 'life';
   };
   attributes: {
-    bg_img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    btn_txt: Schema.Attribute.String;
+    Bg_img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Btn_txt: Schema.Attribute.String;
     card: Schema.Attribute.Component<'home.card', true>;
-    heading: Schema.Attribute.String;
-    title: Schema.Attribute.String;
+    Heading: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -322,10 +322,10 @@ export interface HomeLlaTestimonials extends Struct.ComponentSchema {
     displayName: 'lla_testimonials';
   };
   attributes: {
-    description: Schema.Attribute.Text;
-    heading: Schema.Attribute.String;
+    Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.String;
     slider: Schema.Attribute.Component<'home.slider', true>;
-    title: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -335,9 +335,9 @@ export interface HomeSlider extends Struct.ComponentSchema {
     displayName: 'slider';
   };
   attributes: {
-    batch: Schema.Attribute.String;
-    description: Schema.Attribute.Text;
-    name: Schema.Attribute.String;
+    Batch: Schema.Attribute.String;
+    Description: Schema.Attribute.Text;
+    Name: Schema.Attribute.String;
   };
 }
 
@@ -347,10 +347,10 @@ export interface HomeSponsor extends Struct.ComponentSchema {
     displayName: 'sponsor';
   };
   attributes: {
-    description: Schema.Attribute.Text;
-    heading: Schema.Attribute.String;
-    img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios', true>;
-    title: Schema.Attribute.String;
+    Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.String;
+    Img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios', true>;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -361,9 +361,9 @@ export interface HomeTestimonial extends Struct.ComponentSchema {
   };
   attributes: {
     card: Schema.Attribute.Component<'home.card', true>;
-    description: Schema.Attribute.Text;
-    heading: Schema.Attribute.String;
-    title: Schema.Attribute.String;
+    Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
   };
 }
 

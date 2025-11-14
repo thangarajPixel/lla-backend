@@ -5,16 +5,16 @@
   },
   "options": {},
   "attributes": {
-    "title": {
+    "Title": {
       "type": "string"
     },
-    "heading": {
+    "Heading": {
       "type": "string"
     },
-    "description": {
+    "Description": {
       "type": "text"
     },
-    "img": {
+    "Img": {
       "type": "media",
       "multiple": true,
       "allowedTypes": [

@@ -5,16 +5,16 @@
   },
   "options": {},
   "attributes": {
-    "title": {
+    "Title": {
       "type": "string"
     },
-    "heading": {
+    "Heading": {
       "type": "string"
     },
-    "btn_txt": {
+    "Btn_txt": {
       "type": "string"
     },
-    "img": {
+    "Img": {
       "type": "media",
       "multiple": true,
       "allowedTypes": [

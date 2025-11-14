@@ -5,13 +5,13 @@
   },
   "options": {},
   "attributes": {
-    "description": {
+    "Description": {
       "type": "text"
     },
-    "name": {
+    "Name": {
       "type": "string"
     },
-    "batch": {
+    "Batch": {
       "type": "string"
     }
   },

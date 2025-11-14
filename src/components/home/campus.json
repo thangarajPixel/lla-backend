@@ -5,19 +5,19 @@
   },
   "options": {},
   "attributes": {
-    "title": {
+    "Title": {
       "type": "string"
     },
-    "heading": {
+    "Heading": {
       "type": "string"
     },
-    "description": {
+    "Description": {
       "type": "text"
     },
-    "btn_txt": {
+    "Btn_txt": {
       "type": "string"
     },
-    "bg_img": {
+    "Bg_img": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
