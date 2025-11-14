@@ -38,28 +38,28 @@ export default factories.createCoreController(
               on: {
                 "home.banner": {
                   populate: {
-                    video: true,
+                    Video: true,
                   },
                 },
                 "home.course": {
                   populate: {
                     card: {
                       populate: {
-                        img1: true,
+                        Img: true,
                       },
                     },
                   },
                 },
                 "home.campus": {
                   populate: {
-                    bg_img: true,
+                    Bg_img: true,
                   },
                 },
                 "home.faculty": {
                   populate: {
                     card: {
                       populate: {
-                        img1: true,
+                        Img: true,
                       },
                     },
                   },
@@ -68,7 +68,7 @@ export default factories.createCoreController(
                   populate: {
                     card: {
                       populate: {
-                        img1: true,
+                        Img: true,
                       },
                     },
                   },
@@ -77,7 +77,7 @@ export default factories.createCoreController(
                   populate: {
                     card: {
                       populate: {
-                        img1: true,
+                        Img: true,
                       },
                     },
                   },
@@ -91,17 +91,17 @@ export default factories.createCoreController(
                 },
                 "home.gallery": {
                   populate: {
-                    img: true,
+                    Img: true,
                   },
                 },
                 "home.about": {
                   populate: {
-                    img: true,
+                    Img: true,
                   },
                 },
                 "home.sponsor": {
                   populate: {
-                    img: true,
+                    Img: true,
                   },
                 },
               },
