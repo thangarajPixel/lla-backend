@@ -1,5 +1,4 @@
 import { factories } from "@strapi/strapi";
-import { posix } from "path";
 import { addBaseUrlToMediaUrls } from "../../../helper";
 
 export default factories.createCoreController(
@@ -13,28 +12,36 @@ export default factories.createCoreController(
               on: {
                 "home.banner": {
                   populate: {
-                    Video: true,
+                    Video: {
+                      select: ["id", "name", "url"],
+                    },
                   },
                 },
                 "home.course": {
                   populate: {
                     Card: {
                       populate: {
-                        Image: true,
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
                       },
                     },
                   },
                 },
                 "home.campus": {
                   populate: {
-                    Bg_img: true,
+                    Bg_img: {
+                      select: ["id", "name", "url"],
+                    },
                   },
                 },
                 "home.faculty": {
                   populate: {
                     Card: {
                       populate: {
-                        Image: true,
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
                       },
                     },
                   },
@@ -43,7 +50,9 @@ export default factories.createCoreController(
                   populate: {
                     Card: {
                       populate: {
-                        Image: true,
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
                       },
                     },
                   },
@@ -52,7 +61,9 @@ export default factories.createCoreController(
                   populate: {
                     Card: {
                       populate: {
-                        Image: true,
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
                       },
                     },
                   },
@@ -66,17 +77,23 @@ export default factories.createCoreController(
                 },
                 "home.gallery": {
                   populate: {
-                    Image: true,
+                    Image: {
+                      select: ["id", "name", "url"],
+                    },
                   },
                 },
                 "home.about": {
                   populate: {
-                    Image: true,
+                    Image: {
+                      select: ["id", "name", "url"],
+                    },
                   },
                 },
                 "home.sponsor": {
                   populate: {
-                    Image: true,
+                    Image: {
+                      select: ["id", "name", "url"],
+                    },
                   },
                 },
               },
