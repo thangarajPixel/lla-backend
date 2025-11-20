@@ -376,6 +376,7 @@ export interface HomeCourse extends Struct.ComponentSchema {
   attributes: {
     Card: Schema.Attribute.Component<'home.card', true>;
     Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
