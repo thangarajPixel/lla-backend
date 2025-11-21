@@ -533,7 +533,9 @@ export interface ApiCampusCampus extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    campus: Schema.Attribute.DynamicZone<['campus.infra-facilities']>;
+    campus: Schema.Attribute.DynamicZone<
+      ['campus.menu', 'campus.facilities', 'home.gallery']
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -776,13 +778,18 @@ export interface ApiLifeLife extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    Card: Schema.Attribute.Component<'home.card', true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::life.life'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    SubHeading: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

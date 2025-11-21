@@ -1,17 +1,11 @@
 {
-  "collectionName": "components_about_abouts",
+  "collectionName": "components_campus_cards",
   "info": {
-    "displayName": "About"
+    "displayName": "Card"
   },
   "options": {},
   "attributes": {
     "Title": {
-      "type": "string"
-    },
-    "Heading": {
-      "type": "string"
-    },
-    "SubHeading": {
       "type": "string"
     },
     "Image": {
@@ -23,9 +17,6 @@
         "videos",
         "audios"
       ]
-    },
-    "Description": {
-      "type": "blocks"
     }
   },
   "config": {}

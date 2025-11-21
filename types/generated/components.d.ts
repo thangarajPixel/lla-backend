@@ -9,6 +9,7 @@ export interface AboutAbout extends Struct.ComponentSchema {
     Description: Schema.Attribute.Blocks;
     Heading: Schema.Attribute.String;
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -21,6 +22,7 @@ export interface AboutFounder extends Struct.ComponentSchema {
   attributes: {
     Founder_card: Schema.Attribute.Component<'about.founder-card', true>;
     Heading: Schema.Attribute.String;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -63,6 +65,7 @@ export interface AboutTeam extends Struct.ComponentSchema {
     Card: Schema.Attribute.Component<'home.card', true>;
     Frame: Schema.Attribute.Component<'home.card', false>;
     Heading: Schema.Attribute.String;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -82,58 +85,43 @@ export interface AddressAddress extends Struct.ComponentSchema {
   };
 }
 
-export interface CampusFacilitiesGallery extends Struct.ComponentSchema {
-  collectionName: 'components_campus_facilities_galleries';
+export interface CampusCard extends Struct.ComponentSchema {
+  collectionName: 'components_campus_cards';
   info: {
-    displayName: 'facilities_gallery';
-  };
-  attributes: {};
-}
-
-export interface CampusInfraFacilities extends Struct.ComponentSchema {
-  collectionName: 'components_campus_infra_facilities';
-  info: {
-    displayName: 'infra_facilities';
+    displayName: 'Card';
   };
   attributes: {
-    banner: Schema.Attribute.Component<'course.banner', false>;
-    campus_video: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    >;
-    facilities_gallery: Schema.Attribute.Component<
-      'campus.facilities-gallery',
-      false
-    >;
-    location: Schema.Attribute.Component<'campus.location', false>;
-    overview: Schema.Attribute.Component<'campus.overview', false>;
-    testimonial: Schema.Attribute.Component<'campus.testimonial', false>;
+    Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Title: Schema.Attribute.String;
   };
 }
 
-export interface CampusLocation extends Struct.ComponentSchema {
-  collectionName: 'components_campus_locations';
+export interface CampusFacilities extends Struct.ComponentSchema {
+  collectionName: 'components_campus_facilities';
   info: {
-    displayName: 'location';
-  };
-  attributes: {};
-}
-
-export interface CampusOverview extends Struct.ComponentSchema {
-  collectionName: 'components_campus_overviews';
-  info: {
-    displayName: 'overview';
+    displayName: 'Facilities';
   };
   attributes: {
-    title: Schema.Attribute.String;
+    Card: Schema.Attribute.Component<'campus.card', true>;
+    Heading: Schema.Attribute.String;
+    SubHeading: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
   };
 }
 
-export interface CampusTestimonial extends Struct.ComponentSchema {
-  collectionName: 'components_campus_testimonials';
+export interface CampusMenu extends Struct.ComponentSchema {
+  collectionName: 'components_campus_menus';
   info: {
-    displayName: 'testimonial';
+    displayName: 'Menu';
   };
-  attributes: {};
+  attributes: {
+    Description: Schema.Attribute.Blocks;
+    Heading: Schema.Attribute.String;
+    Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    SubHeading: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
+    Video: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+  };
 }
 
 export interface CourseBanner extends Struct.ComponentSchema {
@@ -526,11 +514,9 @@ declare module '@strapi/strapi' {
       'about.legacy': AboutLegacy;
       'about.team': AboutTeam;
       'address.address': AddressAddress;
-      'campus.facilities-gallery': CampusFacilitiesGallery;
-      'campus.infra-facilities': CampusInfraFacilities;
-      'campus.location': CampusLocation;
-      'campus.overview': CampusOverview;
-      'campus.testimonial': CampusTestimonial;
+      'campus.card': CampusCard;
+      'campus.facilities': CampusFacilities;
+      'campus.menu': CampusMenu;
       'course.banner': CourseBanner;
       'course.benefit': CourseBenefit;
       'course.card': CourseCard;

@@ -10,5 +10,23 @@
     "draftAndPublish": true
   },
   "pluginOptions": {},
-  "attributes": {}
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Heading": {
+      "type": "string"
+    },
+    "SubHeading": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "text"
+    },
+    "Card": {
+      "type": "component",
+      "component": "home.card",
+      "repeatable": true
+    }
+  }
 }

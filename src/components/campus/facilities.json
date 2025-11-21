@@ -1,7 +1,7 @@
 {
-  "collectionName": "components_about_founders",
+  "collectionName": "components_campus_facilities",
   "info": {
-    "displayName": "Founder"
+    "displayName": "Facilities"
   },
   "options": {},
   "attributes": {
@@ -14,9 +14,9 @@
     "SubHeading": {
       "type": "string"
     },
-    "Founder_card": {
+    "Card": {
       "type": "component",
-      "component": "about.founder-card",
+      "component": "campus.card",
       "repeatable": true
     }
   },

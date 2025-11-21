@@ -16,19 +16,25 @@ export default factories.createCoreController(
               on: {
                 "about.about": {
                   populate: {
-                    Image: true,
+                    Image: {
+                      select: ["id", "name", "url"],
+                    },
                   },
                 },
                 "about.legacy": {
                   populate: {
-                    Image: true,
+                    Image: {
+                      select: ["id", "name", "url"],
+                    },
                   },
                 },
                 "about.founder": {
                   populate: {
                     Founder_card: {
                       populate: {
-                        Image: true,
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
                       },
                     },
                   },
@@ -37,12 +43,16 @@ export default factories.createCoreController(
                   populate: {
                     Card: {
                       populate: {
-                        Image: true,
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
                       },
                     },
                     Frame: {
                       populate: {
-                        Image: true,
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
                       },
                     },
                   },
@@ -57,7 +67,7 @@ export default factories.createCoreController(
         }
 
         // Add base URL to media URLs
-        addBaseUrlToMediaUrls(entity);
+        // addBaseUrlToMediaUrls(entity);
 
         const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
         return this.transformResponse(sanitizedEntity);
@@ -77,7 +87,11 @@ export default factories.createCoreController(
                 "about.founder": {
                   populate: {
                     Founder_card: {
-                      populate: { Image: true },
+                      populate: {
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
+                      },
                     },
                   },
                 },
@@ -112,7 +126,7 @@ export default factories.createCoreController(
         // Replace original array
         founderBlock.Founder_card = finalCards;
 
-        addBaseUrlToMediaUrls(founderBlock);
+        // addBaseUrlToMediaUrls(founderBlock);
 
         return this.transformResponse(founderBlock);
       } catch (error) {

@@ -14,7 +14,9 @@
     "campus": {
       "type": "dynamiczone",
       "components": [
-        "campus.infra-facilities"
+        "campus.menu",
+        "campus.facilities",
+        "home.gallery"
       ]
     }
   }
