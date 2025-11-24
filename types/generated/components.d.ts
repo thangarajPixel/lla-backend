@@ -394,6 +394,17 @@ export interface ParentGuardianSpouseDetailsParentGuardianSpouseDetails
   };
 }
 
+export interface PostGraduatePostGraduate extends Struct.ComponentSchema {
+  collectionName: 'components_post_graduate_post_graduates';
+  info: {
+    displayName: 'Post_Graduate';
+  };
+  attributes: {
+    Finished: Schema.Attribute.Boolean;
+    Graduation_Degree: Schema.Attribute.String;
+  };
+}
+
 export interface SeoHome extends Struct.ComponentSchema {
   collectionName: 'components_seo_homes';
   info: {
@@ -402,6 +413,33 @@ export interface SeoHome extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.Text;
     title: Schema.Attribute.String;
+  };
+}
+
+export interface UnderGraduateUnderGraduate extends Struct.ComponentSchema {
+  collectionName: 'components_under_graduate_under_graduates';
+  info: {
+    displayName: 'Under_Graduate';
+  };
+  attributes: {
+    Finshed: Schema.Attribute.Boolean & Schema.Attribute.Required;
+    Gaduation_Degree: Schema.Attribute.String & Schema.Attribute.Required;
+    Upload_Marksheet: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+  };
+}
+
+export interface WorkExperienceWorkExperience extends Struct.ComponentSchema {
+  collectionName: 'components_work_experience_work_experiences';
+  info: {
+    displayName: 'Work Experience';
+  };
+  attributes: {
+    Duration: Schema.Attribute.Date & Schema.Attribute.Required;
+    Employeer: Schema.Attribute.String;
+    Reference: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Role_Designation: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -441,7 +479,10 @@ declare module '@strapi/strapi' {
       'home.testimonial': HomeTestimonial;
       'language.language-and-proficiency': LanguageLanguageAndProficiency;
       'parent-guardian-spouse-details.parent-guardian-spouse-details': ParentGuardianSpouseDetailsParentGuardianSpouseDetails;
+      'post-graduate.post-graduate': PostGraduatePostGraduate;
       'seo.home': SeoHome;
+      'under-graduate.under-graduate': UnderGraduateUnderGraduate;
+      'work-experience.work-experience': WorkExperienceWorkExperience;
     }
   }
 }

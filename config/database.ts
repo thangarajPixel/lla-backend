@@ -11,6 +11,8 @@ export default ({ env }) => {
         database: env('DATABASE_NAME', 'strapi'),
         user: env('DATABASE_USERNAME', 'strapi'),
         password: env('DATABASE_PASSWORD', ''),
+        charset: 'utf8mb4',
+        collation: 'utf8mb4_unicode_ci',
         ssl: env.bool('DATABASE_SSL', false) && {
           key: env('DATABASE_SSL_KEY', undefined),
           cert: env('DATABASE_SSL_CERT', undefined),
@@ -20,7 +22,16 @@ export default ({ env }) => {
           rejectUnauthorized: env.bool('DATABASE_SSL_REJECT_UNAUTHORIZED', true),
         },
       },
-      pool: { min: env.int('DATABASE_POOL_MIN', 2), max: env.int('DATABASE_POOL_MAX', 10) },
+      pool: { 
+        min: env.int('DATABASE_POOL_MIN', 2), 
+        max: env.int('DATABASE_POOL_MAX', 10),
+        afterCreate: (conn, done) => {
+          conn.query('SET SESSION sql_mode="NO_ENGINE_SUBSTITUTION";', (err) => {
+            done(err, conn);
+          });
+        },
+      },
+      acquireConnectionTimeout: 60000,
     },
     postgres: {
       connection: {
@@ -55,6 +66,9 @@ export default ({ env }) => {
       client,
       ...connections[client],
       acquireConnectionTimeout: env.int('DATABASE_CONNECTION_TIMEOUT', 60000),
+    },
+    settings: {
+      forceMigration: false,
     },
   };
 };

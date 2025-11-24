@@ -473,6 +473,14 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     date_of_birth: Schema.Attribute.Date;
+    Education_Details_10th_std: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    > &
+      Schema.Attribute.Required;
+    Education_Details_12th_std: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    > &
+      Schema.Attribute.Required;
     email: Schema.Attribute.Email;
     first_name: Schema.Attribute.String;
     Language_Proficiency: Schema.Attribute.DynamicZone<
@@ -491,10 +499,29 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
       'parent-guardian-spouse-details.parent-guardian-spouse-details',
       false
     >;
+    Post_Graduate: Schema.Attribute.Component<
+      'post-graduate.post-graduate',
+      false
+    >;
     publishedAt: Schema.Attribute.DateTime;
+    Role_Designation: Schema.Attribute.Component<
+      'work-experience.work-experience',
+      false
+    > &
+      Schema.Attribute.Required;
+    Under_Graduate: Schema.Attribute.Component<
+      'under-graduate.under-graduate',
+      false
+    > &
+      Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Upload_Your_Portfolio: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    > &
+      Schema.Attribute.Required;
   };
 }
 

@@ -45,6 +45,56 @@
       "type": "component",
       "component": "parent-guardian-spouse-details.parent-guardian-spouse-details",
       "repeatable": false
+    },
+    "Education_Details_12th_std": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "Education_Details_10th_std": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "Role_Designation": {
+      "type": "component",
+      "component": "work-experience.work-experience",
+      "repeatable": false,
+      "required": true
+    },
+    "Upload_Your_Portfolio": {
+      "type": "media",
+      "multiple": true,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "Under_Graduate": {
+      "type": "component",
+      "component": "under-graduate.under-graduate",
+      "repeatable": false,
+      "required": true
+    },
+    "Post_Graduate": {
+      "type": "component",
+      "component": "post-graduate.post-graduate",
+      "repeatable": false
     }
   }
 }

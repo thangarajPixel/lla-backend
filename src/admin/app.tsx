@@ -1,4 +1,5 @@
 import type { StrapiApp } from '@strapi/strapi/admin';
+
 export default {
   config: {
     auth: {
@@ -22,6 +23,6 @@ export default {
     },
   },
   bootstrap(app: StrapiApp) {
-  console.log('Custom admin loaded', app);
+    console.log('Custom admin loaded', app);
   },
 };

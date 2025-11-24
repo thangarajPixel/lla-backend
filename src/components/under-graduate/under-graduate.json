@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_under_graduate_under_graduates",
+  "info": {
+    "displayName": "Under_Graduate"
+  },
+  "options": {},
+  "attributes": {
+    "Gaduation_Degree": {
+      "type": "string",
+      "required": true
+    },
+    "Finshed": {
+      "type": "boolean",
+      "required": true
+    },
+    "Upload_Marksheet": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

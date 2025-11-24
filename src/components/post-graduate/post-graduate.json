@@ -1,0 +1,16 @@
+{
+  "collectionName": "components_post_graduate_post_graduates",
+  "info": {
+    "displayName": "Post_Graduate"
+  },
+  "options": {},
+  "attributes": {
+    "Graduation_Degree": {
+      "type": "string"
+    },
+    "Finished": {
+      "type": "boolean"
+    }
+  },
+  "config": {}
+}

@@ -1,0 +1,15 @@
+{
+  "name": "admission-manager",
+  "version": "1.0.0",
+  "description": "Custom admission manager with view and action buttons",
+  "strapi": {
+    "name": "admission-manager",
+    "displayName": "Admission Manager",
+    "description": "Manage admissions with custom actions",
+    "kind": "plugin"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "@strapi/strapi": "^5.0.0"
+  }
+}
