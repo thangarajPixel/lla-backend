@@ -37,6 +37,7 @@
     "node": ">=18.0.0 <=22.x.x",
     "npm": ">=6.0.0"
   },
+  
   "strapi": {
     "uuid": "5a0cfb15-fb8e-4d63-8acf-a072e8bcea75",
     "installId": "2577b79901f135b63bd714332cae32d99a35fcc64abc6783979e10a44ed7a506"
