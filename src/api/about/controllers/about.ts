@@ -2,7 +2,7 @@
  * about controller
  */
 
-import { factories } from "@strapi/strapi";
+const { factories } = require("@strapi/strapi");
 import { addBaseUrlToMediaUrls } from "../../../helper";
 
 export default factories.createCoreController(
@@ -69,8 +69,8 @@ export default factories.createCoreController(
         // Add base URL to media URLs
         // addBaseUrlToMediaUrls(entity);
 
-        const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
-        return this.transformResponse(sanitizedEntity);
+        const sanitizedEntity = await super.sanitizeOutput(entity, ctx);
+        return super.transformResponse(sanitizedEntity);
       } catch (error) {
         console.error("Home find error:", error);
         return ctx.internalServerError("Failed to load home data");
@@ -128,7 +128,7 @@ export default factories.createCoreController(
 
         // addBaseUrlToMediaUrls(founderBlock);
 
-        return this.transformResponse(founderBlock);
+        return super.transformResponse(founderBlock);
       } catch (error) {
         console.error("founderById error:", error);
         return ctx.internalServerError("Failed to load founder data");

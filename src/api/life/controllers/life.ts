@@ -2,7 +2,7 @@
  * life controller
  */
 
-import { factories } from "@strapi/strapi";
+const { factories } = require("@strapi/strapi");
 
 export default factories.createCoreController(
   "api::life.life",
@@ -36,14 +36,18 @@ export default factories.createCoreController(
         // original card data with paginated data
         entity.Card = paginatedCards;
 
-        const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
+        const sanitizedEntity = await super.sanitizeOutput(entity);
 
-        return this.transformResponse(sanitizedEntity, {
+        sanitizedEntity.pagination = {
           page,
           perPage,
           total: totalCards,
           totalPages: Math.ceil(totalCards / perPage),
-        });
+        };
+
+        return {
+          data: sanitizedEntity
+        };
       } catch (error) {
         console.error("Life find error:", error);
         return ctx.internalServerError("Failed to load life data");

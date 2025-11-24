@@ -2,7 +2,7 @@
  * campus controller
  */
 
-import { factories } from "@strapi/strapi";
+const { factories } = require("@strapi/strapi");
 
 export default factories.createCoreController(
   "api::campus.campus",
@@ -53,8 +53,8 @@ export default factories.createCoreController(
         // Add base URL to media URLs
         // addBaseUrlToMediaUrls(entity);
 
-        const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
-        return this.transformResponse(sanitizedEntity);
+        const sanitizedEntity = await super.sanitizeOutput(entity, ctx);
+        return super.transformResponse(sanitizedEntity);
       } catch (error) {
         console.error("Home find error:", error);
         return ctx.internalServerError("Failed to load home data");
