@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_faculty_filmmakings",
+  "info": {
+    "displayName": "Filmmaking"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "blocks"
+    },
+    "Card": {
+      "type": "component",
+      "component": "campus.card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

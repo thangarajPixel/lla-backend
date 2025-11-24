@@ -288,6 +288,63 @@ export interface CourseStudentReview extends Struct.ComponentSchema {
   };
 }
 
+export interface FacultyFaculty extends Struct.ComponentSchema {
+  collectionName: 'components_faculty_faculties';
+  info: {
+    displayName: 'Menu';
+  };
+  attributes: {
+    Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.String;
+    Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    SubHeading: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface FacultyFilmmaking extends Struct.ComponentSchema {
+  collectionName: 'components_faculty_filmmakings';
+  info: {
+    displayName: 'Filmmaking';
+  };
+  attributes: {
+    Card: Schema.Attribute.Component<'campus.card', true>;
+    Description: Schema.Attribute.Blocks;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface FacultyPhotography extends Struct.ComponentSchema {
+  collectionName: 'components_faculty_photographies';
+  info: {
+    displayName: 'Photography';
+  };
+  attributes: {
+    Card: Schema.Attribute.Component<'campus.card', true>;
+    Description: Schema.Attribute.String;
+    Heading: Schema.Attribute.String;
+    SubHeading: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface FacultyVisiting extends Struct.ComponentSchema {
+  collectionName: 'components_faculty_visitings';
+  info: {
+    displayName: 'Visiting';
+  };
+  attributes: {
+    Card: Schema.Attribute.Component<'campus.card', true>;
+    Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.String;
+    SubHeading: Schema.Attribute.String;
+    Title: Schema.Attribute.String;
+  };
+}
+
 export interface FaqBanner extends Struct.ComponentSchema {
   collectionName: 'components_faq_banners';
   info: {
@@ -530,6 +587,10 @@ declare module '@strapi/strapi' {
       'course.other-info': CourseOtherInfo;
       'course.qa': CourseQa;
       'course.student-review': CourseStudentReview;
+      'faculty.faculty': FacultyFaculty;
+      'faculty.filmmaking': FacultyFilmmaking;
+      'faculty.photography': FacultyPhotography;
+      'faculty.visiting': FacultyVisiting;
       'faq.banner': FaqBanner;
       'home.about': HomeAbout;
       'home.banner': HomeBanner;

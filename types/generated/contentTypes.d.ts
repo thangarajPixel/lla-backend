@@ -625,6 +625,15 @@ export interface ApiFacultyFaculty extends Struct.SingleTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Faculty: Schema.Attribute.DynamicZone<
+      [
+        'faculty.faculty',
+        'about.founder',
+        'faculty.photography',
+        'faculty.filmmaking',
+        'faculty.visiting',
+      ]
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_faculty_faculties",
+  "info": {
+    "displayName": "Menu"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Heading": {
+      "type": "string"
+    },
+    "SubHeading": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "text"
+    },
+    "Image": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

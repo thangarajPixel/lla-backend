@@ -10,5 +10,16 @@
     "draftAndPublish": true
   },
   "pluginOptions": {},
-  "attributes": {}
+  "attributes": {
+    "Faculty": {
+      "type": "dynamiczone",
+      "components": [
+        "faculty.faculty",
+        "about.founder",
+        "faculty.photography",
+        "faculty.filmmaking",
+        "faculty.visiting"
+      ]
+    }
+  }
 }

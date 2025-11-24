@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_faculty_visitings",
+  "info": {
+    "displayName": "Visiting"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Heading": {
+      "type": "string"
+    },
+    "SubHeading": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "text"
+    },
+    "Card": {
+      "type": "component",
+      "component": "campus.card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

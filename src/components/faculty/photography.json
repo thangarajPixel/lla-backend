@@ -1,0 +1,27 @@
+{
+  "collectionName": "components_faculty_photographies",
+  "info": {
+    "displayName": "Photography"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Heading": {
+      "type": "string"
+    },
+    "SubHeading": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "string"
+    },
+    "Card": {
+      "type": "component",
+      "component": "campus.card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}
