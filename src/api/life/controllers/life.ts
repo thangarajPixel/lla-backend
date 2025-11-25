@@ -3,6 +3,7 @@
  */
 
 const { factories } = require("@strapi/strapi");
+import { addBaseUrlToMediaUrls } from "../../../helper";
 
 export default factories.createCoreController(
   "api::life.life",
@@ -35,6 +36,9 @@ export default factories.createCoreController(
 
         // original card data with paginated data
         entity.Card = paginatedCards;
+
+        // Add base URL to media URLs
+        addBaseUrlToMediaUrls(entity);
 
         const sanitizedEntity = await super.sanitizeOutput(entity);
 

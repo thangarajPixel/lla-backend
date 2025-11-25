@@ -3,6 +3,7 @@
  */
 
 const { factories } = require("@strapi/strapi");
+import { addBaseUrlToMediaUrls } from "../../../helper";
 
 export default factories.createCoreController(
   "api::campus.campus",
@@ -51,7 +52,7 @@ export default factories.createCoreController(
         }
 
         // Add base URL to media URLs
-        // addBaseUrlToMediaUrls(entity);
+        addBaseUrlToMediaUrls(entity);
 
         const sanitizedEntity = await super.sanitizeOutput(entity, ctx);
         return super.transformResponse(sanitizedEntity);
