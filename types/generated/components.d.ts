@@ -368,6 +368,7 @@ export interface HomeAbout extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -393,6 +394,7 @@ export interface HomeCampus extends Struct.ComponentSchema {
     Btn_txt: Schema.Attribute.String;
     Description: Schema.Attribute.Text;
     Heading: Schema.Attribute.String;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -422,6 +424,7 @@ export interface HomeCourse extends Struct.ComponentSchema {
     Card: Schema.Attribute.Component<'home.card', true>;
     Description: Schema.Attribute.Text;
     Heading: Schema.Attribute.String;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -436,6 +439,7 @@ export interface HomeFaculty extends Struct.ComponentSchema {
     Card: Schema.Attribute.Component<'home.card', true>;
     Description: Schema.Attribute.Text;
     Heading: Schema.Attribute.String;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -452,6 +456,7 @@ export interface HomeGallery extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -465,7 +470,9 @@ export interface HomeLife extends Struct.ComponentSchema {
     Bg_img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Btn_txt: Schema.Attribute.String;
     Card: Schema.Attribute.Component<'home.card', true>;
+    Description: Schema.Attribute.String;
     Heading: Schema.Attribute.String;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -479,6 +486,7 @@ export interface HomeLlaTestimonials extends Struct.ComponentSchema {
     Description: Schema.Attribute.Text;
     Heading: Schema.Attribute.String;
     Slider: Schema.Attribute.Component<'home.slider', true>;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -520,6 +528,7 @@ export interface HomeTestimonial extends Struct.ComponentSchema {
     Card: Schema.Attribute.Component<'home.card', true>;
     Description: Schema.Attribute.Text;
     Heading: Schema.Attribute.String;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }

@@ -26,6 +26,9 @@
         "videos",
         "audios"
       ]
+    },
+    "SubHeading": {
+      "type": "string"
     }
   },
   "config": {}

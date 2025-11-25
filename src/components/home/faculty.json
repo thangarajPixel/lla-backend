@@ -14,6 +14,9 @@
     "Description": {
       "type": "text"
     },
+    "SubHeading": {
+      "type": "string"
+    },
     "Btn_txt": {
       "type": "string"
     },

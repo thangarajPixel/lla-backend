@@ -11,6 +11,9 @@
     "Heading": {
       "type": "string"
     },
+    "SubHeading": {
+      "type": "string"
+    },
     "Description": {
       "type": "text"
     },
