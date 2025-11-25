@@ -109,7 +109,7 @@ export default factories.createCoreController(
         }
 
         // Add base URL to media URLs
-        addBaseUrlToMediaUrls(entity);
+        // addBaseUrlToMediaUrls(entity);
 
         const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
         return this.transformResponse(sanitizedEntity);

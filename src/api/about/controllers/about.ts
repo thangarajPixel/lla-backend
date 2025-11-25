@@ -67,7 +67,7 @@ export default factories.createCoreController(
         }
 
         // Add base URL to media URLs
-        addBaseUrlToMediaUrls(entity);
+        // addBaseUrlToMediaUrls(entity);
 
         const sanitizedEntity = await super.sanitizeOutput(entity, ctx);
         return super.transformResponse(sanitizedEntity);
@@ -126,7 +126,7 @@ export default factories.createCoreController(
         // Replace original array
         founderBlock.Founder_card = finalCards;
 
-        addBaseUrlToMediaUrls(founderBlock);
+        // addBaseUrlToMediaUrls(founderBlock);
 
         return super.transformResponse(founderBlock);
       } catch (error) {

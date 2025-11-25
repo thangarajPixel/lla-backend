@@ -38,7 +38,7 @@ export default factories.createCoreController(
         entity.Card = paginatedCards;
 
         // Add base URL to media URLs
-        addBaseUrlToMediaUrls(entity);
+        // addBaseUrlToMediaUrls(entity);
 
         const sanitizedEntity = await super.sanitizeOutput(entity);
 
