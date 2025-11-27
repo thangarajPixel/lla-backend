@@ -1,30 +1,26 @@
 import type { StrapiApp } from '@strapi/strapi/admin';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+
+import { Button } from '@strapi/design-system';
+import { Dialog } from '@strapi/design-system';
+
+import { Eye, Download, Duplicate } from '@strapi/icons';
+
 export default {
   config: {
     auth: {
       logo: 'http://localhost:8000/uploads/logo.png',
     },
-    menu:{
-       logo:"http://localhost:8000/uploads/logo.png",
+    menu: {
+      logo: 'http://localhost:8000/uploads/logo.png',
     },
     tutorials: false,
     notifications: { release: false },
     locales: ['en', 'fr'],
-    translations: {
-      en: {
-         'Auth.form.welcome.title': 'Welcome to Light & Life Academy',
-         'Auth.form.welcome.subtitle': 'Log in to manage your content',
-      },
-      fr: {
-         'Auth.form.welcome.title': 'Bienvenue à Light & Life Academy',
-         'Auth.form.welcome.subtitle': 'Connectez-vous pour gérer votre contenu',
-      },
-    },
   },
+
   bootstrap(app: StrapiApp) {
-<<<<<<< Updated upstream
-  console.log('Custom admin loaded', app);
-=======
     console.log('Custom admin loaded ✔');
 
     // ---------------------------------------------------------------
@@ -185,6 +181,5 @@ export default {
         );
       },
     });
->>>>>>> Stashed changes
   },
 };
