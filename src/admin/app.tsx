@@ -1,100 +1,40 @@
-import type { StrapiApp } from '@strapi/strapi/admin';
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-
-import { Button } from '@strapi/design-system';
-import { Dialog } from '@strapi/design-system';
-
-import { Eye, Download, Duplicate } from '@strapi/icons';
+import { Button, Dialog } from '@strapi/design-system';
+import { SingleSelect, SingleSelectOption } from '@strapi/design-system';
+import { Eye, Duplicate, Download } from '@strapi/icons';
 
 export default {
-  config: {
-    auth: {
-      logo: 'http://localhost:8000/uploads/logo.png',
-    },
-    menu: {
-      logo: 'http://localhost:8000/uploads/logo.png',
-    },
-    tutorials: false,
-    notifications: { release: false },
-    locales: ['en', 'fr'],
-  },
-
-  bootstrap(app: StrapiApp) {
-    console.log('Custom admin loaded ✔');
-
-    // ---------------------------------------------------------------------
-    // ✅ Watch selected row IDs in Admission table
-    // ---------------------------------------------------------------------
-    app.getPlugin('content-manager').injectComponent('listView', 'beforeBody', {
-      name: 'SelectedIdWatcher',
-      Component: () => {
-        const location = useLocation();
-
-        useEffect(() => {
-          if (!location.pathname.includes('api::admission.admission')) return;
-
-          const handleClick = (event: any) => {
-            const target = event.target;
-
-            if (target && target.type === 'checkbox') {
-              setTimeout(() => {
-                const row = target.closest('tr');
-                if (row) {
-                  const cells = row.querySelectorAll('td');
-                  if (cells.length > 1) {
-                    const idText = cells[1].textContent?.trim();
-                    if (idText && idText !== 'ID' && !isNaN(Number(idText))) {
-                      alert(`Selected ID: ${idText}`);
-                    }
-                  }
-                }
-              }, 100);
-            }
-          };
-
-          document.addEventListener('click', handleClick, true);
-
-          return () => {
-            document.removeEventListener('click', handleClick, true);
-          };
-        }, [location.pathname]);
-
-        return null;
-      },
-    });
-
-    // ---------------------------------------------------------------------
-    // ✅ Header Buttons (View | Popup | Download)
-    // ---------------------------------------------------------------------
+  bootstrap(app: any) {
     app.getPlugin('content-manager').injectComponent('listView', 'actions', {
       name: 'CustomHeaderButtons',
       Component: () => {
         const location = useLocation();
         const [isOpen, setIsOpen] = useState(false);
+        const [stepValue, setStepValue] = useState('');
+        const [yearValue, setYearValue] = useState('');
 
         if (!location.pathname.includes('api::admission.admission')) {
           return null;
         }
 
-        // ACTION FUNCTIONS
-        const handleView = () => {
-          window.open('https://dev.lightandlifeacademy.in/', '_blank');
-        };
-
-        const handleDownload = () => {
-          window.open('http://localhost:8000/uploads/sample.pdf', '_blank');
-        };
-
+        const handleView = () => window.open('https://dev.lightandlifeacademy.in/', '_blank');
+        const handleDownload = () => window.open('http://localhost:8000/uploads/sample.pdf', '_blank');
         const handleSubmit = () => {
-          alert('Form Submitted Successfully!');
+          alert(`Form Submitted!\nStep: ${stepValue}\nYear: ${yearValue}`);
           setIsOpen(false);
         };
 
+        // Generate Academic Years from 2017-2018 to 2027-2028
+        const years = [];
+        for (let start = 2017; start <= 2027; start++) {
+          years.push(`${start}-${start + 1}`);
+        }
+
         return (
           <>
-            {/* Header Buttons */}
-            <div style={{ display: 'flex', gap: '10px' }}>
+            {/* Header Buttons + Dropdowns */}
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
               <Button startIcon={<Eye />} variant="secondary" onClick={handleView}>
                 View
               </Button>
@@ -106,6 +46,34 @@ export default {
               <Button startIcon={<Download />} variant="secondary" onClick={handleDownload}>
                 Download
               </Button>
+
+              {/* Step Dropdown */}
+              <div style={{ width: 150 }}>
+                <SingleSelect
+                  placeholder="Choose Option"
+                  value={stepValue}
+                  onChange={(value: string | number) => setStepValue(String(value))}
+                >
+                  <SingleSelectOption value="Step1">Step1</SingleSelectOption>
+                  <SingleSelectOption value="Step2">Step2</SingleSelectOption>
+                  <SingleSelectOption value="Step3">Step3</SingleSelectOption>
+                </SingleSelect>
+              </div>
+
+              {/* Academic Year Dropdown */}
+              <div style={{ width: 150 }}>
+                <SingleSelect
+                  placeholder="Select Year"
+                  value={yearValue}
+                  onChange={(value: string | number) => setYearValue(String(value))}
+                >
+                  {years.map((year) => (
+                    <SingleSelectOption key={year} value={year}>
+                      {year}
+                    </SingleSelectOption>
+                  ))}
+                </SingleSelect>
+              </div>
             </div>
 
             {/* Popup Modal */}
