@@ -433,16 +433,17 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiAboutAbout extends Struct.SingleTypeSchema {
   collectionName: 'abouts';
   info: {
+    description: 'Write about yourself and the content you create';
     displayName: 'About';
     pluralName: 'abouts';
     singularName: 'about';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    about: Schema.Attribute.DynamicZone<
-      ['about.about', 'about.legacy', 'about.founder', 'about.team']
+    blocks: Schema.Attribute.DynamicZone<
+      ['shared.media', 'shared.quote', 'shared.rich-text', 'shared.slider']
     >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -451,100 +452,78 @@ export interface ApiAboutAbout extends Struct.SingleTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::about.about'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
   };
 }
 
-export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
-  collectionName: 'admissions';
+export interface ApiArticleArticle extends Struct.CollectionTypeSchema {
+  collectionName: 'articles';
   info: {
-    displayName: 'Admission';
-    pluralName: 'admissions';
-    singularName: 'admission';
+    description: 'Create your blog content';
+    displayName: 'Article';
+    pluralName: 'articles';
+    singularName: 'article';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    address: Schema.Attribute.DynamicZone<['address.address']>;
+    author: Schema.Attribute.Relation<'manyToOne', 'api::author.author'>;
+    blocks: Schema.Attribute.DynamicZone<
+      ['shared.media', 'shared.quote', 'shared.rich-text', 'shared.slider']
+    >;
+    category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
+    cover: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    date_of_birth: Schema.Attribute.Date;
-    email: Schema.Attribute.Email;
-    first_name: Schema.Attribute.String;
-    Language_Proficiency: Schema.Attribute.DynamicZone<
-      ['language.language-and-proficiency']
-    >;
-    last_name: Schema.Attribute.String;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 80;
+      }>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::admission.admission'
+      'api::article.article'
     > &
       Schema.Attribute.Private;
-    mobile_no: Schema.Attribute.String;
-    nationality: Schema.Attribute.String;
-    Parent_Guardian_Spouse_Details: Schema.Attribute.Component<
-      'parent-guardian-spouse-details.parent-guardian-spouse-details',
-      false
-    >;
     publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID<'title'>;
+    title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
   };
 }
 
-export interface ApiBlogBlog extends Struct.SingleTypeSchema {
-  collectionName: 'blogs';
+export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
+  collectionName: 'authors';
   info: {
-    displayName: 'Blog';
-    pluralName: 'blogs';
-    singularName: 'blog';
+    description: 'Create authors for your content';
+    displayName: 'Author';
+    pluralName: 'authors';
+    singularName: 'author';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
+    articles: Schema.Attribute.Relation<'oneToMany', 'api::article.article'>;
+    avatar: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::blog.blog'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiCampusCampus extends Struct.SingleTypeSchema {
-  collectionName: 'campuses';
-  info: {
-    displayName: 'Campus';
-    pluralName: 'campuses';
-    singularName: 'campus';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    campus: Schema.Attribute.DynamicZone<
-      ['campus.menu', 'campus.facilities', 'home.gallery']
-    >;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
+    email: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::campus.campus'
+      'api::author.author'
     > &
       Schema.Attribute.Private;
+    name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -552,278 +531,64 @@ export interface ApiCampusCampus extends Struct.SingleTypeSchema {
   };
 }
 
-export interface ApiContactContact extends Struct.CollectionTypeSchema {
-  collectionName: 'contacts';
+export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
+  collectionName: 'categories';
   info: {
-    displayName: 'Contact';
-    pluralName: 'contacts';
-    singularName: 'contact';
+    description: 'Organize your content into categories';
+    displayName: 'Category';
+    pluralName: 'categories';
+    singularName: 'category';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
+    articles: Schema.Attribute.Relation<'oneToMany', 'api::article.article'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    Email: Schema.Attribute.Email;
+    description: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::contact.contact'
+      'api::category.category'
     > &
       Schema.Attribute.Private;
-    Message: Schema.Attribute.Text;
-    Mobile: Schema.Attribute.String;
-    Name: Schema.Attribute.String;
+    name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    slug: Schema.Attribute.UID;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
   };
 }
 
-export interface ApiCourseCourse extends Struct.SingleTypeSchema {
-  collectionName: 'courses';
+export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
+  collectionName: 'globals';
   info: {
-    displayName: 'Course';
-    pluralName: 'courses';
-    singularName: 'course';
+    description: 'Define global settings';
+    displayName: 'Global';
+    pluralName: 'globals';
+    singularName: 'global';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
-    Course: Schema.Attribute.DynamicZone<['course.dip-professional']>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    defaultSeo: Schema.Attribute.Component<'shared.seo', false>;
+    favicon: Schema.Attribute.Media<'images' | 'files' | 'videos'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
-      'api::course.course'
+      'api::global.global'
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiFacultyFaculty extends Struct.SingleTypeSchema {
-  collectionName: 'faculties';
-  info: {
-    displayName: 'Faculty';
-    pluralName: 'faculties';
-    singularName: 'faculty';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    Faculty: Schema.Attribute.DynamicZone<
-      [
-        'faculty.faculty',
-        'about.founder',
-        'faculty.photography',
-        'faculty.filmmaking',
-        'faculty.visiting',
-      ]
-    >;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::faculty.faculty'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiFaqFaq extends Struct.SingleTypeSchema {
-  collectionName: 'faqs';
-  info: {
-    displayName: 'Faq';
-    pluralName: 'faqs';
-    singularName: 'faq';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    faq: Schema.Attribute.DynamicZone<['faq.banner']>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::faq.faq'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiFooterFooter extends Struct.SingleTypeSchema {
-  collectionName: 'footers';
-  info: {
-    displayName: 'Footer';
-    pluralName: 'footers';
-    singularName: 'footer';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    Btn_txt: Schema.Attribute.String;
-    Copy_right_txt: Schema.Attribute.Text;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    Description: Schema.Attribute.Text;
-    Icon: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::footer.footer'
-    > &
-      Schema.Attribute.Private;
-    Logo: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
-    publishedAt: Schema.Attribute.DateTime;
-    Title: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiGalleryGallery extends Struct.SingleTypeSchema {
-  collectionName: 'galleries';
-  info: {
-    displayName: 'Gallery';
-    pluralName: 'galleries';
-    singularName: 'gallery';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::gallery.gallery'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiHomeHome extends Struct.SingleTypeSchema {
-  collectionName: 'homes';
-  info: {
-    displayName: 'Home';
-    pluralName: 'homes';
-    singularName: 'home';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    Home: Schema.Attribute.DynamicZone<
-      [
-        'home.banner',
-        'home.campus',
-        'home.course',
-        'home.faculty',
-        'home.life',
-        'home.testimonial',
-        'home.lla-testimonials',
-        'home.gallery',
-        'home.about',
-        'home.sponsor',
-      ]
-    >;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::home.home'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiLifeLife extends Struct.SingleTypeSchema {
-  collectionName: 'lives';
-  info: {
-    displayName: 'Life';
-    pluralName: 'lives';
-    singularName: 'life';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    Card: Schema.Attribute.Component<'home.card', true>;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    Description: Schema.Attribute.Text;
-    Heading: Schema.Attribute.String;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::life.life'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    SubHeading: Schema.Attribute.String;
-    Title: Schema.Attribute.String;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
-export interface ApiSeoSeo extends Struct.SingleTypeSchema {
-  collectionName: 'seos';
-  info: {
-    displayName: 'seo';
-    pluralName: 'seos';
-    singularName: 'seo';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::seo.seo'> &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    seo: Schema.Attribute.DynamicZone<['seo.home']>;
+    siteDescription: Schema.Attribute.Text & Schema.Attribute.Required;
+    siteName: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1341,18 +1106,10 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::about.about': ApiAboutAbout;
-      'api::admission.admission': ApiAdmissionAdmission;
-      'api::blog.blog': ApiBlogBlog;
-      'api::campus.campus': ApiCampusCampus;
-      'api::contact.contact': ApiContactContact;
-      'api::course.course': ApiCourseCourse;
-      'api::faculty.faculty': ApiFacultyFaculty;
-      'api::faq.faq': ApiFaqFaq;
-      'api::footer.footer': ApiFooterFooter;
-      'api::gallery.gallery': ApiGalleryGallery;
-      'api::home.home': ApiHomeHome;
-      'api::life.life': ApiLifeLife;
-      'api::seo.seo': ApiSeoSeo;
+      'api::article.article': ApiArticleArticle;
+      'api::author.author': ApiAuthorAuthor;
+      'api::category.category': ApiCategoryCategory;
+      'api::global.global': ApiGlobalGlobal;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

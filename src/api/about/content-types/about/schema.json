@@ -4,21 +4,20 @@
   "info": {
     "singularName": "about",
     "pluralName": "abouts",
-    "displayName": "About"
+    "displayName": "About",
+    "description": "Write about yourself and the content you create"
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "about": {
+    "title": {
+      "type": "string"
+    },
+    "blocks": {
       "type": "dynamiczone",
-      "components": [
-        "about.about",
-        "about.legacy",
-        "about.founder",
-        "about.team"
-      ]
+      "components": ["shared.media", "shared.quote", "shared.rich-text", "shared.slider"]
     }
   }
 }

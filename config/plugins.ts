@@ -1,3 +1,1 @@
-module.exports = {
-  // Example plugin configuration
-}
+export default () => ({});
