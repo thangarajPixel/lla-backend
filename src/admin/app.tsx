@@ -54,9 +54,9 @@ export default {
                   value={stepValue}
                   onChange={(value: string | number) => setStepValue(String(value))}
                 >
-                  <SingleSelectOption value="Step1">Step1</SingleSelectOption>
-                  <SingleSelectOption value="Step2">Step2</SingleSelectOption>
-                  <SingleSelectOption value="Step3">Step3</SingleSelectOption>
+                  <SingleSelectOption value="Step1">Step1(Basic)</SingleSelectOption>
+                  <SingleSelectOption value="Step2">Step2(Portfolio)</SingleSelectOption>
+                  <SingleSelectOption value="Step3">Step3(Paid)</SingleSelectOption>
                 </SingleSelect>
               </div>
 
