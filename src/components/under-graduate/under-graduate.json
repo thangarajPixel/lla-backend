@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_under_graduate_under_graduates",
+  "info": {
+    "displayName": "Under_Graduate"
+  },
+  "options": {},
+  "attributes": {
+    "degree": {
+      "type": "string"
+    },
+    "marksheet": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "ug_status": {
+      "type": "enumeration",
+      "enum": [
+        "Finished",
+        "In-Progress"
+      ]
+    }
+  },
+  "config": {}
+}

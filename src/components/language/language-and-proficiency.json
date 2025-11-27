@@ -4,19 +4,6 @@
     "displayName": "Language & Proficiency"
   },
   "options": {},
-  "attributes": {
-    "language": {
-      "type": "string"
-    },
-    "read": {
-      "type": "boolean"
-    },
-    "write": {
-      "type": "boolean"
-    },
-    "speak": {
-      "type": "boolean"
-    }
-  },
+  "attributes": {},
   "config": {}
 }

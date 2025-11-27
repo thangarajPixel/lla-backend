@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_education_details_education_details",
+  "info": {
+    "displayName": "Education_Details"
+  },
+  "options": {},
+  "attributes": {
+    "Education_Details_12th_std": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "Education_Details_10th_std": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

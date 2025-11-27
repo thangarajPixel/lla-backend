@@ -468,33 +468,67 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    address: Schema.Attribute.DynamicZone<['address.address']>;
+    address: Schema.Attribute.Blocks;
+    blood_group: Schema.Attribute.String;
+    city: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    date_of_birth: Schema.Attribute.Date;
-    email: Schema.Attribute.Email;
-    first_name: Schema.Attribute.String;
-    Language_Proficiency: Schema.Attribute.DynamicZone<
-      ['language.language-and-proficiency']
+    date_of_birth: Schema.Attribute.Date & Schema.Attribute.Required;
+    district: Schema.Attribute.String;
+    Education_Details: Schema.Attribute.Component<
+      'education-details.education-details',
+      false
     >;
-    last_name: Schema.Attribute.String;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    first_name: Schema.Attribute.String & Schema.Attribute.Required;
+    hobbies: Schema.Attribute.String;
+    Language_Proficiency: Schema.Attribute.Component<
+      'language-and-proficiency.language-proficiency',
+      false
+    >;
+    last_name: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::admission.admission'
     > &
       Schema.Attribute.Private;
-    mobile_no: Schema.Attribute.String;
-    nationality: Schema.Attribute.String;
+    mobile_no: Schema.Attribute.BigInteger;
+    name_title: Schema.Attribute.Enumeration<['Mr.', 'Ms.']> &
+      Schema.Attribute.Required;
+    nationality: Schema.Attribute.String & Schema.Attribute.Required;
     Parent_Guardian_Spouse_Details: Schema.Attribute.Component<
-      'parent-guardian-spouse-details.parent-guardian-spouse-details',
+      'parent-guardian-spouse.parent-guardian-spouse-details',
       false
     >;
+    passport_size_image: Schema.Attribute.Media<'images' | 'files'>;
+    photography_club: Schema.Attribute.String;
+    pincode: Schema.Attribute.String;
+    Post_Graduate: Schema.Attribute.Component<
+      'post-graduate.post-graduate',
+      true
+    >;
     publishedAt: Schema.Attribute.DateTime;
+    state: Schema.Attribute.Relation<'manyToOne', 'api::state.state'>;
+    Step1: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    Step2: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    Step3: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    Under_Graduate: Schema.Attribute.Component<
+      'under-graduate.under-graduate',
+      false
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Upload_Your_Portfolio: Schema.Attribute.Component<
+      'upload-your-portfolio.upload-your-portfolio',
+      false
+    >;
+    Work_Experience: Schema.Attribute.Component<
+      'work-experience.work-experience',
+      true
+    >;
   };
 }
 
@@ -830,6 +864,35 @@ export interface ApiSeoSeo extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiStateState extends Struct.CollectionTypeSchema {
+  collectionName: 'states';
+  info: {
+    displayName: 'State';
+    pluralName: 'states';
+    singularName: 'state';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    admissions: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::admission.admission'
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::state.state'> &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -917,6 +980,44 @@ export interface PluginContentReleasesReleaseAction
     >;
     type: Schema.Attribute.Enumeration<['publish', 'unpublish']> &
       Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface PluginExportImportKkmExportImportConfig
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'export_import_kkm_configs';
+  info: {
+    displayName: 'Export Import Config';
+    pluralName: 'export-import-configs';
+    singularName: 'export-import-config';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  pluginOptions: {
+    'content-manager': {
+      visible: false;
+    };
+    'content-type-builder': {
+      visible: false;
+    };
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'plugin::export-import-kkm.export-import-config'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    selectedExportCollections: Schema.Attribute.JSON;
+    selectedImportCollections: Schema.Attribute.JSON;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1353,8 +1454,10 @@ declare module '@strapi/strapi' {
       'api::home.home': ApiHomeHome;
       'api::life.life': ApiLifeLife;
       'api::seo.seo': ApiSeoSeo;
+      'api::state.state': ApiStateState;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
+      'plugin::export-import-kkm.export-import-config': PluginExportImportKkmExportImportConfig;
       'plugin::i18n.locale': PluginI18NLocale;
       'plugin::review-workflows.workflow': PluginReviewWorkflowsWorkflow;
       'plugin::review-workflows.workflow-stage': PluginReviewWorkflowsWorkflowStage;

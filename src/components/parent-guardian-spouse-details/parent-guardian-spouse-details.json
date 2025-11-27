@@ -4,19 +4,6 @@
     "displayName": " Parent/Guardian/Spouse Details"
   },
   "options": {},
-  "attributes": {
-    "name": {
-      "type": "string"
-    },
-    "profession": {
-      "type": "string"
-    },
-    "email": {
-      "type": "email"
-    },
-    "contact_no": {
-      "type": "string"
-    }
-  },
+  "attributes": {},
   "config": {}
 }

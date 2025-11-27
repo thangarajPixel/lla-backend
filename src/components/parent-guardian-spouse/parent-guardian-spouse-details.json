@@ -1,0 +1,57 @@
+{
+  "collectionName": "components_parent_guardian_spouse_parent_guardian_spouse_details",
+  "info": {
+    "displayName": "Parent_Guardian_Spouse_Details"
+  },
+  "options": {},
+  "attributes": {
+    "title": {
+      "type": "enumeration",
+      "enum": [
+        "Mr.",
+        "Ms."
+      ]
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "mobile_no": {
+      "type": "biginteger"
+    },
+    "email": {
+      "type": "email"
+    },
+    "profession": {
+      "type": "string"
+    },
+    "nationality": {
+      "type": "string"
+    },
+    "admission": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::admission.admission"
+    },
+    "address": {
+      "type": "blocks"
+    },
+    "city": {
+      "type": "string"
+    },
+    "district": {
+      "type": "string"
+    },
+    "state": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::state.state"
+    },
+    "pincode": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}

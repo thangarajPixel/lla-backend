@@ -4,25 +4,6 @@
     "displayName": "address"
   },
   "options": {},
-  "attributes": {
-    "flat": {
-      "type": "text"
-    },
-    "city": {
-      "type": "string"
-    },
-    "pincode": {
-      "type": "string"
-    },
-    "hobies": {
-      "type": "string"
-    },
-    "photography_club": {
-      "type": "string"
-    },
-    "blood_grp": {
-      "type": "string"
-    }
-  },
+  "attributes": {},
   "config": {}
 }

@@ -11,40 +11,118 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "name_title": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "Mr.",
+        "Ms."
+      ]
+    },
     "first_name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "last_name": {
-      "type": "string"
-    },
-    "mobile_no": {
-      "type": "string"
-    },
-    "email": {
-      "type": "email"
-    },
-    "nationality": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "date_of_birth": {
-      "type": "date"
+      "type": "date",
+      "required": true
+    },
+    "nationality": {
+      "type": "string",
+      "required": true
+    },
+    "passport_size_image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "mobile_no": {
+      "type": "biginteger"
+    },
+    "email": {
+      "type": "email",
+      "required": true
     },
     "Language_Proficiency": {
-      "type": "dynamiczone",
-      "components": [
-        "language.language-and-proficiency"
-      ]
+      "type": "component",
+      "component": "language-and-proficiency.language-proficiency",
+      "repeatable": false
     },
     "address": {
-      "type": "dynamiczone",
-      "components": [
-        "address.address"
-      ]
+      "type": "blocks"
+    },
+    "city": {
+      "type": "string"
+    },
+    "district": {
+      "type": "string"
+    },
+    "state": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::state.state",
+      "inversedBy": "admissions"
+    },
+    "pincode": {
+      "type": "string"
+    },
+    "hobbies": {
+      "type": "string"
+    },
+    "photography_club": {
+      "type": "string"
+    },
+    "blood_group": {
+      "type": "string"
     },
     "Parent_Guardian_Spouse_Details": {
       "type": "component",
-      "component": "parent-guardian-spouse-details.parent-guardian-spouse-details",
+      "component": "parent-guardian-spouse.parent-guardian-spouse-details",
       "repeatable": false
+    },
+    "Step1": {
+      "type": "boolean",
+      "default": false
+    },
+    "Education_Details": {
+      "type": "component",
+      "component": "education-details.education-details",
+      "repeatable": false
+    },
+    "Under_Graduate": {
+      "type": "component",
+      "component": "under-graduate.under-graduate",
+      "repeatable": false
+    },
+    "Post_Graduate": {
+      "type": "component",
+      "component": "post-graduate.post-graduate",
+      "repeatable": true
+    },
+    "Work_Experience": {
+      "type": "component",
+      "component": "work-experience.work-experience",
+      "repeatable": true
+    },
+    "Step2": {
+      "type": "boolean",
+      "default": false
+    },
+    "Upload_Your_Portfolio": {
+      "type": "component",
+      "component": "upload-your-portfolio.upload-your-portfolio",
+      "repeatable": false
+    },
+    "Step3": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

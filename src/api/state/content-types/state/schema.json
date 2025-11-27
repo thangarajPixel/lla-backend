@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "states",
+  "info": {
+    "singularName": "state",
+    "pluralName": "states",
+    "displayName": "State"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "admissions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::admission.admission",
+      "mappedBy": "state"
+    }
+  }
+}

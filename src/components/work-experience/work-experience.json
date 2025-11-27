@@ -1,0 +1,32 @@
+{
+  "collectionName": "components_work_experience_work_experiences",
+  "info": {
+    "displayName": "Work_Experience"
+  },
+  "options": {},
+  "attributes": {
+    "designation": {
+      "type": "string"
+    },
+    "employer": {
+      "type": "string"
+    },
+    "duration_start": {
+      "type": "date"
+    },
+    "duration_end": {
+      "type": "date"
+    },
+    "reference_letter": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

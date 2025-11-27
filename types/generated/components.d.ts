@@ -75,14 +75,7 @@ export interface AddressAddress extends Struct.ComponentSchema {
   info: {
     displayName: 'address';
   };
-  attributes: {
-    blood_grp: Schema.Attribute.String;
-    city: Schema.Attribute.String;
-    flat: Schema.Attribute.Text;
-    hobies: Schema.Attribute.String;
-    photography_club: Schema.Attribute.String;
-    pincode: Schema.Attribute.String;
-  };
+  attributes: {};
 }
 
 export interface CampusCard extends Struct.ComponentSchema {
@@ -285,6 +278,22 @@ export interface CourseStudentReview extends Struct.ComponentSchema {
     Description: Schema.Attribute.Text;
     Heading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
+  };
+}
+
+export interface EducationDetailsEducationDetails
+  extends Struct.ComponentSchema {
+  collectionName: 'components_education_details_education_details';
+  info: {
+    displayName: 'Education_Details';
+  };
+  attributes: {
+    Education_Details_10th_std: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
+    Education_Details_12th_std: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
   };
 }
 
@@ -533,10 +542,11 @@ export interface HomeTestimonial extends Struct.ComponentSchema {
   };
 }
 
-export interface LanguageLanguageAndProficiency extends Struct.ComponentSchema {
-  collectionName: 'components_language_language_and_proficiencies';
+export interface LanguageAndProficiencyLanguageProficiency
+  extends Struct.ComponentSchema {
+  collectionName: 'components_language_and_proficiency_language_proficiencies';
   info: {
-    displayName: 'Language & Proficiency';
+    displayName: 'Language_Proficiency';
   };
   attributes: {
     language: Schema.Attribute.String;
@@ -546,17 +556,58 @@ export interface LanguageLanguageAndProficiency extends Struct.ComponentSchema {
   };
 }
 
+export interface LanguageLanguageAndProficiency extends Struct.ComponentSchema {
+  collectionName: 'components_language_language_and_proficiencies';
+  info: {
+    displayName: 'Language & Proficiency';
+  };
+  attributes: {};
+}
+
 export interface ParentGuardianSpouseDetailsParentGuardianSpouseDetails
   extends Struct.ComponentSchema {
   collectionName: 'components_parent_guardian_spouse_details_parent_guardian_spouse_details';
   info: {
     displayName: ' Parent/Guardian/Spouse Details';
   };
+  attributes: {};
+}
+
+export interface ParentGuardianSpouseParentGuardianSpouseDetails
+  extends Struct.ComponentSchema {
+  collectionName: 'components_parent_guardian_spouse_parent_guardian_spouse_details';
+  info: {
+    displayName: 'Parent_Guardian_Spouse_Details';
+  };
   attributes: {
-    contact_no: Schema.Attribute.String;
+    address: Schema.Attribute.Blocks;
+    admission: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::admission.admission'
+    >;
+    city: Schema.Attribute.String;
+    district: Schema.Attribute.String;
     email: Schema.Attribute.Email;
-    name: Schema.Attribute.String;
+    first_name: Schema.Attribute.String;
+    last_name: Schema.Attribute.String;
+    mobile_no: Schema.Attribute.BigInteger;
+    nationality: Schema.Attribute.String;
+    pincode: Schema.Attribute.String;
     profession: Schema.Attribute.String;
+    state: Schema.Attribute.Relation<'oneToMany', 'api::state.state'>;
+    title: Schema.Attribute.Enumeration<['Mr.', 'Ms.']>;
+  };
+}
+
+export interface PostGraduatePostGraduate extends Struct.ComponentSchema {
+  collectionName: 'components_post_graduate_post_graduates';
+  info: {
+    displayName: 'Post_Graduate';
+  };
+  attributes: {
+    degree: Schema.Attribute.String;
+    marksheet: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    pg_status: Schema.Attribute.Enumeration<['Finished', 'In-Progress']>;
   };
 }
 
@@ -568,6 +619,48 @@ export interface SeoHome extends Struct.ComponentSchema {
   attributes: {
     description: Schema.Attribute.Text;
     title: Schema.Attribute.String;
+  };
+}
+
+export interface UnderGraduateUnderGraduate extends Struct.ComponentSchema {
+  collectionName: 'components_under_graduate_under_graduates';
+  info: {
+    displayName: 'Under_Graduate';
+  };
+  attributes: {
+    degree: Schema.Attribute.String;
+    marksheet: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    ug_status: Schema.Attribute.Enumeration<['Finished', 'In-Progress']>;
+  };
+}
+
+export interface UploadYourPortfolioUploadYourPortfolio
+  extends Struct.ComponentSchema {
+  collectionName: 'components_upload_your_portfolio_upload_your_portfolios';
+  info: {
+    displayName: 'Upload_Your_Portfolio';
+  };
+  attributes: {
+    images: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+  };
+}
+
+export interface WorkExperienceWorkExperience extends Struct.ComponentSchema {
+  collectionName: 'components_work_experience_work_experiences';
+  info: {
+    displayName: 'Work_Experience';
+  };
+  attributes: {
+    designation: Schema.Attribute.String;
+    duration_end: Schema.Attribute.Date;
+    duration_start: Schema.Attribute.Date;
+    employer: Schema.Attribute.String;
+    reference_letter: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
   };
 }
 
@@ -596,6 +689,7 @@ declare module '@strapi/strapi' {
       'course.other-info': CourseOtherInfo;
       'course.qa': CourseQa;
       'course.student-review': CourseStudentReview;
+      'education-details.education-details': EducationDetailsEducationDetails;
       'faculty.faculty': FacultyFaculty;
       'faculty.filmmaking': FacultyFilmmaking;
       'faculty.photography': FacultyPhotography;
@@ -613,9 +707,15 @@ declare module '@strapi/strapi' {
       'home.slider': HomeSlider;
       'home.sponsor': HomeSponsor;
       'home.testimonial': HomeTestimonial;
+      'language-and-proficiency.language-proficiency': LanguageAndProficiencyLanguageProficiency;
       'language.language-and-proficiency': LanguageLanguageAndProficiency;
       'parent-guardian-spouse-details.parent-guardian-spouse-details': ParentGuardianSpouseDetailsParentGuardianSpouseDetails;
+      'parent-guardian-spouse.parent-guardian-spouse-details': ParentGuardianSpouseParentGuardianSpouseDetails;
+      'post-graduate.post-graduate': PostGraduatePostGraduate;
       'seo.home': SeoHome;
+      'under-graduate.under-graduate': UnderGraduateUnderGraduate;
+      'upload-your-portfolio.upload-your-portfolio': UploadYourPortfolioUploadYourPortfolio;
+      'work-experience.work-experience': WorkExperienceWorkExperience;
     }
   }
 }
