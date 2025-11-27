@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-11-24T07:05:09.815Z"
+    "x-generation-date": "2025-11-27T09:01:08.277Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -8844,6 +8844,9 @@
           "Heading": {
             "type": "string"
           },
+          "SubHeading": {
+            "type": "string"
+          },
           "Btn_txt": {
             "type": "string"
           },
@@ -10087,6 +10090,9 @@
           "Heading": {
             "type": "string"
           },
+          "SubHeading": {
+            "type": "string"
+          },
           "Description": {
             "type": "string"
           },
@@ -10131,6 +10137,9 @@
             "type": "string"
           },
           "Heading": {
+            "type": "string"
+          },
+          "SubHeading": {
             "type": "string"
           },
           "Description": {
@@ -10388,6 +10397,38 @@
           "data": {
             "type": "object",
             "properties": {
+              "Faculty": {
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/FacultyFacultyComponent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AboutFounderComponent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FacultyPhotographyComponent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FacultyFilmmakingComponent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FacultyVisitingComponent"
+                    }
+                  ]
+                },
+                "discriminator": {
+                  "propertyName": "__component",
+                  "mapping": {
+                    "faculty.faculty": "#/components/schemas/FacultyFacultyComponent",
+                    "about.founder": "#/components/schemas/AboutFounderComponent",
+                    "faculty.photography": "#/components/schemas/FacultyPhotographyComponent",
+                    "faculty.filmmaking": "#/components/schemas/FacultyFilmmakingComponent",
+                    "faculty.visiting": "#/components/schemas/FacultyVisitingComponent"
+                  }
+                }
+              },
               "locale": {
                 "type": "string"
               },
@@ -10453,6 +10494,38 @@
           "documentId": {
             "type": "string"
           },
+          "Faculty": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/FacultyFacultyComponent"
+                },
+                {
+                  "$ref": "#/components/schemas/AboutFounderComponent"
+                },
+                {
+                  "$ref": "#/components/schemas/FacultyPhotographyComponent"
+                },
+                {
+                  "$ref": "#/components/schemas/FacultyFilmmakingComponent"
+                },
+                {
+                  "$ref": "#/components/schemas/FacultyVisitingComponent"
+                }
+              ]
+            },
+            "discriminator": {
+              "propertyName": "__component",
+              "mapping": {
+                "faculty.faculty": "#/components/schemas/FacultyFacultyComponent",
+                "about.founder": "#/components/schemas/AboutFounderComponent",
+                "faculty.photography": "#/components/schemas/FacultyPhotographyComponent",
+                "faculty.filmmaking": "#/components/schemas/FacultyFilmmakingComponent",
+                "faculty.visiting": "#/components/schemas/FacultyVisitingComponent"
+              }
+            }
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -10473,258 +10546,6 @@
               },
               "documentId": {
                 "type": "string"
-              },
-              "firstname": {
-                "type": "string"
-              },
-              "lastname": {
-                "type": "string"
-              },
-              "username": {
-                "type": "string"
-              },
-              "email": {
-                "type": "string",
-                "format": "email"
-              },
-              "resetPasswordToken": {
-                "type": "string"
-              },
-              "registrationToken": {
-                "type": "string"
-              },
-              "isActive": {
-                "type": "boolean"
-              },
-              "roles": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "number"
-                    },
-                    "documentId": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "code": {
-                      "type": "string"
-                    },
-                    "description": {
-                      "type": "string"
-                    },
-                    "users": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number"
-                          },
-                          "documentId": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    },
-                    "permissions": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number"
-                          },
-                          "documentId": {
-                            "type": "string"
-                          },
-                          "action": {
-                            "type": "string"
-                          },
-                          "actionParameters": {},
-                          "subject": {
-                            "type": "string"
-                          },
-                          "properties": {},
-                          "conditions": {},
-                          "role": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "number"
-                              },
-                              "documentId": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "createdAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "updatedAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "publishedAt": {
-                            "type": "string",
-                            "format": "date-time"
-                          },
-                          "createdBy": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "number"
-                              },
-                              "documentId": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "updatedBy": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "number"
-                              },
-                              "documentId": {
-                                "type": "string"
-                              }
-                            }
-                          },
-                          "locale": {
-                            "type": "string"
-                          },
-                          "localizations": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "id": {
-                                  "type": "number"
-                                },
-                                "documentId": {
-                                  "type": "string"
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "createdAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "updatedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "publishedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "createdBy": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "number"
-                        },
-                        "documentId": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "updatedBy": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "number"
-                        },
-                        "documentId": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "locale": {
-                      "type": "string"
-                    },
-                    "localizations": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "number"
-                          },
-                          "documentId": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              },
-              "blocked": {
-                "type": "boolean"
-              },
-              "preferedLanguage": {
-                "type": "string"
-              },
-              "createdAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "updatedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "publishedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "createdBy": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "number"
-                  },
-                  "documentId": {
-                    "type": "string"
-                  }
-                }
-              },
-              "updatedBy": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "number"
-                  },
-                  "documentId": {
-                    "type": "string"
-                  }
-                }
-              },
-              "locale": {
-                "type": "string"
-              },
-              "localizations": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "number"
-                    },
-                    "documentId": {
-                      "type": "string"
-                    }
-                  }
-                }
               }
             }
           },
@@ -10752,6 +10573,38 @@
                 },
                 "documentId": {
                   "type": "string"
+                },
+                "Faculty": {
+                  "type": "array",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "$ref": "#/components/schemas/FacultyFacultyComponent"
+                      },
+                      {
+                        "$ref": "#/components/schemas/AboutFounderComponent"
+                      },
+                      {
+                        "$ref": "#/components/schemas/FacultyPhotographyComponent"
+                      },
+                      {
+                        "$ref": "#/components/schemas/FacultyFilmmakingComponent"
+                      },
+                      {
+                        "$ref": "#/components/schemas/FacultyVisitingComponent"
+                      }
+                    ]
+                  },
+                  "discriminator": {
+                    "propertyName": "__component",
+                    "mapping": {
+                      "faculty.faculty": "#/components/schemas/FacultyFacultyComponent",
+                      "about.founder": "#/components/schemas/AboutFounderComponent",
+                      "faculty.photography": "#/components/schemas/FacultyPhotographyComponent",
+                      "faculty.filmmaking": "#/components/schemas/FacultyFilmmakingComponent",
+                      "faculty.visiting": "#/components/schemas/FacultyVisitingComponent"
+                    }
+                  }
                 },
                 "createdAt": {
                   "type": "string",
@@ -10817,6 +10670,252 @@
           },
           "meta": {
             "type": "object"
+          }
+        }
+      },
+      "FacultyFacultyComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "__component": {
+            "type": "string",
+            "enum": [
+              "faculty.faculty"
+            ]
+          },
+          "Title": {
+            "type": "string"
+          },
+          "Heading": {
+            "type": "string"
+          },
+          "SubHeading": {
+            "type": "string"
+          },
+          "Description": {
+            "type": "string"
+          },
+          "Image": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "number"
+                },
+                "documentId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "alternativeText": {
+                  "type": "string"
+                },
+                "caption": {
+                  "type": "string"
+                },
+                "width": {
+                  "type": "integer"
+                },
+                "height": {
+                  "type": "integer"
+                },
+                "formats": {},
+                "hash": {
+                  "type": "string"
+                },
+                "ext": {
+                  "type": "string"
+                },
+                "mime": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "previewUrl": {
+                  "type": "string"
+                },
+                "provider": {
+                  "type": "string"
+                },
+                "provider_metadata": {},
+                "related": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "documentId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "folder": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "folderPath": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "createdBy": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "updatedBy": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "number"
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "locale": {
+                  "type": "string"
+                },
+                "localizations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "documentId": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "FacultyPhotographyComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "__component": {
+            "type": "string",
+            "enum": [
+              "faculty.photography"
+            ]
+          },
+          "Title": {
+            "type": "string"
+          },
+          "Heading": {
+            "type": "string"
+          },
+          "SubHeading": {
+            "type": "string"
+          },
+          "Description": {
+            "type": "string"
+          },
+          "Card": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampusCardComponent"
+            }
+          }
+        }
+      },
+      "FacultyFilmmakingComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "__component": {
+            "type": "string",
+            "enum": [
+              "faculty.filmmaking"
+            ]
+          },
+          "Title": {
+            "type": "string"
+          },
+          "Description": {},
+          "Card": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampusCardComponent"
+            }
+          }
+        }
+      },
+      "FacultyVisitingComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "__component": {
+            "type": "string",
+            "enum": [
+              "faculty.visiting"
+            ]
+          },
+          "Title": {
+            "type": "string"
+          },
+          "Heading": {
+            "type": "string"
+          },
+          "SubHeading": {
+            "type": "string"
+          },
+          "Description": {
+            "type": "string"
+          },
+          "Card": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CampusCardComponent"
+            }
           }
         }
       },
@@ -13400,6 +13499,9 @@
           "Heading": {
             "type": "string"
           },
+          "SubHeading": {
+            "type": "string"
+          },
           "Description": {
             "type": "string"
           },
@@ -13555,6 +13657,9 @@
           "Heading": {
             "type": "string"
           },
+          "SubHeading": {
+            "type": "string"
+          },
           "Description": {
             "type": "string"
           },
@@ -13587,6 +13692,9 @@
           "Description": {
             "type": "string"
           },
+          "SubHeading": {
+            "type": "string"
+          },
           "Btn_txt": {
             "type": "string"
           },
@@ -13617,6 +13725,12 @@
             "type": "string"
           },
           "Btn_txt": {
+            "type": "string"
+          },
+          "SubHeading": {
+            "type": "string"
+          },
+          "Description": {
             "type": "string"
           },
           "Bg_img": {
@@ -13911,6 +14025,9 @@
                 }
               }
             }
+          },
+          "SubHeading": {
+            "type": "string"
           }
         }
       },
