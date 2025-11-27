@@ -467,6 +467,20 @@ export interface HomeTestimonial extends Struct.ComponentSchema {
   };
 }
 
+export interface LanguageProficiencyLanguageProficiency
+  extends Struct.ComponentSchema {
+  collectionName: 'components_language_proficiency_language_proficiencies';
+  info: {
+    displayName: 'Language_Proficiency';
+  };
+  attributes: {
+    language: Schema.Attribute.String;
+    read: Schema.Attribute.Boolean;
+    speak: Schema.Attribute.Boolean;
+    write: Schema.Attribute.Boolean;
+  };
+}
+
 export interface LanguageLanguageAndProficiency extends Struct.ComponentSchema {
   collectionName: 'components_language_language_and_proficiencies';
   info: {
@@ -543,6 +557,7 @@ declare module '@strapi/strapi' {
       'home.slider': HomeSlider;
       'home.sponsor': HomeSponsor;
       'home.testimonial': HomeTestimonial;
+      'language-proficiency.language-proficiency': LanguageProficiencyLanguageProficiency;
       'language.language-and-proficiency': LanguageLanguageAndProficiency;
       'parent-guardian-spouse-details.parent-guardian-spouse-details': ParentGuardianSpouseDetailsParentGuardianSpouseDetails;
       'seo.home': SeoHome;

@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_language_proficiency_language_proficiencies",
+  "info": {
+    "displayName": "Language_Proficiency"
+  },
+  "options": {},
+  "attributes": {
+    "language": {
+      "type": "string",
+      "required": false
+    },
+    "read": {
+      "type": "boolean"
+    },
+    "write": {
+      "type": "boolean"
+    },
+    "speak": {
+      "type": "boolean"
+    }
+  },
+  "config": {}
+}

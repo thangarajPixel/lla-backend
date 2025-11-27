@@ -1,3 +1,8 @@
 module.exports = {
-  // Example plugin configuration
-}
+  'export-import-kkm': {
+    enabled: true,
+    config: {
+      showDateFilter: false,
+    },
+  },
+};

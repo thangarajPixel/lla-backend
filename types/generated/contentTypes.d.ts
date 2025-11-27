@@ -468,29 +468,30 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    address: Schema.Attribute.DynamicZone<['address.address']>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    date_of_birth: Schema.Attribute.Date;
-    email: Schema.Attribute.Email;
-    first_name: Schema.Attribute.String;
-    Language_Proficiency: Schema.Attribute.DynamicZone<
-      ['language.language-and-proficiency']
+    date_of_birth: Schema.Attribute.Date & Schema.Attribute.Required;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    first_name: Schema.Attribute.String & Schema.Attribute.Required;
+    Language_Proficiency: Schema.Attribute.Component<
+      'language-proficiency.language-proficiency',
+      false
     >;
-    last_name: Schema.Attribute.String;
+    last_name: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::admission.admission'
     > &
       Schema.Attribute.Private;
-    mobile_no: Schema.Attribute.String;
-    nationality: Schema.Attribute.String;
-    Parent_Guardian_Spouse_Details: Schema.Attribute.Component<
-      'parent-guardian-spouse-details.parent-guardian-spouse-details',
-      false
-    >;
+    mobile_number: Schema.Attribute.BigInteger & Schema.Attribute.Required;
+    name_title: Schema.Attribute.Enumeration<['Mr.', 'Ms.']>;
+    nationality: Schema.Attribute.String & Schema.Attribute.Required;
+    passport_size_image: Schema.Attribute.Media<'images' | 'files'> &
+      Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

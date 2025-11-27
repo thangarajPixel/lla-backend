@@ -11,39 +11,50 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "name_title": {
+      "type": "enumeration",
+      "enum": [
+        "Mr.",
+        "Ms."
+      ]
+    },
     "first_name": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "last_name": {
-      "type": "string"
-    },
-    "mobile_no": {
-      "type": "string"
-    },
-    "email": {
-      "type": "email"
-    },
-    "nationality": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "date_of_birth": {
-      "type": "date"
+      "type": "date",
+      "required": true
+    },
+    "nationality": {
+      "type": "string",
+      "required": true
+    },
+    "mobile_number": {
+      "type": "biginteger",
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": true
+    },
+    "passport_size_image": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
     },
     "Language_Proficiency": {
-      "type": "dynamiczone",
-      "components": [
-        "language.language-and-proficiency"
-      ]
-    },
-    "address": {
-      "type": "dynamiczone",
-      "components": [
-        "address.address"
-      ]
-    },
-    "Parent_Guardian_Spouse_Details": {
       "type": "component",
-      "component": "parent-guardian-spouse-details.parent-guardian-spouse-details",
+      "component": "language-proficiency.language-proficiency",
       "repeatable": false
     }
   }
