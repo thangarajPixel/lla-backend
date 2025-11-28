@@ -119,53 +119,44 @@ export default factories.createCoreController(
       }
     },
 
-    async findCards(ctx) {
-      try {
-        const { query } = ctx;
-        const page = parseInt(String(query.page)) || 1;
-        const pageSize = parseInt(String(query.pageSize)) || 4;
+    // async findCards(ctx) {
+    //   try {
+    //     const entity = await strapi.db.query("api::home.home").findOne({
+    //       populate: {
+    //         Home: {
+    //           on: {
+    //             "home.course": {
+    //               populate: {
+    //                 Card: {
+    //                   populate: {
+    //                     Image: {
+    //                       select: ["id", "name", "url"],
+    //                     },
+    //                   },
+    //                 },
+    //               },
+    //             },
+    //           },
+    //         },
+    //       },
+    //     });
 
-        const entity = await strapi.db.query("api::home.home").findOne({
-          populate: {
-            Home: {
-              on: {
-                 "home.course": {
-                  populate: {
-                    Card: {
-                      populate: {
-                        Image: {
-                          select: ["id", "name", "url"],
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        });
+    //     if (!entity) return ctx.notFound("Home content not found");
 
-        if (!entity) return ctx.notFound("Home content not found");
+    //     // Find the "course" component
+    //     const course = entity.Home.find((c) => c.__component === "home.course");
 
-        const course = entity.Home.find((c) => c.__component === "home.course");
-        if (course && course.Card) {
-          const allCards = course.Card;
-          const paginatedCards = allCards.slice(
-            (page - 1) * pageSize,
-            page * pageSize
-          );
+    //     if (course && course.Card) {
+    //       return ctx.send({
+    //         data: course.Card,
+    //       });
+    //     }
 
-          return ctx.send({
-            data: paginatedCards,
-            pagination: { total: allCards.length, page, pageSize },
-          });
-        }
-
-        return ctx.send({ data: [], pagination: { total: 0, page, pageSize } });
-      } catch (error) {
-        console.error("Find Cards error:", error);
-        return ctx.internalServerError("Failed to load paginated cards");
-      }
-    },
+    //     return ctx.send({ data: [] });
+    //   } catch (error) {
+    //     console.error("Find Cards error:", error);
+    //     return ctx.internalServerError("Failed to load cards");
+    //   }
+    // },
   })
 );
