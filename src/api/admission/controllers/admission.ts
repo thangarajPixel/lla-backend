@@ -37,74 +37,75 @@ export default factories.createCoreController('api::admission.admission', ({ str
   async findOne(ctx) {
     const { id } = ctx.params;
 
-    // Override query populate to include all relations
-    ctx.query = {
-      ...ctx.query,
-      populate: {
-        passport_size_image: true,
-        state: true,
-        Language_Proficiency: true,
-        Parent_Guardian_Spouse_Details: {
-          populate: {
-            state: true,
-          },
+    const populateConfig = {
+      passport_size_image: true,
+      state: true,
+      Language_Proficiency: true,
+      Parent_Guardian_Spouse_Details: {
+        populate: {
+          state: true,
         },
-        Education_Details: {
-          populate: {
-            Education_Details_12th_std: true,
-            Education_Details_10th_std: true,
-          },
+      },
+      Education_Details: {
+        populate: {
+          Education_Details_12th_std: true,
+          Education_Details_10th_std: true,
         },
-        Under_Graduate: {
-          populate: {
-            marksheet: true,
-          },
+      },
+      Under_Graduate: {
+        populate: {
+          marksheet: true,
         },
-        Post_Graduate: {
-          populate: {
-            marksheet: true,
-          },
+      },
+      Post_Graduate: {
+        populate: {
+          marksheet: true,
         },
-        Work_Experience: {
-          populate: {
-            reference_letter: true,
-          },
+      },
+      Work_Experience: {
+        populate: {
+          reference_letter: true,
         },
-        Upload_Your_Portfolio: {
-          populate: {
-            images: true,
-          },
+      },
+      Upload_Your_Portfolio: {
+        populate: {
+          images: true,
         },
-        localizations: true,
       },
     };
 
+    let admission;
+
     // Check if id is numeric (for swagger compatibility)
     if (/^\d+$/.test(id)) {
-      // Find by numeric id and get documentId
-      const entity = await strapi.entityService.findMany('api::admission.admission', {
+      // Find by numeric id with full population
+      const entities = await strapi.entityService.findMany('api::admission.admission', {
         filters: { id: parseInt(id) },
-        populate: ctx.query.populate,
+        populate: populateConfig,
       });
 
-      if (!entity || entity.length === 0) {
+      if (!entities || entities.length === 0) {
         return ctx.notFound('Admission not found');
       }
 
-      // Use the documentId for the actual lookup
-      ctx.params.id = entity[0].documentId;
-    }
+      admission = entities[0];
+    } else {
+      // Find by documentId with full population
+      admission = await strapi.entityService.findOne('api::admission.admission', id, {
+        populate: populateConfig,
+      });
 
-    // Call the default findOne method with populated query
-    const response = await super.findOne(ctx);
+      if (!admission) {
+        return ctx.notFound('Admission not found');
+      }
+    }
 
     // Add base URL to all media fields
     const baseUrl = process.env.ADMIN_BASE_URL || `${ctx.request.protocol}://${ctx.request.host}`;
-    if (response && response.data) {
-      response.data = addBaseUrlToMedia(response.data, baseUrl);
-    }
+    const transformedData = addBaseUrlToMedia(admission, baseUrl);
 
-    return response;
+    // Return formatted response
+    return { data: transformedData };
   },
 
   async generatePdf(ctx) {
