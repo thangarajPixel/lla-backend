@@ -10,5 +10,15 @@ export default {
         middlewares: [],
       },
     },
+    {
+      method: 'GET',
+      path: '/admissions/export',
+      handler: 'api::admission.admission.exportAll',
+      config: {
+        auth: false, // Disable authentication for this route
+        policies: [],
+        middlewares: [],
+      },
+    },
   ],
 };

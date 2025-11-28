@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Button, Dialog } from '@strapi/design-system';
 import { SingleSelect, SingleSelectOption } from '@strapi/design-system';
-import { Eye, Duplicate, Download } from '@strapi/icons';
+import { Eye, Download } from '@strapi/icons';
 
 export default {
   bootstrap(app: any) {
@@ -24,6 +24,20 @@ export default {
         if (!location.pathname.includes('api::admission.admission')) {
           return null;
         }
+
+        // Simple encryption function for security
+        const encryptId = (id: string): string => {
+          // Base64 encode with some obfuscation
+          const encoded = btoa(id + '_lla_' + Date.now().toString().slice(-4));
+          return encoded.replace(/[+/=]/g, (match) => {
+            switch (match) {
+              case '+': return '-';
+              case '/': return '_';
+              case '=': return '';
+              default: return match;
+            }
+          });
+        };
 
         // Add click handler and styling for first_name column
         React.useEffect(() => {
@@ -95,7 +109,7 @@ export default {
                 console.log('DocumentId found:', documentId);
 
                 // Try to find numeric ID instead of documentId
-                let recordId = null;
+                let recordId: string | null = null;
 
                 // Method 1: Get ID from the ID column (2nd column, index 1)
                 const allCells = Array.from(row.querySelectorAll('td'));
@@ -132,9 +146,9 @@ export default {
                 }
 
                 // Check all columns for DocumentId or ID using existing allCells
-                let finalId = null;
 
                 // Check each cell for DocumentId (long alphanumeric) or ID (numeric)
+                let finalId: string | null = null;
                 allCells.forEach((cell, index) => {
                   const cellText = cell.textContent?.trim();
                   if (cellText) {
@@ -155,8 +169,9 @@ export default {
 
                 if (finalId) {
                   const baseUrl = process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in';
-                  const url = `${baseUrl}/admission/${finalId}`;
-                  console.log('Opening URL with ID:', url);
+                  const encryptedId = encryptId(finalId);
+                  const url = `${baseUrl}/admission/${encryptedId}`;
+                  console.log('Opening URL with encrypted ID:', url);
 
                   setTimeout(() => {
                     window.open(url, '_blank');
@@ -191,7 +206,8 @@ export default {
                   if (checkbox && checkbox.value) {
                     const documentId = checkbox.value;
                     const baseUrl = process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in';
-                    const url = `${baseUrl}/${documentId}`;
+                    const encryptedId = encryptId(documentId);
+                    const url = `${baseUrl}/admission/${encryptedId}`;
                     console.log('Direct click handler - Opening URL:', url);
                     window.open(url, '_blank');
                   }
@@ -228,11 +244,12 @@ export default {
                 if (cell.querySelector('.pdf-download-btn')) return;
 
                 const row = cell.closest('tr');
+                if (!row) return;
                 const allCells = Array.from(row.querySelectorAll('td'));
 
                 // Get ID from row
-                let rowId = null;
-                allCells.forEach((c, index) => {
+                let rowId: string | null = null;
+                allCells.forEach((c) => {
                   const cellText = c.textContent?.trim();
                   if (cellText && /^\d+$/.test(cellText) && cellText !== '0' && cellText !== '1') {
                     rowId = cellText;
@@ -305,6 +322,11 @@ export default {
 
         const handleView = () => window.open(process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in/', '_blank');
         const handleDownload = () => window.open(`${process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in'}/uploads/sample.pdf`, '_blank');
+        const handleExportAll = () => {
+          const adminBaseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
+          const exportUrl = `${adminBaseUrl}/api/admissions/export`;
+          window.open(exportUrl, '_blank');
+        };
         const handleSubmit = () => {
           alert(`Form Submitted!\nStep: ${stepValue}\nYear: ${yearValue}`);
           setIsOpen(false);
@@ -323,12 +345,15 @@ export default {
               <Button startIcon={<Eye />} variant="secondary" onClick={handleView}>
                 View
               </Button>
-              <Button startIcon={<Duplicate />} variant="secondary" onClick={() => setIsOpen(true)}>
+              {/* <Button startIcon={<Download />} variant="secondary" onClick={handleExportAll}>
+                Export All
+              </Button> */}
+              {/* <Button startIcon={<Duplicate />} variant="secondary" onClick={() => setIsOpen(true)}>
                 Popup
               </Button>
               <Button startIcon={<Download />} variant="secondary" onClick={handleDownload}>
                 Download
-              </Button>
+              </Button> */}
 
               {/* Step Dropdown */}
               <div style={{ width: 150 }}>

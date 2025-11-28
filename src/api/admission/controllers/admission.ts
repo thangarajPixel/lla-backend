@@ -144,5 +144,78 @@ export default factories.createCoreController('api::admission.admission', ({ str
       console.error('Error generating PDF:', error);
       ctx.throw(500, 'Error generating PDF: ' + error.message);
     }
+  },
+
+  async exportAll(ctx) {
+    try {
+      // Get all admissions without any date filters
+      const admissions = await strapi.entityService.findMany('api::admission.admission', {
+        populate: '*',
+        pagination: {
+          start: 0,
+          limit: -1, // Get all records
+        },
+      });
+
+      if (!admissions || admissions.length === 0) {
+        return ctx.notFound('No admissions found');
+      }
+
+      // Convert to CSV format
+      const csvHeaders = [
+        'ID',
+        'Name Title',
+        'First Name',
+        'Last Name',
+        'Email',
+        'Date of Birth',
+        'Nationality',
+        'Mobile No',
+        'City',
+        'District',
+        'Pincode',
+        'Step 1',
+        'Step 2',
+        'Step 3',
+        'Created At',
+        'Updated At'
+      ];
+
+      const csvRows = admissions.map(admission => [
+        admission.id,
+        admission.name_title || '',
+        admission.first_name || '',
+        admission.last_name || '',
+        admission.email || '',
+        admission.date_of_birth || '',
+        admission.nationality || '',
+        admission.mobile_no || '',
+        admission.city || '',
+        admission.district || '',
+        admission.pincode || '',
+        admission.step_1 ? 'Yes' : 'No',
+        admission.step_2 ? 'Yes' : 'No',
+        admission.step_3 ? 'Yes' : 'No',
+        admission.createdAt || '',
+        admission.updatedAt || ''
+      ]);
+
+      // Create CSV content
+      const csvContent = [
+        csvHeaders.join(','),
+        ...csvRows.map(row => row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(','))
+      ].join('\n');
+
+      // Set response headers for CSV download
+      ctx.set('Content-Type', 'text/csv');
+      ctx.set('Content-Disposition', `attachment; filename="admissions-export-${new Date().toISOString().split('T')[0]}.csv"`);
+
+      // Return CSV content
+      ctx.body = csvContent;
+
+    } catch (error) {
+      console.error('Error exporting admissions:', error);
+      ctx.throw(500, 'Error exporting admissions: ' + error.message);
+    }
   }
 }));

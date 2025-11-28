@@ -1,6 +1,6 @@
 module.exports = {
   documentation: {
-    enabled: false,
+    enabled: true,
     config: {
       info: {
         title: "API Documentation",
@@ -18,4 +18,15 @@ module.exports = {
       ]
     },
   },
+  "strapi-csv-import-export": {
+
+          config: {
+
+            authorizedExports: ["api::admission.admission"],
+
+            authorizedImports: ["api::admission.admission"]
+
+  }
+
+}
 };
