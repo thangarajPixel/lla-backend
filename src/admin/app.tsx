@@ -263,7 +263,7 @@ export default {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;">
                       <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
                     </svg>
-                    PDF
+                    
                   `; // SVG download icon with text
                   pdfBtn.style.cssText = `
                     margin-top:7px;
