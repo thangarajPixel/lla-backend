@@ -154,7 +154,8 @@ export default {
                 console.log('Final ID to use:', finalId);
 
                 if (finalId) {
-                  const url = `https://dev.lightandlifeacademy.in/${finalId}`;
+                  const baseUrl = process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in';
+                  const url = `${baseUrl}/${finalId}`;
                   console.log('Opening URL with ID:', url);
 
                   setTimeout(() => {
@@ -189,7 +190,8 @@ export default {
 
                   if (checkbox && checkbox.value) {
                     const documentId = checkbox.value;
-                    const url = `https://dev.lightandlifeacademy.in/${documentId}`;
+                    const baseUrl = process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in';
+                    const url = `${baseUrl}/${documentId}`;
                     console.log('Direct click handler - Opening URL:', url);
                     window.open(url, '_blank');
                   }
@@ -274,7 +276,8 @@ export default {
                     console.log('Opening PDF in new tab for ID:', rowId);
 
                     // Open PDF in new tab
-                    const pdfUrl = `http://localhost:8000/api/admissions/${rowId}/pdf`;
+                    const adminBaseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
+                    const pdfUrl = `${adminBaseUrl}/api/admissions/${rowId}/pdf`;
                     window.open(pdfUrl, '_blank');
                   };
 
@@ -291,8 +294,8 @@ export default {
           return () => clearTimeout(timer);
         }, []);
 
-        const handleView = () => window.open('https://dev.lightandlifeacademy.in/', '_blank');
-        const handleDownload = () => window.open('http://localhost:8000/uploads/sample.pdf', '_blank');
+        const handleView = () => window.open(process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in/', '_blank');
+        const handleDownload = () => window.open(`${process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in'}/uploads/sample.pdf`, '_blank');
         const handleSubmit = () => {
           alert(`Form Submitted!\nStep: ${stepValue}\nYear: ${yearValue}`);
           setIsOpen(false);
