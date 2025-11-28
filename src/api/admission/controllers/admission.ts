@@ -62,9 +62,9 @@ export default factories.createCoreController('api::admission.admission', ({ str
         // Generate PDF buffer
         const pdfBuffer = await pdfGenerator.generateAdmissionPDF(formattedData);
 
-        // Set response headers for PDF
+        // Set response headers for PDF download
         ctx.set('Content-Type', 'application/pdf');
-        ctx.set('Content-Disposition', `inline; filename="admission-${admission.id}.pdf"`);
+        ctx.set('Content-Disposition', `attachment; filename="admission-${admission.id}.pdf"`);
 
         // Return PDF buffer
         ctx.body = pdfBuffer;

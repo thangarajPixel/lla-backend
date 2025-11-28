@@ -299,12 +299,20 @@ export default {
                     e.preventDefault();
                     e.stopPropagation();
 
-                    console.log('Opening PDF in new tab for ID:', rowId);
+                    console.log('Downloading PDF for ID:', rowId);
 
-                    // Open PDF in new tab
-                    const adminBaseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
+                    // Download PDF using anchor element
+                    const adminBaseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
                     const pdfUrl = `${adminBaseUrl}/api/admissions/${rowId}/pdf`;
-                    window.open(pdfUrl, '_blank');
+                    
+                    // Create temporary anchor element for download
+                    const link = document.createElement('a');
+                    link.href = pdfUrl;
+                    link.download = `admission-${rowId}.pdf`;
+                    link.target = '_blank';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                   };
 
                   cell.appendChild(pdfBtn);
