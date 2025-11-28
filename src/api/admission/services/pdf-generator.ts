@@ -445,10 +445,17 @@ class PDFGenerator {
 
       const page = await browser.newPage();
       
-      // Set content and wait for load
+      // Set longer timeout and handle image loading errors
+      await page.setDefaultNavigationTimeout(60000);
+      
+      // Set content with timeout handling
       await page.setContent(html, { 
-        waitUntil: 'networkidle0' 
+        waitUntil: 'domcontentloaded',
+        timeout: 30000
       });
+
+      // Wait a bit for any images to load (but don't fail if they don't)
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       console.log('Generating PDF...');
 
@@ -461,7 +468,8 @@ class PDFGenerator {
           right: '20px',
           bottom: '20px',
           left: '20px'
-        }
+        },
+        preferCSSPageSize: false,
       });
 
       await browser.close();

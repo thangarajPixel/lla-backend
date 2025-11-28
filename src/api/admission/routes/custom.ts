@@ -3,9 +3,9 @@ export default {
     {
       method: 'GET',
       path: '/admissions/:id/pdf',
-      handler: 'api::admission.admission.generatePdf',
+      handler: 'admission.generatePdf',
       config: {
-        auth: false, // Disable authentication for this route
+        auth: false,
         policies: [],
         middlewares: [],
       },
@@ -13,9 +13,9 @@ export default {
     {
       method: 'GET',
       path: '/admissions/export',
-      handler: 'api::admission.admission.exportAll',
+      handler: 'admission.exportAll',
       config: {
-        auth: false, // Disable authentication for this route
+        auth: false,
         policies: [],
         middlewares: [],
       },

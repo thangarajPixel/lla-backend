@@ -176,12 +176,17 @@ export default factories.createCoreController('api::admission.admission', ({ str
         // Format admission data
         const formattedData = pdfGenerator.formatAdmissionData(admission);
 
+        console.log('Generating PDF for admission:', admission.id);
+
         // Generate PDF buffer
         const pdfBuffer = await pdfGenerator.generateAdmissionPDF(formattedData);
+
+        console.log('PDF generated successfully, buffer size:', pdfBuffer.length);
 
         // Set response headers for PDF download
         ctx.set('Content-Type', 'application/pdf');
         ctx.set('Content-Disposition', `attachment; filename="admission-${admission.id}.pdf"`);
+        ctx.set('Content-Length', pdfBuffer.length.toString());
 
         // Return PDF buffer
         ctx.body = pdfBuffer;
