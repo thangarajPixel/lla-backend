@@ -1,6 +1,6 @@
 module.exports = {
   documentation: {
-    enabled: true,
+    enabled: false,
     config: {
       info: {
         title: "API Documentation",
