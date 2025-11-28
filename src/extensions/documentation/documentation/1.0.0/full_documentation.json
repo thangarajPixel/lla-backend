@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-11-28T05:23:31.631Z"
+    "x-generation-date": "2025-11-28T05:29:02.744Z"
   },
   "servers": [
     {
@@ -7621,6 +7621,13 @@
               "step_3": {
                 "type": "boolean"
               },
+              "Payment_Status": {
+                "type": "string",
+                "enum": [
+                  "Paid",
+                  "UnPaid"
+                ]
+              },
               "locale": {
                 "type": "string"
               },
@@ -8578,6 +8585,13 @@
                     "step_3": {
                       "type": "boolean"
                     },
+                    "Payment_Status": {
+                      "type": "string",
+                      "enum": [
+                        "Paid",
+                        "UnPaid"
+                      ]
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -8730,6 +8744,13 @@
           "step_3": {
             "type": "boolean"
           },
+          "Payment_Status": {
+            "type": "string",
+            "enum": [
+              "Paid",
+              "UnPaid"
+            ]
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -8847,17 +8868,6 @@
           },
           "nationality": {
             "type": "string"
-          },
-          "admission": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "number"
-              },
-              "documentId": {
-                "type": "string"
-              }
-            }
           },
           "address": {},
           "city": {
@@ -17866,6 +17876,13 @@
                 },
                 "step_3": {
                   "type": "boolean"
+                },
+                "Payment_Status": {
+                  "type": "string",
+                  "enum": [
+                    "Paid",
+                    "UnPaid"
+                  ]
                 },
                 "createdAt": {
                   "type": "string",

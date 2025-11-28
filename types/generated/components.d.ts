@@ -581,10 +581,6 @@ export interface ParentGuardianSpouseParentGuardianSpouseDetails
   };
   attributes: {
     address: Schema.Attribute.Blocks;
-    admission: Schema.Attribute.Relation<
-      'oneToOne',
-      'api::admission.admission'
-    >;
     city: Schema.Attribute.String;
     district: Schema.Attribute.String;
     email: Schema.Attribute.Email;
