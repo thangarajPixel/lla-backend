@@ -302,7 +302,7 @@ export default {
                     console.log('Downloading PDF for ID:', rowId);
 
                     // Download PDF using anchor element
-                    const adminBaseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
+                    const adminBaseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
                     const pdfUrl = `${adminBaseUrl}/api/admissions/${rowId}/pdf`;
                     
                     // Create temporary anchor element for download
