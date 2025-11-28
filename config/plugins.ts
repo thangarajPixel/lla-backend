@@ -8,7 +8,7 @@ module.exports = {
       },
       servers: [
         {
-          url: "https://dev-admin.lightandlifeacademy.in/api/",
+          url: process.env.SERVER_URL || "https://dev-admin.lightandlifeacademy.in/api/",
           description: "Live Server",
         },
         {
