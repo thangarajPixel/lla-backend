@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-11-28T07:24:53.845Z"
+    "x-generation-date": "2025-11-28T07:27:19.477Z"
   },
   "servers": [
     {
@@ -7556,7 +7556,10 @@
                 "format": "email"
               },
               "Language_Proficiency": {
-                "$ref": "#/components/schemas/LanguageAndProficiencyLanguageProficiencyComponent"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/LanguageAndProficiencyLanguageProficiencyComponent"
+                }
               },
               "address": {},
               "city": {
@@ -8329,7 +8332,10 @@
             "format": "email"
           },
           "Language_Proficiency": {
-            "$ref": "#/components/schemas/LanguageAndProficiencyLanguageProficiencyComponent"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LanguageAndProficiencyLanguageProficiencyComponent"
+            }
           },
           "address": {},
           "city": {
@@ -8520,7 +8526,10 @@
                       "format": "email"
                     },
                     "Language_Proficiency": {
-                      "$ref": "#/components/schemas/LanguageAndProficiencyLanguageProficiencyComponent"
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/LanguageAndProficiencyLanguageProficiencyComponent"
+                      }
                     },
                     "address": {},
                     "city": {
@@ -17744,7 +17753,10 @@
                   "format": "email"
                 },
                 "Language_Proficiency": {
-                  "$ref": "#/components/schemas/LanguageAndProficiencyLanguageProficiencyComponent"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/LanguageAndProficiencyLanguageProficiencyComponent"
+                  }
                 },
                 "address": {},
                 "city": {

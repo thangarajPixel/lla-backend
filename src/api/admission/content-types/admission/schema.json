@@ -53,7 +53,7 @@
     "Language_Proficiency": {
       "type": "component",
       "component": "language-and-proficiency.language-proficiency",
-      "repeatable": false
+      "repeatable": true
     },
     "address": {
       "type": "blocks"

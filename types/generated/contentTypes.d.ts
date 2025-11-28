@@ -485,7 +485,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     hobbies: Schema.Attribute.String;
     Language_Proficiency: Schema.Attribute.Component<
       'language-and-proficiency.language-proficiency',
-      false
+      true
     >;
     last_name: Schema.Attribute.String & Schema.Attribute.Required;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
