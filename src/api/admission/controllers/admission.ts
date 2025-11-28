@@ -177,11 +177,17 @@ export default factories.createCoreController('api::admission.admission', ({ str
         const formattedData = pdfGenerator.formatAdmissionData(admission);
 
         console.log('Generating PDF for admission:', admission.id);
+        console.log('Formatted data:', JSON.stringify(formattedData, null, 2));
 
         // Generate PDF buffer
         const pdfBuffer = await pdfGenerator.generateAdmissionPDF(formattedData);
 
         console.log('PDF generated successfully, buffer size:', pdfBuffer.length);
+
+        // Validate PDF buffer
+        if (!pdfBuffer || pdfBuffer.length === 0) {
+          throw new Error('PDF buffer is empty');
+        }
 
         // Set response headers for PDF download
         ctx.set('Content-Type', 'application/pdf');
@@ -192,7 +198,8 @@ export default factories.createCoreController('api::admission.admission', ({ str
         ctx.body = pdfBuffer;
 
       } catch (pdfError) {
-        console.error('PDF generation failed, falling back to HTML:', pdfError);
+        console.error('PDF generation failed:', pdfError);
+        console.error('Error stack:', pdfError.stack);
 
         // Fallback to simple HTML
         const html = `
