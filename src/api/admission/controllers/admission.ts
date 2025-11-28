@@ -4,9 +4,80 @@
 
 import { factories } from '@strapi/strapi'
 
+// Helper function to add base URL to media fields
+const addBaseUrlToMedia = (data: any, baseUrl: string): any => {
+  if (!data) return data;
+
+  // Handle single media object
+  if (data.url && typeof data.url === 'string') {
+    return {
+      ...data,
+      url: data.url.startsWith('http') ? data.url : `${baseUrl}${data.url}`,
+    };
+  }
+
+  // Handle arrays
+  if (Array.isArray(data)) {
+    return data.map(item => addBaseUrlToMedia(item, baseUrl));
+  }
+
+  // Handle objects
+  if (typeof data === 'object') {
+    const result: any = {};
+    for (const key in data) {
+      result[key] = addBaseUrlToMedia(data[key], baseUrl);
+    }
+    return result;
+  }
+
+  return data;
+};
+
 export default factories.createCoreController('api::admission.admission', ({ strapi }) => ({
   async findOne(ctx) {
     const { id } = ctx.params;
+
+    // Override query populate to include all relations
+    ctx.query = {
+      ...ctx.query,
+      populate: {
+        passport_size_image: true,
+        state: true,
+        Language_Proficiency: true,
+        Parent_Guardian_Spouse_Details: {
+          populate: {
+            state: true,
+          },
+        },
+        Education_Details: {
+          populate: {
+            Education_Details_12th_std: true,
+            Education_Details_10th_std: true,
+          },
+        },
+        Under_Graduate: {
+          populate: {
+            marksheet: true,
+          },
+        },
+        Post_Graduate: {
+          populate: {
+            marksheet: true,
+          },
+        },
+        Work_Experience: {
+          populate: {
+            reference_letter: true,
+          },
+        },
+        Upload_Your_Portfolio: {
+          populate: {
+            images: true,
+          },
+        },
+        localizations: true,
+      },
+    };
 
     // Check if id is numeric (for swagger compatibility)
     if (/^\d+$/.test(id)) {
@@ -24,27 +95,72 @@ export default factories.createCoreController('api::admission.admission', ({ str
       ctx.params.id = entity[0].documentId;
     }
 
-    // Call the default findOne method
-    return super.findOne(ctx);
+    // Call the default findOne method with populated query
+    const response = await super.findOne(ctx);
+
+    // Add base URL to all media fields
+    const baseUrl = process.env.ADMIN_BASE_URL || `${ctx.request.protocol}://${ctx.request.host}`;
+    if (response && response.data) {
+      response.data = addBaseUrlToMedia(response.data, baseUrl);
+    }
+
+    return response;
   },
 
   async generatePdf(ctx) {
     const { id } = ctx.params;
 
     try {
-      // Find admission by numeric id
+      // Find admission by numeric id with deep population
       let admission;
+      const populateConfig = {
+        populate: {
+          passport_size_image: true,
+          state: true,
+          Language_Proficiency: true,
+          Parent_Guardian_Spouse_Details: {
+            populate: {
+              state: true,
+            },
+          },
+          Education_Details: {
+            populate: {
+              Education_Details_12th_std: true,
+              Education_Details_10th_std: true,
+            },
+          },
+          Under_Graduate: {
+            populate: {
+              marksheet: true,
+            },
+          },
+          Post_Graduate: {
+            populate: {
+              marksheet: true,
+            },
+          },
+          Work_Experience: {
+            populate: {
+              reference_letter: true,
+            },
+          },
+          Upload_Your_Portfolio: {
+            populate: {
+              images: true,
+            },
+          },
+        },
+      };
+
       if (/^\d+$/.test(id)) {
         const entities = await strapi.entityService.findMany('api::admission.admission', {
           filters: { id: parseInt(id) },
-          populate: '*',
+          ...populateConfig,
         });
         admission = entities[0];
       } else {
         // Find by documentId
-        admission = await strapi.entityService.findOne('api::admission.admission', id, {
-          populate: '*',
-        });
+        admission = await strapi.entityService.findOne('api::admission.admission', id, populateConfig);
       }
 
       if (!admission) {
