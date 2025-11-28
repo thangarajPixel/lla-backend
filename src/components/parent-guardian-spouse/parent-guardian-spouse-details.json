@@ -30,11 +30,6 @@
     "nationality": {
       "type": "string"
     },
-    "admission": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::admission.admission"
-    },
     "address": {
       "type": "blocks"
     },

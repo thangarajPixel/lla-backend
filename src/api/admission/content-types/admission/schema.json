@@ -123,6 +123,13 @@
     "step_3": {
       "type": "boolean",
       "default": false
+    },
+    "Payment_Status": {
+      "type": "enumeration",
+      "enum": [
+        "Paid",
+        "UnPaid"
+      ]
     }
   }
 }
