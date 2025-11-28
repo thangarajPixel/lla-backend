@@ -8,11 +8,11 @@ module.exports = {
       },
       servers: [
         {
-          url: "https://dev-admin.lightandlifeacademy.in",
+          url: "https://dev-admin.lightandlifeacademy.in/api/",
           description: "Live Server",
         },
         {
-          url: "http://localhost:8000",
+          url: "http://localhost:8000/api/",
           description: "Local Server",
         }
       ]

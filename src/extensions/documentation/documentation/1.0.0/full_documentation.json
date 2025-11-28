@@ -13,15 +13,15 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-11-28T05:21:00.381Z"
+    "x-generation-date": "2025-11-28T05:23:31.631Z"
   },
   "servers": [
     {
-      "url": "https://dev-admin.lightandlifeacademy.in",
+      "url": "https://dev-admin.lightandlifeacademy.in/api/",
       "description": "Live Server"
     },
     {
-      "url": "http://localhost:8000",
+      "url": "http://localhost:8000/api/",
       "description": "Local Server"
     }
   ],
