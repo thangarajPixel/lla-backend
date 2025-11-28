@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-11-27T17:44:52.446Z"
+    "x-generation-date": "2025-11-28T02:53:10.155Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -7587,7 +7587,7 @@
               "Parent_Guardian_Spouse_Details": {
                 "$ref": "#/components/schemas/ParentGuardianSpouseParentGuardianSpouseDetailsComponent"
               },
-              "Step1": {
+              "step_1": {
                 "type": "boolean"
               },
               "Education_Details": {
@@ -7608,13 +7608,13 @@
                   "$ref": "#/components/schemas/WorkExperienceWorkExperienceComponent"
                 }
               },
-              "Step2": {
+              "step_2": {
                 "type": "boolean"
               },
               "Upload_Your_Portfolio": {
                 "$ref": "#/components/schemas/UploadYourPortfolioUploadYourPortfolioComponent"
               },
-              "Step3": {
+              "step_3": {
                 "type": "boolean"
               },
               "locale": {
@@ -8544,7 +8544,7 @@
                     "Parent_Guardian_Spouse_Details": {
                       "$ref": "#/components/schemas/ParentGuardianSpouseParentGuardianSpouseDetailsComponent"
                     },
-                    "Step1": {
+                    "step_1": {
                       "type": "boolean"
                     },
                     "Education_Details": {
@@ -8565,13 +8565,13 @@
                         "$ref": "#/components/schemas/WorkExperienceWorkExperienceComponent"
                       }
                     },
-                    "Step2": {
+                    "step_2": {
                       "type": "boolean"
                     },
                     "Upload_Your_Portfolio": {
                       "$ref": "#/components/schemas/UploadYourPortfolioUploadYourPortfolioComponent"
                     },
-                    "Step3": {
+                    "step_3": {
                       "type": "boolean"
                     },
                     "createdAt": {
@@ -8696,7 +8696,7 @@
           "Parent_Guardian_Spouse_Details": {
             "$ref": "#/components/schemas/ParentGuardianSpouseParentGuardianSpouseDetailsComponent"
           },
-          "Step1": {
+          "step_1": {
             "type": "boolean"
           },
           "Education_Details": {
@@ -8717,13 +8717,13 @@
               "$ref": "#/components/schemas/WorkExperienceWorkExperienceComponent"
             }
           },
-          "Step2": {
+          "step_2": {
             "type": "boolean"
           },
           "Upload_Your_Portfolio": {
             "$ref": "#/components/schemas/UploadYourPortfolioUploadYourPortfolioComponent"
           },
-          "Step3": {
+          "step_3": {
             "type": "boolean"
           },
           "createdAt": {
@@ -17833,7 +17833,7 @@
                 "Parent_Guardian_Spouse_Details": {
                   "$ref": "#/components/schemas/ParentGuardianSpouseParentGuardianSpouseDetailsComponent"
                 },
-                "Step1": {
+                "step_1": {
                   "type": "boolean"
                 },
                 "Education_Details": {
@@ -17854,13 +17854,13 @@
                     "$ref": "#/components/schemas/WorkExperienceWorkExperienceComponent"
                   }
                 },
-                "Step2": {
+                "step_2": {
                   "type": "boolean"
                 },
                 "Upload_Your_Portfolio": {
                   "$ref": "#/components/schemas/UploadYourPortfolioUploadYourPortfolioComponent"
                 },
-                "Step3": {
+                "step_3": {
                   "type": "boolean"
                 },
                 "createdAt": {

@@ -87,7 +87,7 @@
       "component": "parent-guardian-spouse.parent-guardian-spouse-details",
       "repeatable": false
     },
-    "Step1": {
+    "step_1": {
       "type": "boolean",
       "default": false
     },
@@ -111,7 +111,7 @@
       "component": "work-experience.work-experience",
       "repeatable": true
     },
-    "Step2": {
+    "step_2": {
       "type": "boolean",
       "default": false
     },
@@ -120,7 +120,7 @@
       "component": "upload-your-portfolio.upload-your-portfolio",
       "repeatable": false
     },
-    "Step3": {
+    "step_3": {
       "type": "boolean",
       "default": false
     }

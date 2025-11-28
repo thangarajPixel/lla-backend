@@ -52,7 +52,37 @@ export default {
                 <SingleSelect
                   placeholder="Choose Option"
                   value={stepValue}
-                  onChange={(value: string | number) => setStepValue(String(value))}
+                  onChange={(value: string | number) => {
+                    const step = String(value);
+                    setStepValue(step);
+
+                    // Map dropdown values to actual database columns
+                    const fieldMap: Record<string, string> = {
+                      'Step1': 'step_1',
+                      'Step2': 'step_2',
+                      'Step3': 'step_3'
+                    };
+
+                    const field = fieldMap[step];
+                    if (field) {
+                      // Apply filter to admission table
+                      const currentUrl = new URL(window.location.href);
+
+                      // Remove all existing step filters first
+                      const keysToDelete: string[] = [];
+                      currentUrl.searchParams.forEach((value, key) => {
+                        if (key.includes('step_1') || key.includes('step_2') || key.includes('step_3')) {
+                          keysToDelete.push(key);
+                        }
+                      });
+                      keysToDelete.forEach(key => currentUrl.searchParams.delete(key));
+
+                      // Reset to page 1 and add the new filter
+                      currentUrl.searchParams.set('page', '1');
+                      currentUrl.searchParams.set('filters[' + field + '][$eq]', '1');
+                      window.location.href = currentUrl.toString();
+                    }
+                  }}
                 >
                   <SingleSelectOption value="Step1">Step1(Basic)</SingleSelectOption>
                   <SingleSelectOption value="Step2">Step2(Portfolio)</SingleSelectOption>
@@ -65,7 +95,36 @@ export default {
                 <SingleSelect
                   placeholder="Select Year"
                   value={yearValue}
-                  onChange={(value: string | number) => setYearValue(String(value))}
+                  onChange={(value: string | number) => {
+                    const year = String(value);
+                    setYearValue(year);
+
+                    if (year) {
+                      // Parse academic year (e.g., "2024-2025")
+                      const [startYear, endYear] = year.split('-');
+
+                      // Academic year: April 1st of start year to March 31st of end year
+                      const startDate = `${startYear}-04-01`;
+                      const endDate = `${endYear}-03-31`;
+
+                      const currentUrl = new URL(window.location.href);
+
+                      // Remove existing createdAt filters
+                      const keysToDelete: string[] = [];
+                      currentUrl.searchParams.forEach((value, key) => {
+                        if (key.includes('createdAt')) {
+                          keysToDelete.push(key);
+                        }
+                      });
+                      keysToDelete.forEach(key => currentUrl.searchParams.delete(key));
+
+                      // Add date range filter
+                      currentUrl.searchParams.set('page', '1');
+                      currentUrl.searchParams.set('filters[createdAt][$gte]', startDate);
+                      currentUrl.searchParams.set('filters[createdAt][$lte]', endDate);
+                      window.location.href = currentUrl.toString();
+                    }
+                  }}
                 >
                   {years.map((year) => (
                     <SingleSelectOption key={year} value={year}>
@@ -74,6 +133,27 @@ export default {
                   ))}
                 </SingleSelect>
               </div>
+
+              {/* Clear Filters Button */}
+              <Button
+                variant="tertiary"
+                onClick={() => {
+                  setStepValue('');
+                  setYearValue('');
+                  const currentUrl = new URL(window.location.href);
+                  const keysToDelete: string[] = [];
+                  currentUrl.searchParams.forEach((value, key) => {
+                    if (key.includes('step_') || key.includes('createdAt')) {
+                      keysToDelete.push(key);
+                    }
+                  });
+                  keysToDelete.forEach(key => currentUrl.searchParams.delete(key));
+                  currentUrl.searchParams.set('page', '1');
+                  window.location.href = currentUrl.toString();
+                }}
+              >
+                Clear
+              </Button>
             </div>
 
             {/* Popup Modal */}

@@ -511,9 +511,9 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     >;
     publishedAt: Schema.Attribute.DateTime;
     state: Schema.Attribute.Relation<'manyToOne', 'api::state.state'>;
-    Step1: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    Step2: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    Step3: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    step_1: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    step_2: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    step_3: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     Under_Graduate: Schema.Attribute.Component<
       'under-graduate.under-graduate',
       false
