@@ -1,8 +1,7 @@
 {
-  "openapi": "3.0.0",
   "info": {
+    "title": "API Documentation",
     "version": "1.0.0",
-    "title": "DOCUMENTATION",
     "description": "",
     "termsOfService": "YOUR_TERMS_OF_SERVICE_URL",
     "contact": {
@@ -14,20 +13,25 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-11-28T02:53:10.155Z"
+    "x-generation-date": "2025-11-28T05:19:13.229Z"
   },
+  "servers": [
+    {
+      "url": "https://dev-admin.lightandlifeacademy.in",
+      "description": "Live Server"
+    },
+    {
+      "url": "http://localhost:8000",
+      "description": "Local Server"
+    }
+  ],
+  "openapi": "3.0.0",
   "x-strapi-config": {
     "plugins": [
       "upload",
       "users-permissions"
     ]
   },
-  "servers": [
-    {
-      "url": "http://localhost:8000/api",
-      "description": "Development server"
-    }
-  ],
   "externalDocs": {
     "description": "Find out more",
     "url": "https://docs.strapi.io/developer-docs/latest/getting-started/introduction.html"
