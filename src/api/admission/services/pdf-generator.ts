@@ -485,26 +485,6 @@ class PDFGenerator {
     }
   }
 
-  // Helper method to extract text from rich text blocks
-  extractTextFromBlocks(blocks: any): string {
-    if (!blocks) return '';
-    
-    // If it's already a string, return it
-    if (typeof blocks === 'string') return blocks;
-    
-    // If it's an array of blocks
-    if (Array.isArray(blocks)) {
-      return blocks.map(block => {
-        if (block.children && Array.isArray(block.children)) {
-          return block.children.map((child: any) => child.text || '').join('');
-        }
-        return '';
-      }).join(' ');
-    }
-    
-    return '';
-  }
-
   // Helper method to format data
   formatAdmissionData(admission: any) {
     // Format language proficiency as array for template
@@ -515,12 +495,9 @@ class PDFGenerator {
       speak: lang.speak || false,
     })) || [];
 
-    // Extract text from address blocks (rich text format)
-    const studentAddress = this.extractTextFromBlocks(admission.address);
-
     // Format student address in single line: address, city, state, district, pincode
     const addressParts = [
-      studentAddress,
+      admission.address,
       admission.city,
       admission.state?.name || admission.state,
       admission.district,
@@ -535,12 +512,9 @@ class PDFGenerator {
     const parentEmail = parent?.email || 'Not Provided';
     const parentContact = parent?.mobile_no || 'Not Provided';
     
-    // Extract text from parent address blocks
-    const parentAddressText = this.extractTextFromBlocks(parent?.address);
-    
     // Format parent address in single line: address, city, state, district, pincode
     const parentAddressParts = [
-      parentAddressText,
+      parent?.address,
       parent?.city,
       parent?.state?.name || parent?.state,
       parent?.district,
