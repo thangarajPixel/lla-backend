@@ -1,6 +1,6 @@
 module.exports = {
   documentation: {
-    enabled: true,
+    enabled: false,
     config: {
       info: {
         title: "API Documentation",
@@ -8,7 +8,7 @@ module.exports = {
       },
       servers: [
         {
-          url: "https://dev-admin.lightandlifeacademy.in/api/",
+          url: process.env.SERVER_URL || "https://dev-admin.lightandlifeacademy.in/api/",
           description: "Live Server",
         },
         {
