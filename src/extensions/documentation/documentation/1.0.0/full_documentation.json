@@ -1,7 +1,8 @@
 {
+  "openapi": "3.0.0",
   "info": {
-    "title": "API Documentation",
     "version": "1.0.0",
+    "title": "DOCUMENTATION",
     "description": "",
     "termsOfService": "YOUR_TERMS_OF_SERVICE_URL",
     "contact": {
@@ -14,24 +15,20 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "x-generation-date": "2025-11-28T07:15:34.628Z"
+    "x-generation-date": "2025-11-28T05:40:12.097Z"
   },
-  "servers": [
-    {
-      "url": "https://dev-admin.lightandlifeacademy.in/api/",
-      "description": "Live Server"
-    },
-    {
-      "url": "http://localhost:8000/api/",
-      "description": "Local Server"
-    }
-  ],
-  "openapi": "3.0.0",
   "x-strapi-config": {
     "plugins": [
       "upload",
       "users-permissions"
     ]
   },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api",
+      "description": "Development server"
+    }
+  ],
   "externalDocs": {
     "description": "Find out more",
     "url": "https://docs.strapi.io/developer-docs/latest/getting-started/introduction.html"
@@ -7621,13 +7618,6 @@
               "step_3": {
                 "type": "boolean"
               },
-              "Payment_Status": {
-                "type": "string",
-                "enum": [
-                  "Paid",
-                  "UnPaid"
-                ]
-              },
               "locale": {
                 "type": "string"
               },
@@ -8585,13 +8575,6 @@
                     "step_3": {
                       "type": "boolean"
                     },
-                    "Payment_Status": {
-                      "type": "string",
-                      "enum": [
-                        "Paid",
-                        "UnPaid"
-                      ]
-                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -8744,13 +8727,6 @@
           "step_3": {
             "type": "boolean"
           },
-          "Payment_Status": {
-            "type": "string",
-            "enum": [
-              "Paid",
-              "UnPaid"
-            ]
-          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -8868,6 +8844,17 @@
           },
           "nationality": {
             "type": "string"
+          },
+          "admission": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "documentId": {
+                "type": "string"
+              }
+            }
           },
           "address": {},
           "city": {
@@ -17876,13 +17863,6 @@
                 },
                 "step_3": {
                   "type": "boolean"
-                },
-                "Payment_Status": {
-                  "type": "string",
-                  "enum": [
-                    "Paid",
-                    "UnPaid"
-                  ]
                 },
                 "createdAt": {
                   "type": "string",
