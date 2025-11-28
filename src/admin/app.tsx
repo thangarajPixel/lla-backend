@@ -155,7 +155,7 @@ export default {
 
                 if (finalId) {
                   const baseUrl = process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in';
-                  const url = `${baseUrl}/${finalId}`;
+                  const url = `${baseUrl}/admission/${finalId}`;
                   console.log('Opening URL with ID:', url);
 
                   setTimeout(() => {
@@ -218,8 +218,12 @@ export default {
         React.useEffect(() => {
           const timer = setTimeout(() => {
             const addPdfButtons = () => {
-              const statusCells = document.querySelectorAll('table tbody tr td[aria-colindex="5"]');
-              statusCells.forEach(cell => {
+              // Remove any existing PDF buttons first
+              document.querySelectorAll('.pdf-download-btn').forEach(btn => btn.remove());
+              
+              // Target MOBILE_NO column (second to last column)
+              const mobileCells = document.querySelectorAll('table tbody tr td:nth-last-child(2)');
+              mobileCells.forEach(cell => {
                 // Check if button already exists
                 if (cell.querySelector('.pdf-download-btn')) return;
 
@@ -238,9 +242,14 @@ export default {
                 if (rowId) {
                   const pdfBtn = document.createElement('button');
                   pdfBtn.className = 'pdf-download-btn';
-                  pdfBtn.innerHTML = '📄'; // Added document icon
+                  pdfBtn.innerHTML = `
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;">
+                      <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                    </svg>
+                    PDF
+                  `; // SVG download icon with text
                   pdfBtn.style.cssText = `
-                    margin-top:5px;
+                    margin-top:7px;
                     background: #4945ff !important;
                     color: white !important;
                     border: none !important;
