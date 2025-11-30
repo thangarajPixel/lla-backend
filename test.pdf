@@ -1,0 +1,61 @@
+
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Admission Form - panner test</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+              .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #4945ff; padding-bottom: 20px; }
+              .field { margin: 10px 0; padding: 8px; background: #f8f9fa; border-radius: 4px; }
+              .label { font-weight: bold; color: #4945ff; }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1 style="color: #4945ff;">Light and Life Academy</h1>
+              <h2>Admission Form</h2>
+            </div>
+            
+            <div class="field">
+              <span class="label">Application ID:</span> 12
+            </div>
+            <div class="field">
+              <span class="label">Name:</span> Mr. panner test
+            </div>
+            <div class="field">
+              <span class="label">Email:</span> user@gmail.com
+            </div>
+            <div class="field">
+              <span class="label">Date of Birth:</span> 2025-11-28
+            </div>
+            <div class="field">
+              <span class="label">Nationality:</span> indian
+            </div>
+            <div class="field">
+              <span class="label">Mobile:</span> 123456789
+            </div>
+            <div class="field">
+              <span class="label">City:</span> test 1
+            </div>
+            <div class="field">
+              <span class="label">District:</span> test2
+            </div>
+            <div class="field">
+              <span class="label">Pincode:</span> 565656
+            </div>
+            <div class="field">
+              <span class="label">Step 1 Completed:</span> No
+            </div>
+            <div class="field">
+              <span class="label">Step 2 Completed:</span> No
+            </div>
+            <div class="field">
+              <span class="label">Step 3 Completed:</span> No
+            </div>
+            
+            <div style="margin-top: 30px; text-align: center; color: #666; font-size: 12px;">
+              Generated on 30/11/2025, 1:36:08 pm
+            </div>
+          </body>
+          </html>
+        

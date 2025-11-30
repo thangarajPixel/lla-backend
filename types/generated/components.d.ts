@@ -129,6 +129,7 @@ export interface CourseBanner extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
+    SubTitle: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -141,6 +142,7 @@ export interface CourseBenefit extends Struct.ComponentSchema {
   attributes: {
     Card: Schema.Attribute.Component<'home.card', true>;
     Heading: Schema.Attribute.String;
+    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
