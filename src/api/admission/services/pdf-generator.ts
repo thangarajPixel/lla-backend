@@ -2,6 +2,7 @@ import * as puppeteer from 'puppeteer';
 import * as handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';
+import PDFDocument from 'pdfkit';
 
 class PDFGenerator {
   private templatePath: string;
@@ -9,6 +10,104 @@ class PDFGenerator {
   constructor() {
     this.templatePath = path.join(__dirname, '../templates');
     console.log('Template path:', this.templatePath);
+  }
+
+  // Simple PDF generation using PDFKit (fallback)
+  async generateSimplePDF(admissionData: any): Promise<Buffer> {
+    return new Promise((resolve, reject) => {
+      try {
+        const doc = new PDFDocument({ margin: 50 });
+        const chunks: Buffer[] = [];
+
+        doc.on('data', (chunk) => chunks.push(chunk));
+        doc.on('end', () => resolve(Buffer.concat(chunks)));
+        doc.on('error', reject);
+
+        // Header
+        doc.fontSize(20).fillColor('#4945ff').text('Light and Life Academy', { align: 'center' });
+        doc.fontSize(16).text('Admission Form', { align: 'center' });
+        doc.moveDown();
+
+        // Application ID
+        doc.fontSize(12).fillColor('#000').text(`Application ID: ${admissionData.id}`, { align: 'center' });
+        doc.moveDown(2);
+
+        // Personal Details
+        doc.fontSize(14).fillColor('#ff6b6b').text('Personal Details');
+        doc.moveDown(0.5);
+        doc.fontSize(10).fillColor('#000');
+        doc.text(`Name: ${admissionData.fullName}`);
+        doc.text(`Email: ${admissionData.email}`);
+        doc.text(`Mobile: ${admissionData.mobileNumber}`);
+        doc.text(`Date of Birth: ${admissionData.formattedDate}`);
+        doc.text(`Nationality: ${admissionData.nationality}`);
+        doc.text(`Blood Group: ${admissionData.bloodGroupInfo}`);
+        doc.text(`Address: ${admissionData.addressInfo}`);
+        doc.moveDown();
+
+        // Language & Proficiency
+        if (admissionData.languagesList && admissionData.languagesList.length > 0) {
+          doc.fontSize(14).fillColor('#ff6b6b').text('Language & Proficiency');
+          doc.moveDown(0.5);
+          doc.fontSize(10).fillColor('#000');
+          admissionData.languagesList.forEach((lang: any) => {
+            const skills = [];
+            if (lang.read) skills.push('Read');
+            if (lang.write) skills.push('Write');
+            if (lang.speak) skills.push('Speak');
+            doc.text(`${lang.language}: ${skills.join(', ')}`);
+          });
+          doc.moveDown();
+        }
+
+        // Parental Details
+        doc.fontSize(14).fillColor('#ff6b6b').text('Parental Details');
+        doc.moveDown(0.5);
+        doc.fontSize(10).fillColor('#000');
+        doc.text(`Name: ${admissionData.parentName}`);
+        doc.text(`Profession: ${admissionData.parentProfession}`);
+        doc.text(`Email: ${admissionData.parentEmail}`);
+        doc.text(`Contact: ${admissionData.parentContact}`);
+        doc.text(`Address: ${admissionData.parentAddress}`);
+        doc.moveDown();
+
+        // Education Details
+        doc.fontSize(14).fillColor('#ff6b6b').text('Education Details');
+        doc.moveDown(0.5);
+        doc.fontSize(10).fillColor('#000');
+        doc.text(`Under Graduate: ${admissionData.ugDegree} - ${admissionData.ugStatus}`);
+        doc.moveDown();
+
+        // Work Experience
+        if (admissionData.workExperienceList && admissionData.workExperienceList.length > 0) {
+          doc.fontSize(14).fillColor('#ff6b6b').text('Work Experience');
+          doc.moveDown(0.5);
+          doc.fontSize(10).fillColor('#000');
+          admissionData.workExperienceList.forEach((work: any) => {
+            doc.text(`${work.designation} at ${work.employer}`);
+            doc.text(`Duration: ${work.duration}`);
+            doc.moveDown(0.5);
+          });
+        }
+
+        // Application Status
+        doc.fontSize(14).fillColor('#ff6b6b').text('Application Status');
+        doc.moveDown(0.5);
+        doc.fontSize(10).fillColor('#000');
+        doc.text(`Step 1: ${admissionData.step1Status}`);
+        doc.text(`Step 2: ${admissionData.step2Status}`);
+        doc.text(`Step 3: ${admissionData.step3Status}`);
+        doc.text(`Payment: ${admissionData.paymentStatus}`);
+        doc.moveDown(2);
+
+        // Footer
+        doc.fontSize(8).fillColor('#666').text('Generated on ' + new Date().toLocaleString(), { align: 'center' });
+
+        doc.end();
+      } catch (error) {
+        reject(error);
+      }
+    });
   }
 
   async generateAdmissionPDF(admissionData: any): Promise<Buffer> {
@@ -491,8 +590,9 @@ class PDFGenerator {
       return pdfBuffer;
 
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      throw error;
+      console.error('Puppeteer PDF generation failed, using simple PDF fallback:', error);
+      // Use simple PDF generation as fallback
+      return await this.generateSimplePDF(admissionData);
     }
   }
 
