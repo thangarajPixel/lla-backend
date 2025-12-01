@@ -34,6 +34,48 @@ const addBaseUrlToMedia = (data: any, baseUrl: string): any => {
 };
 
 export default factories.createCoreController('api::admission.admission', ({ strapi }) => ({
+  async create(ctx) {
+    console.log('========================================');
+    console.log('📝 CREATE API called');
+    console.log('========================================');
+
+    // Remove publishedAt from request body
+    if (ctx.request.body.data) {
+      delete ctx.request.body.data.publishedAt;
+    }
+
+    // Call default create
+    const response = await super.create(ctx);
+
+    console.log('✅ Initial record created - ID:', response.data?.id, 'DocumentId:', response.data?.documentId);
+
+    // Find draft record with publishedAt = null
+    if (response.data?.documentId) {
+      const draftRecords = await strapi.entityService.findMany('api::admission.admission', {
+        filters: {
+          documentId: response.data.documentId,
+          publishedAt: { $null: true }
+        },
+        limit: 1,
+      });
+
+      if (draftRecords && draftRecords.length > 0) {
+        console.log('✅ Found draft record - ID:', draftRecords[0].id);
+        console.log('========================================');
+
+        const baseUrl = process.env.ADMIN_BASE_URL || `${ctx.request.protocol}://${ctx.request.host}`;
+        return { data: addBaseUrlToMedia(draftRecords[0], baseUrl) };
+      }
+    }
+
+    console.log('========================================');
+    const baseUrl = process.env.ADMIN_BASE_URL || `${ctx.request.protocol}://${ctx.request.host}`;
+    if (response?.data) {
+      response.data = addBaseUrlToMedia(response.data, baseUrl);
+    }
+    return response;
+  },
+
   async findOne(ctx) {
     const { id } = ctx.params;
 
