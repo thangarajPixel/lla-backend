@@ -19,6 +19,9 @@ export default factories.createCoreController(
                     Image: {
                       select: ["id", "name", "url"],
                     },
+                    Mobile_image: {
+                      select: ["id", "name", "url"],
+                    },
                   },
                 },
                 "about.legacy": {
