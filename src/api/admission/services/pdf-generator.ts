@@ -148,7 +148,7 @@ class PDFGenerator {
         
         body {
             font-family: 'Arial', sans-serif;
-            line-height: 1.5;
+            line-height: 1.4;
             color: #333;
             background: #fff;
         }
@@ -159,9 +159,9 @@ class PDFGenerator {
         }
         
         .left-column {
-            width: 280px;
+            width: 300px;
             background: #fff;
-            padding: 30px 20px;
+            padding: 30px 25px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -170,41 +170,47 @@ class PDFGenerator {
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 30px;
+            gap: 8px;
+            margin-bottom: 20px;
         }
         
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: #000;
-            border-radius: 4px;
+            width: 35px;
+            height: 35px;
+        }
+        
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
         
         .logo-text {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
-            line-height: 1.2;
+            line-height: 1.3;
+            text-transform: uppercase;
         }
         
         .review-title {
-            font-size: 18px;
+            font-size: 16px;
             color: #ff6b6b;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
+            font-weight: 600;
         }
         
         .review-subtitle {
-            font-size: 11px;
+            font-size: 10px;
             color: #666;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         
         .profile-photo {
-            width: 200px;
-            height: 250px;
-            background: #f0f0f0;
+            width: 220px;
+            height: 280px;
+            background: #f5f5f5;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             overflow: hidden;
         }
         
@@ -216,14 +222,14 @@ class PDFGenerator {
         
         .action-buttons {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 8px;
+            margin-top: 15px;
         }
         
         .btn {
-            padding: 8px 20px;
+            padding: 6px 18px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             border: none;
             cursor: pointer;
         }
@@ -242,81 +248,97 @@ class PDFGenerator {
         .right-column {
             flex: 1;
             background: #fce4d8;
-            padding: 30px 40px;
+            padding: 30px 35px;
         }
         
         .section {
             background: #fce4d8;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .section-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             color: #ff6b6b;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #ff6b6b;
+            margin-bottom: 12px;
         }
         
         .field-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 13px;
+            margin-bottom: 8px;
+            font-size: 11px;
+            align-items: flex-start;
         }
         
         .field-label {
-            color: #666;
-            font-weight: 500;
+            color: #888;
+            font-weight: 400;
+            flex-shrink: 0;
+            width: 35%;
         }
         
         .field-value {
-            color: #333;
-            font-weight: 600;
+            color: #000;
+            font-weight: 500;
             text-align: right;
-            max-width: 60%;
+            flex: 1;
+            word-wrap: break-word;
         }
         
         .language-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            gap: 12px;
             margin-top: 10px;
         }
         
         .language-item {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 12px;
+            gap: 4px;
+            font-size: 10px;
+        }
+        
+        .language-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+            font-size: 11px;
         }
         
         .checkbox {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             border: 2px solid #ff6b6b;
-            border-radius: 3px;
+            border-radius: 2px;
             display: inline-block;
             background: #fff;
+            position: relative;
         }
         
-        .checkbox.checked {
-            background: #ff6b6b;
+        .checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            top: -3px;
+            left: 1px;
+            color: #ff6b6b;
+            font-size: 10px;
+            font-weight: bold;
         }
         
         .portfolio-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 15px;
+            gap: 12px;
+            margin-top: 12px;
         }
         
         .portfolio-item {
             width: 100%;
-            height: 180px;
+            height: 160px;
             border-radius: 8px;
             overflow: hidden;
+            background: #f5f5f5;
         }
         
         .portfolio-item img {
@@ -327,31 +349,44 @@ class PDFGenerator {
         
         .document-link {
             color: #ff6b6b;
-            text-decoration: underline;
-            font-size: 12px;
+            font-size: 11px;
+        }
+        
+        .subsection {
+            margin-top: 12px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 107, 107, 0.2);
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="left-column">
+            <div class="logo">
+                ${logoBase64 ? `<div class="logo-icon"><img src="${logoBase64}" alt="LLA Logo" /></div>` : ''}
+                <div class="logo-text">Light & Life Academy<br>PHOTOGRAPHY</div>
+            </div>
+            
+            <div class="review-title">Review Application</div>
+            <div class="review-subtitle">Kindly verify the status before accepting it.</div>
+            
+            {{#if passport_size_image}}
+            <div class="profile-photo">
+                <img src="{{passport_size_image}}" alt="Profile Photo" />
+            </div>
+            {{else}}
+            <div class="profile-photo"></div>
+            {{/if}}
+            
+            <div class="action-buttons">
+                <button class="btn btn-outline">Send to Edit</button>
+                <button class="btn btn-primary">Proceed to Pay</button>
+            </div>
+        </div>
+        
         <div class="right-column">
-         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; justify-content: center;">
-           ${logoBase64 ? `<img src="${logoBase64}" alt="LLA Logo" style="width: 150px; height: 150px; object-fit: contain;" />` : ''}
-           <h2 style="margin: 0; font-weight: bold; line-height: 1.3;">Light & Life Academy<br><span style="font-size: 14px;">PHOTOGRAPHY</span></h2>
-         </div>
-           <h3 style="text-align:center;font-weight:bold;">Review Application</h3>
             <div class="section">
                 <div class="section-title">Personal Details</div>
-                {{#if Course}}
-                 <div class="field-row">
-                    <div class="field-label">Course</div>
-                    <div class="field-value">{{Course}}</div>
-                </div>
-                 {{/if}}
-                 <div class="field-row">
-                    <div class="field-label">Name Title</div>
-                    <div class="field-value">{{name_title}}</div>
-                </div>
                 <div class="field-row">
                     <div class="field-label">First Name</div>
                     <div class="field-value">{{first_name}}</div>
@@ -360,11 +395,6 @@ class PDFGenerator {
                     <div class="field-label">Last Name</div>
                     <div class="field-value">{{last_name}}</div>
                 </div>
-                 {{#if passport_size_image}}
-                 <div class="profile-photo" style="width: 120px; height: 150px; margin: 10px 0;">
-                 <img src="{{passport_size_image}}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" />
-               </div>
-                {{/if}}
                 <div class="field-row">
                     <div class="field-label">Nationality</div>
                     <div class="field-value">{{nationality}}</div>
@@ -391,12 +421,13 @@ class PDFGenerator {
                 </div>
             </div>
             
+            {{#if languagesList.length}}
             <div class="section">
                 <div class="section-title">Language & Proficiency</div>
                 <div class="language-grid">
                     {{#each languagesList}}
                     <div>
-                        <div style="font-weight: bold; margin-bottom: 5px;">{{language}}</div>
+                        <div class="language-name">{{language}}</div>
                         <div class="language-item">
                             <span class="checkbox {{#if read}}checked{{/if}}"></span>
                             <span>Read</span>
@@ -413,6 +444,7 @@ class PDFGenerator {
                     {{/each}}
                 </div>
             </div>
+            {{/if}}
             
             <div class="section">
                 <div class="section-title">Parental Details</div>
@@ -440,79 +472,92 @@ class PDFGenerator {
             
             <div class="section">
                 <div class="section-title">Education Details</div>
-                <div class="field-row">
-                    <div class="field-label">10th Std</div>
-                    <div class="field-value">
-                        {{#if Education_Details.Education_Details_10th_std}}
-                       Uploaded
-                        {{else}}
-                        Not Uploaded
-                        {{/if}}
+                
+                <div class="subsection">
+                    <div class="field-row">
+                        <div class="field-label">10th Std</div>
+                        <div class="field-value"></div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label">Document</div>
+                        <div class="field-value">
+                            {{#if Education_Details.Education_Details_10th_std}}
+                            <span class="document-link">✓ View Document</span>
+                            {{else}}
+                            Not Uploaded
+                            {{/if}}
+                        </div>
                     </div>
                 </div>
-                <div class="field-row">
-                    <div class="field-label">Document</div>
-                    <div class="field-value">
-                        {{#if Education_Details.Education_Details_10th_std}}
-                       Uploaded
-                        {{/if}}
+                
+                <div class="subsection">
+                    <div class="field-row">
+                        <div class="field-label">12th Std</div>
+                        <div class="field-value"></div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label">Document</div>
+                        <div class="field-value">
+                            {{#if Education_Details.Education_Details_12th_std}}
+                            <span class="document-link">✓ View Document</span>
+                            {{else}}
+                            Not Uploaded
+                            {{/if}}
+                        </div>
                     </div>
                 </div>
-                <div class="field-row">
-                    <div class="field-label">12th Std</div>
-                    <div class="field-value">
-                        {{#if Education_Details.Education_Details_12th_std}}
-                        Uploaded
-                        {{else}}
-                        Not Uploaded
-                        {{/if}}
+                
+                <div class="subsection">
+                    <div class="field-row">
+                        <div class="field-label">Under Graduate</div>
+                        <div class="field-value"></div>
                     </div>
-                </div>
-                <div class="field-row">
-                    <div class="field-label">Under Graduate</div>
-                    <div class="field-value"></div>
-                </div>
-                <div class="field-row">
-                    <div class="field-label">College Name</div>
-                    <div class="field-value">{{ugDegree}}</div>
-                </div>
-                <div class="field-row">
-                    <div class="field-label">Status</div>
-                    <div class="field-value">{{ugStatus}}</div>
-                </div>
-                <div class="field-row">
-                    <div class="field-label">Document</div>
-                    <div class="field-value">
-                        {{#if Under_Graduate.marksheet}}
-                         Uploaded
-                        {{else}}
-                        Not Uploaded
-                        {{/if}}
+                    <div class="field-row">
+                        <div class="field-label">College Name</div>
+                        <div class="field-value">{{ugDegree}}</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label">Status</div>
+                        <div class="field-value">{{ugStatus}}</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label">Document</div>
+                        <div class="field-value">
+                            {{#if Under_Graduate.marksheet}}
+                            <span class="document-link">✓ View Document</span>
+                            {{else}}
+                            Not Uploaded
+                            {{/if}}
+                        </div>
                     </div>
                 </div>
             </div>
             
+            {{#if workExperienceList.length}}
             <div class="section">
                 <div class="section-title">Work Experience</div>
                 {{#each workExperienceList}}
-                <div class="field-row">
-                    <div class="field-label">Role/Designation</div>
-                    <div class="field-value">{{designation}}</div>
-                </div>
-                <div class="field-row">
-                    <div class="field-label">Employer</div>
-                    <div class="field-value">{{employer}}</div>
-                </div>
-                <div class="field-row">
-                    <div class="field-label">Duration</div>
-                    <div class="field-value">{{duration}}</div>
+                <div class="subsection">
+                    <div class="field-row">
+                        <div class="field-label">Role/Designation</div>
+                        <div class="field-value">{{designation}}</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label">Employer</div>
+                        <div class="field-value">{{employer}}</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label">Duration</div>
+                        <div class="field-value">{{duration}}</div>
+                    </div>
                 </div>
                 {{/each}}
             </div>
+            {{/if}}
             
             <div class="section">
                 <div class="section-title">Where did you first out about LLA?</div>
-                <div class="field-value">{{photographyClub}}</div>
+                <div class="field-value" style="text-align: left;">{{photographyClub}}</div>
             </div>
             
             {{#if hasPortfolio}}
