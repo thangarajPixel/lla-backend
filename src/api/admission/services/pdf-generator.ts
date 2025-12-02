@@ -6,16 +6,16 @@ import PDFDocument from 'pdfkit';
 
 // Helper to convert logo to base64
 function getLogoBase64(): string {
-  try {
-    const logoPath = path.join(process.cwd(), 'public', 'logo.png');
-    if (fs.existsSync(logoPath)) {
-      const logoBuffer = fs.readFileSync(logoPath);
-      return `data:image/png;base64,${logoBuffer.toString('base64')}`;
+    try {
+        const logoPath = path.join(process.cwd(), 'public', 'logo.png');
+        if (fs.existsSync(logoPath)) {
+            const logoBuffer = fs.readFileSync(logoPath);
+            return `data:image/png;base64,${logoBuffer.toString('base64')}`;
+        }
+    } catch (error) {
+        console.error('Error loading logo:', error);
     }
-  } catch (error) {
-    console.error('Error loading logo:', error);
-  }
-  return '';
+    return '';
 }
 
 class PDFGenerator {
@@ -127,6 +127,9 @@ class PDFGenerator {
     async generateAdmissionPDF(admissionData: any): Promise<Buffer> {
         try {
             console.log('Starting PDF generation for:', admissionData.id);
+
+            // Get logo as base64
+            const logoBase64 = getLogoBase64();
 
             // Embed template directly in code to avoid file path issues
             const templateHtml = `
@@ -333,7 +336,7 @@ class PDFGenerator {
     <div class="container">
         <div class="right-column">
          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; justify-content: center;">
-           <img src="${process.env.ADMIN_BASE_URL || 'http://localhost:8000'}/logo.png" alt="LLA Logo" style="width: 100px; height: 100px; object-fit: contain;" onerror="this.style.display='none'" />
+           ${logoBase64 ? `<img src="${logoBase64}" alt="LLA Logo" style="width: 60px; height: 60px; object-fit: contain;" />` : ''}
            <h2 style="margin: 0; font-weight: bold; line-height: 1.3;">Light & Life Academy<br><span style="font-size: 14px;">PHOTOGRAPHY</span></h2>
          </div>
            <h3 style="text-align:center;font-weight:bold;">Review Application</h3>

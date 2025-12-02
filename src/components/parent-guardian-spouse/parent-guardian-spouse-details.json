@@ -40,13 +40,13 @@
     "district": {
       "type": "string"
     },
-    "state": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::state.state"
-    },
     "pincode": {
       "type": "string"
+    },
+    "state": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::state.state"
     }
   },
   "config": {}
