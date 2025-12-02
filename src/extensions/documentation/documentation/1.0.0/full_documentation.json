@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-12-02T11:10:19.670Z"
+    "x-generation-date": "2025-12-02T11:15:13.729Z"
   },
   "servers": [
     {
@@ -7761,6 +7761,12 @@
                   "UnPaid"
                 ]
               },
+              "Course": {
+                "type": "string"
+              },
+              "course_id": {
+                "type": "integer"
+              },
               "locale": {
                 "type": "string"
               },
@@ -8733,6 +8739,12 @@
                         "UnPaid"
                       ]
                     },
+                    "Course": {
+                      "type": "string"
+                    },
+                    "course_id": {
+                      "type": "integer"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -8891,6 +8903,12 @@
               "Paid",
               "UnPaid"
             ]
+          },
+          "Course": {
+            "type": "string"
+          },
+          "course_id": {
+            "type": "integer"
           },
           "createdAt": {
             "type": "string",
@@ -18032,6 +18050,12 @@
                     "Paid",
                     "UnPaid"
                   ]
+                },
+                "Course": {
+                  "type": "string"
+                },
+                "course_id": {
+                  "type": "integer"
                 },
                 "createdAt": {
                   "type": "string",

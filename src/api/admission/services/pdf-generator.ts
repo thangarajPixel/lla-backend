@@ -342,6 +342,12 @@ class PDFGenerator {
            <h3 style="text-align:center;font-weight:bold;">Review Application</h3>
             <div class="section">
                 <div class="section-title">Personal Details</div>
+                {{#if Course}}
+                 <div class="field-row">
+                    <div class="field-label">Course</div>
+                    <div class="field-value">{{Course}}</div>
+                </div>
+                 {{/if}}
                  <div class="field-row">
                     <div class="field-label">Name Title</div>
                     <div class="field-value">{{name_title}}</div>

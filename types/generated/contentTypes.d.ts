@@ -471,6 +471,8 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     address: Schema.Attribute.Blocks;
     blood_group: Schema.Attribute.String;
     city: Schema.Attribute.String;
+    Course: Schema.Attribute.String;
+    course_id: Schema.Attribute.Integer;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

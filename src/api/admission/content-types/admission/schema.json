@@ -131,6 +131,12 @@
         "Paid",
         "UnPaid"
       ]
+    },
+    "Course": {
+      "type": "string"
+    },
+    "course_id": {
+      "type": "integer"
     }
   }
 }
