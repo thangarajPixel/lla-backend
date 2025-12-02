@@ -336,7 +336,7 @@ class PDFGenerator {
     <div class="container">
         <div class="right-column">
          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; justify-content: center;">
-           ${logoBase64 ? `<img src="${logoBase64}" alt="LLA Logo" style="width: 60px; height: 60px; object-fit: contain;" />` : ''}
+           ${logoBase64 ? `<img src="${logoBase64}" alt="LLA Logo" style="width: 150px; height: 150px; object-fit: contain;" />` : ''}
            <h2 style="margin: 0; font-weight: bold; line-height: 1.3;">Light & Life Academy<br><span style="font-size: 14px;">PHOTOGRAPHY</span></h2>
          </div>
            <h3 style="text-align:center;font-weight:bold;">Review Application</h3>
@@ -354,11 +354,11 @@ class PDFGenerator {
                     <div class="field-label">Last Name</div>
                     <div class="field-value">{{last_name}}</div>
                 </div>
+                 {{#if passport_size_image}}
                  <div class="profile-photo" style="width: 120px; height: 150px; margin: 10px 0;">
-                {{#if passport_size_image}}
                  <img src="{{passport_size_image}}" alt="Profile Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;" />
-                 {{/if}}
                </div>
+                {{/if}}
                 <div class="field-row">
                     <div class="field-label">Nationality</div>
                     <div class="field-value">{{nationality}}</div>
