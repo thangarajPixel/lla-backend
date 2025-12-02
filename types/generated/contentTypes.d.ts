@@ -495,7 +495,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     mobile_no: Schema.Attribute.BigInteger;
-    name_title: Schema.Attribute.Enumeration<['Mr.', 'Ms.']> &
+    name_title: Schema.Attribute.Enumeration<['Mr.', 'Ms.', 'Mrs.']> &
       Schema.Attribute.Required;
     nationality: Schema.Attribute.String & Schema.Attribute.Required;
     Parent_Guardian_Spouse_Details: Schema.Attribute.Component<

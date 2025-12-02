@@ -16,7 +16,8 @@
       "required": true,
       "enum": [
         "Mr.",
-        "Ms."
+        "Ms.",
+        "Mrs."
       ]
     },
     "first_name": {

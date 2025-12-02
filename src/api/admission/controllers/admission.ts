@@ -120,10 +120,34 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
     // Check if id is numeric (for swagger compatibility)
     if (/^\d+$/.test(id)) {
-      // Find by numeric id with full population
-      const entities = await strapi.entityService.findMany('api::admission.admission', {
+      // First, find the record by ID to get its documentId
+      const initialRecord = await strapi.entityService.findMany('api::admission.admission', {
         filters: { id: parseInt(id) },
+        limit: 1,
+      });
+
+      if (!initialRecord || initialRecord.length === 0) {
+        return ctx.notFound('Admission not found');
+      }
+
+      const documentId = initialRecord[0].documentId;
+
+      // Now find all records with same documentId using db query
+      const allRecords = await strapi.db.query('api::admission.admission').findMany({
+        where: { documentId: documentId },
+        orderBy: { id: 'desc' },
+        limit: 1,
+      });
+
+      if (!allRecords || allRecords.length === 0) {
+        return ctx.notFound('Admission not found');
+      }
+
+      // Get the latest record with full population
+      const entities = await strapi.entityService.findMany('api::admission.admission', {
+        filters: { id: allRecords[0].id },
         populate: populateConfig,
+        limit: 1,
       });
 
       if (!entities || entities.length === 0) {

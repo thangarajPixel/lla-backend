@@ -593,7 +593,7 @@ export interface ParentGuardianSpouseParentGuardianSpouseDetails
     pincode: Schema.Attribute.String;
     profession: Schema.Attribute.String;
     state: Schema.Attribute.Relation<'oneToMany', 'api::state.state'>;
-    title: Schema.Attribute.Enumeration<['Mr.', 'Ms.']>;
+    title: Schema.Attribute.Enumeration<['Mr.', 'Ms.', 'Mrs.']>;
   };
 }
 
