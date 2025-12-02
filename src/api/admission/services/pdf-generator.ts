@@ -378,10 +378,7 @@ class PDFGenerator {
             <div class="profile-photo"></div>
             {{/if}}
             
-            <div class="action-buttons">
-                <button class="btn btn-outline">Send to Edit</button>
-                <button class="btn btn-primary">Proceed to Pay</button>
-            </div>
+
         </div>
         
         <div class="right-column">
