@@ -9,6 +9,9 @@ export interface AboutAbout extends Struct.ComponentSchema {
     Description: Schema.Attribute.Blocks;
     Heading: Schema.Attribute.String;
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Mobile_image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios'
+    >;
     SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };

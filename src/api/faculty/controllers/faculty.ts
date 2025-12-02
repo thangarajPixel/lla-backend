@@ -19,7 +19,51 @@ export default factories.createCoreController(
                       select: ["id", "name", "url"],
                     },
                   },
-                }
+                },
+                "about.founder": {
+                  populate: {
+                    Founder_card:{
+                      populate: {
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
+                      },
+                    }
+                  },
+                },
+                "faculty.photography": {
+                  populate: {
+                    Card:{
+                      populate: {
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
+                      },
+                    }
+                  },
+                },
+                "faculty.filmmaking": {
+                  populate: {
+                    Card:{
+                      populate: {
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
+                      },
+                    }
+                  },
+                },
+                "faculty.visiting": {
+                  populate: {
+                    Card:{
+                      populate: {
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
+                      },
+                    }
+                  },
+                },
               },
             },
           },
