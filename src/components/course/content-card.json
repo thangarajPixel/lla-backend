@@ -11,9 +11,6 @@
     "Title": {
       "type": "string"
     },
-    "Description": {
-      "type": "blocks"
-    },
     "Image": {
       "type": "media",
       "multiple": true,
@@ -26,6 +23,13 @@
     },
     "Type": {
       "type": "string"
+    },
+    "Description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
     }
   },
   "config": {}
