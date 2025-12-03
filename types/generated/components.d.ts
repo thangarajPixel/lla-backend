@@ -175,6 +175,7 @@ export interface CourseContentCard extends Struct.ComponentSchema {
     >;
     Section: Schema.Attribute.String;
     Title: Schema.Attribute.String;
+    Type: Schema.Attribute.String;
   };
 }
 

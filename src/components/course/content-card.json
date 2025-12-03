@@ -23,6 +23,9 @@
         "videos",
         "audios"
       ]
+    },
+    "Type": {
+      "type": "string"
     }
   },
   "config": {}
