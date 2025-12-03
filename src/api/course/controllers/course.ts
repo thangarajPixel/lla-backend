@@ -18,14 +18,18 @@ export default factories.createCoreController(
                   populate: {
                     Menu: {
                       populate: {
-                        Image: true,
+                        Image: {
+                      select: ["id", "name", "url"],
+                    },
                       },
                     },
                     Overview: {
                       populate: {
                         Card: {
                           populate: {
-                            Image: true,
+                            Image:  {
+                      select: ["id", "name", "url"],
+                    },
                           },
                         },
                       },
@@ -34,7 +38,9 @@ export default factories.createCoreController(
                       populate: {
                         Content_card: {
                           populate: {
-                            Image: true,
+                            Image:  {
+                      select: ["id", "name", "url"],
+                    },
                           },
                         },
                       },
@@ -50,7 +56,9 @@ export default factories.createCoreController(
                       populate: {
                         Card: {
                           populate: {
-                            Image: true,
+                            Image: {
+                      select: ["id", "name", "url"],
+                    },
                           },
                         },
                       },
