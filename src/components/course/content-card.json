@@ -24,7 +24,7 @@
     "Type": {
       "type": "string"
     },
-    "descriptionField": {
+    "Description": {
       "type": "customField",
       "customField": "plugin::ckeditor5.CKEditor",
       "options": {
