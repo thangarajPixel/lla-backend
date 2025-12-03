@@ -168,7 +168,7 @@ export interface CourseContentCard extends Struct.ComponentSchema {
     displayName: 'Content_card';
   };
   attributes: {
-    Description: Schema.Attribute.RichText &
+    descriptionField: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         'plugin::ckeditor5.CKEditor',
         {
@@ -179,13 +179,6 @@ export interface CourseContentCard extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
-    ll: Schema.Attribute.RichText &
-      Schema.Attribute.CustomField<
-        'plugin::ckeditor5.CKEditor',
-        {
-          preset: 'defaultHtml';
-        }
-      >;
     Section: Schema.Attribute.String;
     Title: Schema.Attribute.String;
     Type: Schema.Attribute.String;

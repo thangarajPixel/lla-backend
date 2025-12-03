@@ -24,14 +24,7 @@
     "Type": {
       "type": "string"
     },
-    "Description": {
-      "type": "customField",
-      "customField": "plugin::ckeditor5.CKEditor",
-      "options": {
-        "preset": "defaultHtml"
-      }
-    },
-    "ll": {
+    "descriptionField": {
       "type": "customField",
       "customField": "plugin::ckeditor5.CKEditor",
       "options": {
