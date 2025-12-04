@@ -11,7 +11,7 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "Name": {
+    "FirstName": {
       "type": "string"
     },
     "Mobile": {
@@ -22,6 +22,9 @@
     },
     "Message": {
       "type": "text"
+    },
+    "LastName": {
+      "type": "string"
     }
   }
 }
