@@ -14,9 +14,6 @@
     "Title": {
       "type": "string"
     },
-    "Heading": {
-      "type": "string"
-    },
     "Description": {
       "type": "text"
     },
