@@ -376,6 +376,20 @@ export interface FaqBanner extends Struct.ComponentSchema {
   };
 }
 
+export interface GalleryGallery extends Struct.ComponentSchema {
+  collectionName: 'components_gallery_galleries';
+  info: {
+    displayName: 'Gallery';
+  };
+  attributes: {
+    Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    Type: Schema.Attribute.String;
+  };
+}
+
 export interface HomeAbout extends Struct.ComponentSchema {
   collectionName: 'components_home_abouts';
   info: {
@@ -703,6 +717,7 @@ declare module '@strapi/strapi' {
       'faculty.photography': FacultyPhotography;
       'faculty.visiting': FacultyVisiting;
       'faq.banner': FaqBanner;
+      'gallery.gallery': GalleryGallery;
       'home.about': HomeAbout;
       'home.banner': HomeBanner;
       'home.campus': HomeCampus;
