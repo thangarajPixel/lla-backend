@@ -589,6 +589,41 @@ export interface ApiCampusCampus extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiContactPageContactPage extends Struct.SingleTypeSchema {
+  collectionName: 'contact_pages';
+  info: {
+    displayName: 'ContactPage';
+    pluralName: 'contact-pages';
+    singularName: 'contact-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    BtnText: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::contact-page.contact-page'
+    > &
+      Schema.Attribute.Private;
+    Location: Schema.Attribute.Text;
+    LocationUrl: Schema.Attribute.Text;
+    MobileNo: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    Title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    VisitorDescription: Schema.Attribute.String;
+  };
+}
+
 export interface ApiContactContact extends Struct.CollectionTypeSchema {
   collectionName: 'contacts';
   info: {
@@ -1414,6 +1449,7 @@ declare module '@strapi/strapi' {
       'api::admission.admission': ApiAdmissionAdmission;
       'api::blog.blog': ApiBlogBlog;
       'api::campus.campus': ApiCampusCampus;
+      'api::contact-page.contact-page': ApiContactPageContactPage;
       'api::contact.contact': ApiContactContact;
       'api::course.course': ApiCourseCourse;
       'api::faculty.faculty': ApiFacultyFaculty;
