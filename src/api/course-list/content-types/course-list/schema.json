@@ -1,0 +1,22 @@
+{
+  "kind": "collectionType",
+  "collectionName": "course_lists",
+  "info": {
+    "singularName": "course-list",
+    "pluralName": "course-lists",
+    "displayName": "CourseList"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Name": {
+      "type": "string"
+    },
+    "Slug": {
+      "type": "string",
+      "unique": true
+    }
+  }
+}
