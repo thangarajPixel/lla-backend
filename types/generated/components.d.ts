@@ -446,10 +446,6 @@ export interface HomeCard extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
-    LifeViewCard: Schema.Attribute.Component<
-      'life-view-card.life-view-card',
-      true
-    >;
     LongDescription: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         'plugin::ckeditor5.CKEditor',
@@ -624,6 +620,7 @@ export interface LifeCardLifeCard extends Struct.ComponentSchema {
           preset: 'defaultHtml';
         }
       >;
+    Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Title: Schema.Attribute.String;
   };
 }

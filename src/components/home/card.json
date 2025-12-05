@@ -30,11 +30,6 @@
       "options": {
         "preset": "defaultHtml"
       }
-    },
-    "LifeViewCard": {
-      "type": "component",
-      "component": "life-view-card.life-view-card",
-      "repeatable": true
     }
   },
   "config": {}
