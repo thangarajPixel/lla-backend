@@ -471,8 +471,10 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     address: Schema.Attribute.Blocks;
     blood_group: Schema.Attribute.String;
     city: Schema.Attribute.String;
-    Course: Schema.Attribute.String;
-    course_id: Schema.Attribute.Integer;
+    Course: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::course-list.course-list'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -686,6 +688,10 @@ export interface ApiCourseListCourseList extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    admissions: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::admission.admission'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -723,6 +729,36 @@ export interface ApiCourseCourse extends Struct.SingleTypeSchema {
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::course.course'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiEssentialEssential extends Struct.SingleTypeSchema {
+  collectionName: 'essentials';
+  info: {
+    displayName: 'Essential';
+    pluralName: 'essentials';
+    singularName: 'essential';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    isAdmission: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::essential.essential'
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
@@ -1545,6 +1581,7 @@ declare module '@strapi/strapi' {
       'api::contact.contact': ApiContactContact;
       'api::course-list.course-list': ApiCourseListCourseList;
       'api::course.course': ApiCourseCourse;
+      'api::essential.essential': ApiEssentialEssential;
       'api::faculty.faculty': ApiFacultyFaculty;
       'api::faq.faq': ApiFaqFaq;
       'api::footer.footer': ApiFooterFooter;

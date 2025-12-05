@@ -17,6 +17,12 @@
     "Slug": {
       "type": "string",
       "unique": true
+    },
+    "admissions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::admission.admission",
+      "mappedBy": "Course"
     }
   }
 }

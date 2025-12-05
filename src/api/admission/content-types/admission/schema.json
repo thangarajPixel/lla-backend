@@ -134,12 +134,6 @@
         "UnPaid"
       ]
     },
-    "Course": {
-      "type": "string"
-    },
-    "course_id": {
-      "type": "integer"
-    },
     "step_0": {
       "type": "boolean",
       "default": false
@@ -150,6 +144,12 @@
       "options": {
         "preset": "defaultHtml"
       }
+    },
+    "Course": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::course-list.course-list",
+      "inversedBy": "admissions"
     }
   }
 }

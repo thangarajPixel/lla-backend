@@ -1,0 +1,20 @@
+{
+  "kind": "singleType",
+  "collectionName": "essentials",
+  "info": {
+    "singularName": "essential",
+    "pluralName": "essentials",
+    "displayName": "Essential"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "isAdmission": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    }
+  }
+}
