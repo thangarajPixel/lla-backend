@@ -13,7 +13,7 @@
   "attributes": {
     "name_title": {
       "type": "enumeration",
-      "required": true,
+      "required": false,
       "enum": [
         "Mr.",
         "Ms.",
@@ -26,15 +26,15 @@
     },
     "last_name": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "date_of_birth": {
       "type": "date",
-      "required": true
+      "required": false
     },
     "nationality": {
       "type": "string",
-      "required": true
+      "required": false
     },
     "passport_size_image": {
       "type": "media",
@@ -45,11 +45,13 @@
       ]
     },
     "mobile_no": {
-      "type": "biginteger"
+      "type": "biginteger",
+      "required": true
     },
     "email": {
       "type": "email",
-      "required": true
+      "required": true,
+      "unique": true
     },
     "Language_Proficiency": {
       "type": "component",
@@ -137,6 +139,17 @@
     },
     "course_id": {
       "type": "integer"
+    },
+    "step_0": {
+      "type": "boolean",
+      "default": false
+    },
+    "Message": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
     }
   }
 }
