@@ -119,44 +119,49 @@ export default factories.createCoreController(
       }
     },
 
-    // async findCards(ctx) {
-    //   try {
-    //     const entity = await strapi.db.query("api::home.home").findOne({
-    //       populate: {
-    //         Home: {
-    //           on: {
-    //             "home.course": {
-    //               populate: {
-    //                 Card: {
-    //                   populate: {
-    //                     Image: {
-    //                       select: ["id", "name", "url"],
-    //                     },
-    //                   },
-    //                 },
-    //               },
-    //             },
-    //           },
-    //         },
-    //       },
-    //     });
+    async findCourse(ctx) {
+      try {
+        const entity = await strapi.db.query("api::home.home").findOne({
+          populate: {
+            Home: {
+              on: {
+                "home.course": {
+                  populate: {
+                    Card: {
+                      populate: {
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
 
-    //     if (!entity) return ctx.notFound("Home content not found");
+        if (!entity) {
+          return ctx.notFound("Home content not found");
+        }
 
-    //     // Find the "course" component
-    //     const course = entity.Home.find((c) => c.__component === "home.course");
+        // Find the "course" component from Home array
+        const courseComponent = entity.Home?.find(
+          (component: any) => component.__component === "home.course"
+        );
 
-    //     if (course && course.Card) {
-    //       return ctx.send({
-    //         data: course.Card,
-    //       });
-    //     }
+        if (!courseComponent || !courseComponent.Card) {
+          return ctx.send({ data: [] });
+        }
 
-    //     return ctx.send({ data: [] });
-    //   } catch (error) {
-    //     console.error("Find Cards error:", error);
-    //     return ctx.internalServerError("Failed to load cards");
-    //   }
-    // },
+        // Return only the Card array
+        return ctx.send({
+          data: courseComponent.Card,
+        });
+      } catch (error) {
+        console.error("Find Course error:", error);
+        return ctx.internalServerError("Failed to load courses");
+      }
+    },
   })
 );
