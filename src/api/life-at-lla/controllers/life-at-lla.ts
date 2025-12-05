@@ -58,10 +58,10 @@ export default factories.createCoreController('api::life-at-lla.life-at-lla',
 
 async findCard(ctx) {
   try {
-    const { id } = ctx.params;
+    const { slug } = ctx.params;
 
-    if (!id) {
-      return ctx.badRequest("Card ID is required");
+    if (!slug) {
+      return ctx.badRequest("Card slug is required");
     }
 
     // Fetch full life entity including cards
@@ -89,9 +89,9 @@ async findCard(ctx) {
     }
 
     // Find requested card
-    const card = entity.LifeCard.find((c) => c.id === parseInt(id));
+    const card = entity.LifeCard.find((c) => c.Slug === String(slug));
     if (!card) {
-      return ctx.notFound(`Card with ID ${id} not found`);
+      return ctx.notFound(`Card with slug ${slug} not found`);
     }
 
     // Latest 3 Cards
