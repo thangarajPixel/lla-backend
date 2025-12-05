@@ -2,6 +2,84 @@ import nodemailer from 'nodemailer';
 import { encryptAdmissionId } from './id-encryption';
 
 export default {
+  async sendRequestInformationEmail(contact: any) {
+    console.log('========================================');
+    console.log('📧 Sending Request Information email...');
+    console.log('Contact Email:', contact.Email);
+    console.log('Contact Name:', contact.FirstName);
+    console.log('========================================');
+
+    try {
+      // Create transporter
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: false,
+        auth: {
+          user: process.env.SMTP_USERNAME,
+          pass: process.env.SMTP_PASSWORD,
+        },
+      });
+
+      // Email HTML
+      const emailHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: #ff6b6b; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { padding: 30px; background: #fce4d8; border-radius: 0 0 8px 8px; }
+            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Light & Life Academy</h1>
+              <h3>PHOTOGRAPHY</h3>
+            </div>
+            <div class="content">
+              <h2 style="color: #ff6b6b;">Successfully Request for Admission</h2>
+              <p>Hi <strong>${contact.FirstName}</strong>,</p>
+              <p>Thank you for your registration and interest in Light & Life Academy!</p>
+              <p>We have received your request for information. Our team will review your inquiry and get back to you shortly.</p>
+              <p>We look forward to helping you begin your photography journey with us!</p>
+            </div>
+            <div class="footer">
+              <p>Light & Life Academy - Photography</p>
+              <p>This is an automated email. Please do not reply.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Send email
+      console.log('📤 Sending email...');
+      const result = await transporter.sendMail({
+        from: process.env.SMTP_FROM,
+        to: contact.Email,
+        subject: 'Successfully Request for Admission - Light & Life Academy',
+        html: emailHtml,
+      });
+
+      console.log('✅ SUCCESS: Request Information email sent!');
+      console.log('   To:', contact.Email);
+      console.log('   Message ID:', result.messageId);
+      console.log('========================================');
+
+      return { success: true };
+    } catch (error) {
+      console.error('========================================');
+      console.error('❌ ERROR: Failed to send Request Information email');
+      console.error('Error details:', error);
+      console.error('========================================');
+      throw error;
+    }
+  },
+
   async sendRegistrationLinkEmail(admission: any) {
     console.log('========================================');
     console.log('📧 Sending registration link email...');
