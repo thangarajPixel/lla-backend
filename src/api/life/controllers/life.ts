@@ -1,9 +1,4 @@
-/**
- * life controller
- */
-
 const { factories } = require("@strapi/strapi");
-import { addBaseUrlToMediaUrls } from "../../../helper";
 
 export default factories.createCoreController(
   "api::life.life",
@@ -57,5 +52,63 @@ export default factories.createCoreController(
         return ctx.internalServerError("Failed to load life data");
       }
     },
+
+async findCard(ctx) {
+  try {
+    const { id } = ctx.params;
+
+    if (!id) {
+      return ctx.badRequest("Card ID is required");
+    }
+
+    // Fetch full life entity including cards
+    const entity = await strapi.db.query("api::life.life").findOne({
+      populate: {
+        Card: {
+          populate: {
+            Image: {
+              select: ["id", "name", "url"],
+            },
+            LifeViewCard: {
+              populate: {
+                Images: {
+                  select: ["id", "name", "url"],
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!entity || !entity.Card) {
+      return ctx.notFound("Life content not found");
+    }
+
+    // Find requested card
+    const card = entity.Card.find((c) => c.id === parseInt(id));
+    if (!card) {
+      return ctx.notFound(`Card with ID ${id} not found`);
+    }
+
+    // Latest 3 Cards
+    const latestCards = [...entity.Card]
+      .sort((a, b) => b.id - a.id)
+      .slice(0, 3);
+
+    return {
+      data: {
+        card,
+        latest: latestCards,
+      },
+    };
+
+  } catch (error) {
+    console.error("Life findCard error:", error);
+    return ctx.internalServerError("Failed to load card data");
+  }
+}
+
+
   })
 );

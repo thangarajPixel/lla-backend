@@ -1,0 +1,15 @@
+{
+  "collectionName": "components_life_lives",
+  "info": {
+    "displayName": "Life"
+  },
+  "options": {},
+  "attributes": {
+    "LifeViewCard": {
+      "type": "component",
+      "component": "life-view-card.life-view-card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}
