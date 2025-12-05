@@ -1,0 +1,41 @@
+{
+  "collectionName": "components_life_card_life_cards",
+  "info": {
+    "displayName": "LifeCard"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Image": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "Btn_txt": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "text"
+    },
+    "LongDescription": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    },
+    "LifeViewCard": {
+      "type": "component",
+      "component": "life-view-card.life-view-card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

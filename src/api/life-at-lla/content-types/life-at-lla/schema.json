@@ -1,0 +1,33 @@
+{
+  "kind": "singleType",
+  "collectionName": "life_at_llas",
+  "info": {
+    "singularName": "life-at-lla",
+    "pluralName": "life-at-llas",
+    "displayName": "LifeAtLLA"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Heading": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    },
+    "Description": {
+      "type": "text"
+    },
+    "LifeCard": {
+      "type": "component",
+      "component": "life-card.life-card",
+      "repeatable": true
+    }
+  }
+}

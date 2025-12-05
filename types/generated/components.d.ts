@@ -601,6 +601,33 @@ export interface LanguageLanguageAndProficiency extends Struct.ComponentSchema {
   attributes: {};
 }
 
+export interface LifeCardLifeCard extends Struct.ComponentSchema {
+  collectionName: 'components_life_card_life_cards';
+  info: {
+    displayName: 'LifeCard';
+  };
+  attributes: {
+    Btn_txt: Schema.Attribute.String;
+    Description: Schema.Attribute.Text;
+    Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    LifeViewCard: Schema.Attribute.Component<
+      'life-view-card.life-view-card',
+      true
+    >;
+    LongDescription: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Title: Schema.Attribute.String;
+  };
+}
+
 export interface LifeViewCardLifeViewCard extends Struct.ComponentSchema {
   collectionName: 'components_life_view_card_life_view_cards';
   info: {
@@ -619,19 +646,6 @@ export interface LifeViewCardLifeViewCard extends Struct.ComponentSchema {
       true
     >;
     Title: Schema.Attribute.String;
-  };
-}
-
-export interface LifeLife extends Struct.ComponentSchema {
-  collectionName: 'components_life_lives';
-  info: {
-    displayName: 'Life';
-  };
-  attributes: {
-    LifeViewCard: Schema.Attribute.Component<
-      'life-view-card.life-view-card',
-      true
-    >;
   };
 }
 
@@ -777,8 +791,8 @@ declare module '@strapi/strapi' {
       'home.testimonial': HomeTestimonial;
       'language-and-proficiency.language-proficiency': LanguageAndProficiencyLanguageProficiency;
       'language.language-and-proficiency': LanguageLanguageAndProficiency;
+      'life-card.life-card': LifeCardLifeCard;
       'life-view-card.life-view-card': LifeViewCardLifeViewCard;
-      'life.life': LifeLife;
       'parent-guardian-spouse-details.parent-guardian-spouse-details': ParentGuardianSpouseDetailsParentGuardianSpouseDetails;
       'parent-guardian-spouse.parent-guardian-spouse-details': ParentGuardianSpouseParentGuardianSpouseDetails;
       'post-graduate.post-graduate': PostGraduatePostGraduate;

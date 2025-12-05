@@ -641,6 +641,7 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    Course: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -656,6 +657,9 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     Message: Schema.Attribute.Text;
     Mobile: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    Type: Schema.Attribute.Enumeration<['Contact Us', 'Request Information']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Contact Us'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -852,6 +856,43 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::home.home'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiLifeAtLlaLifeAtLla extends Struct.SingleTypeSchema {
+  collectionName: 'life_at_llas';
+  info: {
+    displayName: 'LifeAtLLA';
+    pluralName: 'life-at-llas';
+    singularName: 'life-at-lla';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    LifeCard: Schema.Attribute.Component<'life-card.life-card', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::life-at-lla.life-at-lla'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    Title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1463,6 +1504,7 @@ declare module '@strapi/strapi' {
       'api::footer.footer': ApiFooterFooter;
       'api::gallery.gallery': ApiGalleryGallery;
       'api::home.home': ApiHomeHome;
+      'api::life-at-lla.life-at-lla': ApiLifeAtLlaLifeAtLla;
       'api::life.life': ApiLifeLife;
       'api::seo.seo': ApiSeoSeo;
       'api::state.state': ApiStateState;

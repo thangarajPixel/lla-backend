@@ -25,6 +25,18 @@
     },
     "LastName": {
       "type": "string"
+    },
+    "Type": {
+      "type": "enumeration",
+      "required": true,
+      "default": "Contact Us",
+      "enum": [
+        "Contact Us",
+        "Request Information"
+      ]
+    },
+    "Course": {
+      "type": "string"
     }
   }
 }

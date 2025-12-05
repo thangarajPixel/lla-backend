@@ -2,8 +2,8 @@ export default {
   routes: [
     {
       method: 'GET',
-    path: '/life/:id',
-    handler: 'life.findCard',
+    path: '/life-at-lla/:id',
+    handler: 'life-at-lla.findCard',
       config: {
         auth: false,
       },
