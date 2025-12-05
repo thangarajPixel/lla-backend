@@ -453,6 +453,7 @@ export interface HomeCard extends Struct.ComponentSchema {
           preset: 'defaultHtml';
         }
       >;
+    Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Title: Schema.Attribute.String;
   };
 }
