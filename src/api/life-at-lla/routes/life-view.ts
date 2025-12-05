@@ -3,10 +3,7 @@ export default {
     {
       method: 'GET',
     path: '/life-at-lla/:slug',
-    handler: 'life-at-lla.findCard',
-      config: {
-        auth: false,
-      },
+    handler: 'life-at-lla.findCard'
     },
   ],
 };

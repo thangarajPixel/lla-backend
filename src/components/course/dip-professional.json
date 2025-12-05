@@ -5,6 +5,13 @@
   },
   "options": {},
   "attributes": {
+    "Name": {
+      "type": "string"
+    },
+    "Slug": {
+      "type": "string",
+      "unique": true
+    },
     "Menu": {
       "type": "component",
       "component": "course.banner",
