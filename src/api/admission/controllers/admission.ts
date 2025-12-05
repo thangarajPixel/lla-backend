@@ -50,6 +50,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
     console.log('✅ Initial record created - ID:', response.data?.id, 'DocumentId:', response.data?.documentId);
 
     // Find draft record with publishedAt = null
+    let createdRecord = response.data;
     if (response.data?.documentId) {
       const draftRecords = await strapi.entityService.findMany('api::admission.admission', {
         filters: {
@@ -61,15 +62,29 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
       if (draftRecords && draftRecords.length > 0) {
         console.log('✅ Found draft record - ID:', draftRecords[0].id);
-        console.log('========================================');
+        createdRecord = draftRecords[0];
+      }
+    }
 
-        const baseUrl = process.env.ADMIN_BASE_URL || `${ctx.request.protocol}://${ctx.request.host}`;
-        return { data: addBaseUrlToMedia(draftRecords[0], baseUrl) };
+    // Check if step_0 is false and send registration link email
+    if (createdRecord && createdRecord.step_0 === false && createdRecord.email && createdRecord.first_name) {
+      console.log('📧 step_0 is false, sending registration link email...');
+      try {
+        const emailService = require('../services/email').default;
+        await emailService.sendRegistrationLinkEmail(createdRecord);
+        console.log('✅ Registration link email sent successfully');
+      } catch (emailError) {
+        console.error('❌ Failed to send registration link email:', emailError);
+        // Don't fail the request if email fails
       }
     }
 
     console.log('========================================');
     const baseUrl = process.env.ADMIN_BASE_URL || `${ctx.request.protocol}://${ctx.request.host}`;
+    if (createdRecord) {
+      return { data: addBaseUrlToMedia(createdRecord, baseUrl) };
+    }
+    
     if (response?.data) {
       response.data = addBaseUrlToMedia(response.data, baseUrl);
     }
@@ -414,6 +429,77 @@ export default factories.createCoreController('api::admission.admission', ({ str
     } catch (error) {
       console.error('Error exporting admissions:', error);
       ctx.throw(500, 'Error exporting admissions: ' + error.message);
+    }
+  },
+
+  async checkEmailUnique(ctx) {
+    try {
+      const { email, id } = ctx.request.body;
+
+      console.log('========================================');
+      console.log('📧 Checking email uniqueness');
+      console.log('Email:', email);
+      console.log('Exclude ID:', id);
+      console.log('========================================');
+
+      // Validate email
+      if (!email) {
+        return ctx.badRequest('Email is required');
+      }
+
+      // Build filters
+      const filters: any = {
+        email: email,
+      };
+
+      // If ID is provided (for edit), get document_id and exclude all records with that document_id
+      if (id) {
+        // First, find the record by ID to get its document_id
+        const currentRecord = await strapi.entityService.findMany('api::admission.admission', {
+          filters: { id: parseInt(id) },
+          limit: 1,
+        });
+
+        if (currentRecord && currentRecord.length > 0 && currentRecord[0].documentId) {
+          const documentId = currentRecord[0].documentId;
+          console.log('📄 Found document_id:', documentId);
+          console.log('   Excluding all records with this document_id');
+          
+          // Exclude all records with the same document_id
+          filters.documentId = { $ne: documentId };
+        } else {
+          console.log('⚠️  Record not found or no document_id, excluding by ID only');
+          filters.id = { $ne: parseInt(id) };
+        }
+      }
+
+      console.log('🔍 Filters:', JSON.stringify(filters, null, 2));
+
+      // Check if email exists
+      const existingAdmissions = await strapi.entityService.findMany('api::admission.admission', {
+        filters: filters,
+        limit: 1,
+      });
+
+      const isUnique = !existingAdmissions || existingAdmissions.length === 0;
+
+      console.log('✅ Email check result:', isUnique ? 'UNIQUE' : 'EXISTS');
+      if (!isUnique && existingAdmissions.length > 0) {
+        console.log('   Found in record ID:', existingAdmissions[0].id);
+        console.log('   Document ID:', existingAdmissions[0].documentId);
+      }
+      console.log('========================================');
+
+      return {
+        email: email,
+        isUnique: isUnique,
+        exists: !isUnique,
+        message: isUnique ? 'Email is available' : 'Email already exists',
+      };
+
+    } catch (error) {
+      console.error('Error checking email uniqueness:', error);
+      ctx.throw(500, 'Error checking email: ' + error.message);
     }
   }
 }));

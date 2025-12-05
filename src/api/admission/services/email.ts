@@ -1,6 +1,108 @@
 import nodemailer from 'nodemailer';
+import { encryptAdmissionId } from './id-encryption';
 
 export default {
+  async sendRegistrationLinkEmail(admission: any) {
+    console.log('========================================');
+    console.log('📧 Sending registration link email...');
+    console.log('Student Email:', admission.email);
+    console.log('Student Name:', admission.first_name);
+    console.log('========================================');
+
+    try {
+      // Create transporter
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: false,
+        auth: {
+          user: process.env.SMTP_USERNAME,
+          pass: process.env.SMTP_PASSWORD,
+        },
+      });
+
+      // Generate encrypted ID
+      const encryptedId = encryptAdmissionId(admission.id);
+      const registrationUrl = `https://dev.lightandlifeacademy.in/admission/${encryptedId}`;
+
+      console.log('🔐 Encrypted ID:', encryptedId);
+      console.log('🔗 Registration URL:', registrationUrl);
+
+      // Email HTML
+      const emailHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: #ff6b6b; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { padding: 30px; background: #fce4d8; border-radius: 0 0 8px 8px; }
+            .button { 
+              display: inline-block; 
+              padding: 12px 30px; 
+              background: #ff6b6b; 
+              color: white; 
+              text-decoration: none; 
+              border-radius: 25px; 
+              margin: 20px 0;
+              font-weight: bold;
+            }
+            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Light & Life Academy</h1>
+              <h3>PHOTOGRAPHY</h3>
+            </div>
+            <div class="content">
+              <p>Hi <strong>${admission.first_name}</strong>,</p>
+              <p>Thank you for your interest in Light & Life Academy!</p>
+              <p>To complete your registration, please click the button below:</p>
+              <div style="text-align: center;">
+                <a href="${registrationUrl}" class="button">Complete Registration</a>
+              </div>
+              <p style="font-size: 12px; color: #666;">
+                Or copy and paste this link in your browser:<br>
+                <a href="${registrationUrl}">${registrationUrl}</a>
+              </p>
+              <p>We look forward to having you join our photography community!</p>
+            </div>
+            <div class="footer">
+              <p>Light & Life Academy - Photography</p>
+              <p>This is an automated email. Please do not reply.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `;
+
+      // Send email
+      console.log('📤 Sending email...');
+      const result = await transporter.sendMail({
+        from: process.env.SMTP_FROM,
+        to: admission.email,
+        subject: 'Complete Your Registration - Light & Life Academy',
+        html: emailHtml,
+      });
+
+      console.log('✅ SUCCESS: Registration link email sent!');
+      console.log('   To:', admission.email);
+      console.log('   Message ID:', result.messageId);
+      console.log('========================================');
+
+      return { success: true, encryptedId };
+    } catch (error) {
+      console.error('========================================');
+      console.error('❌ ERROR: Failed to send registration link email');
+      console.error('Error details:', error);
+      console.error('========================================');
+      throw error;
+    }
+  },
+
   async sendRegistrationEmail(admission: any) {
     console.log('========================================');
     console.log('📧 Starting email sending process...');
