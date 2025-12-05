@@ -666,6 +666,35 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCourseListCourseList extends Struct.CollectionTypeSchema {
+  collectionName: 'course_lists';
+  info: {
+    displayName: 'CourseList';
+    pluralName: 'course-lists';
+    singularName: 'course-list';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::course-list.course-list'
+    > &
+      Schema.Attribute.Private;
+    Name: Schema.Attribute.String;
+    publishedAt: Schema.Attribute.DateTime;
+    Slug: Schema.Attribute.String & Schema.Attribute.Unique;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCourseCourse extends Struct.SingleTypeSchema {
   collectionName: 'courses';
   info: {
@@ -782,6 +811,13 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
       'api::footer.footer'
     > &
       Schema.Attribute.Private;
+    Location: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Logo: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -1498,6 +1534,7 @@ declare module '@strapi/strapi' {
       'api::campus.campus': ApiCampusCampus;
       'api::contact-page.contact-page': ApiContactPageContactPage;
       'api::contact.contact': ApiContactContact;
+      'api::course-list.course-list': ApiCourseListCourseList;
       'api::course.course': ApiCourseCourse;
       'api::faculty.faculty': ApiFacultyFaculty;
       'api::faq.faq': ApiFaqFaq;

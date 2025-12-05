@@ -42,6 +42,13 @@
     },
     "Copy_right_txt": {
       "type": "text"
+    },
+    "Location": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
     }
   }
 }

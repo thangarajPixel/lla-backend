@@ -1,10 +1,5 @@
-/**
- * footer controller
- */
 
 import { factories } from "@strapi/strapi";
-
-import { addBaseUrlToMediaUrls } from "../../../helper";
 
 export default factories.createCoreController(
   "api::footer.footer",
@@ -13,18 +8,26 @@ export default factories.createCoreController(
       try {
         const entity = await strapi.db.query("api::footer.footer").findOne({
           populate: {
-            Logo: true,
-            Icon: true,
+            Logo: {
+              select: ["id", "name", "url"],
+            },
+            Icon: {
+              select: ["id", "name", "url"],
+            },
+          },
+        });
+        const course = await strapi.db.query("api::course-list.course-list").findMany({
+          where: {
+            publishedAt: {
+              $notNull: true,
+            },
           },
         });
 
         if (!entity) {
           return ctx.notFound("About content not found");
         }
-
-        // Add base URL to media URLs
-        addBaseUrlToMediaUrls(entity);
-
+        entity.course =course;
         const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
         return this.transformResponse(sanitizedEntity);
       } catch (error) {
@@ -35,4 +38,3 @@ export default factories.createCoreController(
   })
 );
 
-// export default factories.createCoreController('');
