@@ -476,30 +476,38 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    date_of_birth: Schema.Attribute.Date & Schema.Attribute.Required;
+    date_of_birth: Schema.Attribute.Date;
     district: Schema.Attribute.String;
     Education_Details: Schema.Attribute.Component<
       'education-details.education-details',
       false
     >;
-    email: Schema.Attribute.Email & Schema.Attribute.Required;
+    email: Schema.Attribute.Email &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     first_name: Schema.Attribute.String & Schema.Attribute.Required;
     hobbies: Schema.Attribute.String;
     Language_Proficiency: Schema.Attribute.Component<
       'language-and-proficiency.language-proficiency',
       true
     >;
-    last_name: Schema.Attribute.String & Schema.Attribute.Required;
+    last_name: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::admission.admission'
     > &
       Schema.Attribute.Private;
-    mobile_no: Schema.Attribute.BigInteger;
-    name_title: Schema.Attribute.Enumeration<['Mr.', 'Ms.', 'Mrs.']> &
-      Schema.Attribute.Required;
-    nationality: Schema.Attribute.String & Schema.Attribute.Required;
+    Message: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    mobile_no: Schema.Attribute.BigInteger & Schema.Attribute.Required;
+    name_title: Schema.Attribute.Enumeration<['Mr.', 'Ms.', 'Mrs.']>;
+    nationality: Schema.Attribute.String;
     Parent_Guardian_Spouse_Details: Schema.Attribute.Component<
       'parent-guardian-spouse.parent-guardian-spouse-details',
       false
@@ -514,6 +522,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     >;
     publishedAt: Schema.Attribute.DateTime;
     state: Schema.Attribute.Relation<'manyToOne', 'api::state.state'>;
+    step_0: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     step_1: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     step_2: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     step_3: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
