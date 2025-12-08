@@ -230,7 +230,7 @@ export default factories.createCoreController(
 
         const result = {
           ...courseComponent,
-          courseList: courseList || null,
+          courseList,
         };
 
         return ctx.send({
