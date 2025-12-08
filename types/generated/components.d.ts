@@ -515,7 +515,9 @@ export interface HomeCard extends Struct.ComponentSchema {
         }
       >;
     Slug: Schema.Attribute.String & Schema.Attribute.Unique;
+    Thumbnail: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Title: Schema.Attribute.String;
+    Url: Schema.Attribute.Text;
   };
 }
 

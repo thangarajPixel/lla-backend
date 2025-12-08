@@ -19,17 +19,17 @@ export default factories.createCoreController(
                     Menu: {
                       populate: {
                         Image: {
-                      select: ["id", "name", "url"],
-                    },
+                          select: ["id", "name", "url"],
+                        },
                       },
                     },
                     Overview: {
                       populate: {
                         Card: {
                           populate: {
-                            Image:  {
-                      select: ["id", "name", "url"],
-                    },
+                            Image: {
+                              select: ["id", "name", "url"],
+                            },
                           },
                         },
                       },
@@ -38,9 +38,9 @@ export default factories.createCoreController(
                       populate: {
                         Content_card: {
                           populate: {
-                            Image:  {
-                      select: ["id", "name", "url"],
-                    },
+                            Image: {
+                              select: ["id", "name", "url"],
+                            },
                           },
                         },
                       },
@@ -57,8 +57,8 @@ export default factories.createCoreController(
                         Card: {
                           populate: {
                             Image: {
-                      select: ["id", "name", "url"],
-                    },
+                              select: ["id", "name", "url"],
+                            },
                           },
                         },
                       },
@@ -210,6 +210,12 @@ export default factories.createCoreController(
         if (!entity) {
           return ctx.notFound("Course not found");
         }
+        const courselistall = await strapi.db
+          .query("api::course-list.course-list")
+          .findMany();
+
+
+        const courseList = courselistall.find((course) => course.Slug === slug);
 
         // Find the course with matching slug
         const courseComponent = entity.Course?.find(
@@ -222,8 +228,13 @@ export default factories.createCoreController(
           return ctx.notFound(`Course with slug "${slug}" not found`);
         }
 
+        const result = {
+          ...courseComponent,
+          courseList: courseList || null,
+        };
+
         return ctx.send({
-          data: courseComponent,
+          data: result,
         });
       } catch (error) {
         console.error("Find course by slug error:", error);

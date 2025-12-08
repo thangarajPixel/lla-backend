@@ -37,6 +37,19 @@
       "options": {
         "preset": "defaultHtml"
       }
+    },
+    "Thumbnail": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "Url": {
+      "type": "text"
     }
   },
   "config": {}
