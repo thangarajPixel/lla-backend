@@ -20,11 +20,14 @@
     "MobileNo": {
       "type": "string"
     },
+    "Email": {
+      "type": "email"
+    },
     "VisitorDescription": {
       "type": "string"
     },
     "Location": {
-      "type": "text"
+      "type": "blocks"
     },
     "LocationUrl": {
       "type": "text"
