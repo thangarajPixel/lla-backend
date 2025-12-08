@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-12-08T07:42:09.170Z"
+    "x-generation-date": "2025-12-08T07:02:32.053Z"
   },
   "servers": [
     {
@@ -13339,14 +13339,12 @@
               "MobileNo": {
                 "type": "string"
               },
-              "Email": {
-                "type": "string",
-                "format": "email"
-              },
               "VisitorDescription": {
                 "type": "string"
               },
-              "Location": {},
+              "Location": {
+                "type": "string"
+              },
               "LocationUrl": {
                 "type": "string"
               },
@@ -13430,14 +13428,12 @@
           "MobileNo": {
             "type": "string"
           },
-          "Email": {
-            "type": "string",
-            "format": "email"
-          },
           "VisitorDescription": {
             "type": "string"
           },
-          "Location": {},
+          "Location": {
+            "type": "string"
+          },
           "LocationUrl": {
             "type": "string"
           },
@@ -13756,14 +13752,12 @@
                 "MobileNo": {
                   "type": "string"
                 },
-                "Email": {
-                  "type": "string",
-                  "format": "email"
-                },
                 "VisitorDescription": {
                   "type": "string"
                 },
-                "Location": {},
+                "Location": {
+                  "type": "string"
+                },
                 "LocationUrl": {
                   "type": "string"
                 },

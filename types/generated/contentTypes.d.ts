@@ -616,7 +616,6 @@ export interface ApiContactPageContactPage extends Struct.SingleTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     Description: Schema.Attribute.Text;
-    Email: Schema.Attribute.Email;
     Heading: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         'plugin::ckeditor5.CKEditor',
@@ -630,7 +629,7 @@ export interface ApiContactPageContactPage extends Struct.SingleTypeSchema {
       'api::contact-page.contact-page'
     > &
       Schema.Attribute.Private;
-    Location: Schema.Attribute.Blocks;
+    Location: Schema.Attribute.Text;
     LocationUrl: Schema.Attribute.Text;
     MobileNo: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
