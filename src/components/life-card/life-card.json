@@ -35,6 +35,9 @@
         "preset": "defaultHtml"
       }
     },
+    "CreatedDate": {
+      "type": "date"
+    },
     "LifeViewCard": {
       "type": "component",
       "component": "life-view-card.life-view-card",

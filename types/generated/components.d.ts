@@ -607,6 +607,7 @@ export interface LifeCardLifeCard extends Struct.ComponentSchema {
   };
   attributes: {
     Btn_txt: Schema.Attribute.String;
+    CreatedDate: Schema.Attribute.Date;
     Description: Schema.Attribute.Text;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
