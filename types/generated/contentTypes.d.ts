@@ -629,7 +629,6 @@ export interface ApiContactPageContactPage extends Struct.SingleTypeSchema {
       'api::contact-page.contact-page'
     > &
       Schema.Attribute.Private;
-    Location: Schema.Attribute.Text;
     LocationUrl: Schema.Attribute.Text;
     MobileNo: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;

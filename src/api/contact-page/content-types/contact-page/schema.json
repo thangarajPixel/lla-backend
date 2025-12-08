@@ -23,9 +23,6 @@
     "VisitorDescription": {
       "type": "string"
     },
-    "Location": {
-      "type": "text"
-    },
     "LocationUrl": {
       "type": "text"
     },
