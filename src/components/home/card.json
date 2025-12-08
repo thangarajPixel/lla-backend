@@ -28,6 +28,9 @@
     "Btn_txt": {
       "type": "string"
     },
+    "Btn_txt2": {
+      "type": "string"
+    },
     "LongDescription": {
       "type": "customField",
       "customField": "plugin::ckeditor5.CKEditor",

@@ -443,6 +443,7 @@ export interface HomeCard extends Struct.ComponentSchema {
   };
   attributes: {
     Btn_txt: Schema.Attribute.String;
+    Btn_txt2: Schema.Attribute.String;
     Description: Schema.Attribute.Text;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
