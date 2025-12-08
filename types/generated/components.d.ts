@@ -216,6 +216,21 @@ export interface CourseContentCard extends Struct.ComponentSchema {
     >;
     Section: Schema.Attribute.String;
     Title: Schema.Attribute.String;
+    Type: Schema.Attribute.Enumeration<
+      [
+        'Type1',
+        'Type2',
+        'Type3',
+        'Type4',
+        'Type5',
+        'Type6',
+        'Type7',
+        'Type8',
+        'Type9',
+        'Type10',
+      ]
+    > &
+      Schema.Attribute.DefaultTo<'Type1'>;
   };
 }
 
