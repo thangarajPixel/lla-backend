@@ -20,8 +20,18 @@
     "MobileNo": {
       "type": "string"
     },
+    "Email": {
+      "type": "email"
+    },
     "VisitorDescription": {
       "type": "string"
+    },
+    "Location": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
     },
     "LocationUrl": {
       "type": "text"

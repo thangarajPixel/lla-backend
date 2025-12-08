@@ -11,6 +11,9 @@
     "SubTitle": {
       "type": "string"
     },
+    "Duration": {
+      "type": "string"
+    },
     "Description": {
       "type": "blocks"
     },

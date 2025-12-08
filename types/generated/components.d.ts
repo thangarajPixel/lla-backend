@@ -128,6 +128,7 @@ export interface CourseBanner extends Struct.ComponentSchema {
   attributes: {
     Btn_txt: Schema.Attribute.String;
     Description: Schema.Attribute.Blocks;
+    Duration: Schema.Attribute.String;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -181,7 +182,6 @@ export interface CourseContentCard extends Struct.ComponentSchema {
     >;
     Section: Schema.Attribute.String;
     Title: Schema.Attribute.String;
-    Type: Schema.Attribute.String;
   };
 }
 
