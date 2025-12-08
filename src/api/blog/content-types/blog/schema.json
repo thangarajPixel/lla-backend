@@ -10,5 +10,11 @@
     "draftAndPublish": true
   },
   "pluginOptions": {},
-  "attributes": {}
+  "attributes": {
+    "Blog": {
+      "type": "component",
+      "component": "blog.blog",
+      "repeatable": false
+    }
+  }
 }

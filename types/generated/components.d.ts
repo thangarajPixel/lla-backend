@@ -81,6 +81,40 @@ export interface AddressAddress extends Struct.ComponentSchema {
   attributes: {};
 }
 
+export interface BlogBlog extends Struct.ComponentSchema {
+  collectionName: 'components_blog_blogs';
+  info: {
+    displayName: 'Blog';
+  };
+  attributes: {
+    BlogCard: Schema.Attribute.Component<'blog.blog-card', true>;
+    Description: Schema.Attribute.Text;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface BlogBlogCard extends Struct.ComponentSchema {
+  collectionName: 'components_blog_blog_cards';
+  info: {
+    displayName: 'BlogCard';
+  };
+  attributes: {
+    Btn_txt: Schema.Attribute.String;
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    Title: Schema.Attribute.String;
+  };
+}
+
 export interface CampusCard extends Struct.ComponentSchema {
   collectionName: 'components_campus_cards';
   info: {
@@ -757,6 +791,8 @@ declare module '@strapi/strapi' {
       'about.legacy': AboutLegacy;
       'about.team': AboutTeam;
       'address.address': AddressAddress;
+      'blog.blog': BlogBlog;
+      'blog.blog-card': BlogBlogCard;
       'campus.card': CampusCard;
       'campus.facilities': CampusFacilities;
       'campus.menu': CampusMenu;

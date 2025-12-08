@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_blog_blogs",
+  "info": {
+    "displayName": "Blog"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "text"
+    },
+    "BlogCard": {
+      "type": "component",
+      "component": "blog.blog-card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}
