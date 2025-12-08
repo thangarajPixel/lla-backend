@@ -214,6 +214,14 @@ export interface CourseContentCard extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
+    OuterDescription: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    OuterTitle: Schema.Attribute.String;
     Section: Schema.Attribute.String;
     Title: Schema.Attribute.String;
     Type: Schema.Attribute.Enumeration<

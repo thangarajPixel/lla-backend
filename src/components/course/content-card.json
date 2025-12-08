@@ -43,6 +43,16 @@
         "Type9",
         "Type10"
       ]
+    },
+    "OuterTitle": {
+      "type": "string"
+    },
+    "OuterDescription": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
     }
   },
   "config": {}
