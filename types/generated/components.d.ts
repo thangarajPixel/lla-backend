@@ -435,6 +435,28 @@ export interface FaqBanner extends Struct.ComponentSchema {
   };
 }
 
+export interface FaqFaq extends Struct.ComponentSchema {
+  collectionName: 'components_faq_faqs';
+  info: {
+    displayName: 'faq';
+  };
+  attributes: {
+    Qa: Schema.Attribute.Component<'faq.qa', true>;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface FaqQa extends Struct.ComponentSchema {
+  collectionName: 'components_faq_qas';
+  info: {
+    displayName: 'QA';
+  };
+  attributes: {
+    Answer: Schema.Attribute.Text;
+    Question: Schema.Attribute.String;
+  };
+}
+
 export interface GalleryGallery extends Struct.ComponentSchema {
   collectionName: 'components_gallery_galleries';
   info: {
@@ -840,6 +862,8 @@ declare module '@strapi/strapi' {
       'faculty.photography': FacultyPhotography;
       'faculty.visiting': FacultyVisiting;
       'faq.banner': FaqBanner;
+      'faq.faq': FaqFaq;
+      'faq.qa': FaqQa;
       'gallery.gallery': GalleryGallery;
       'home.about': HomeAbout;
       'home.banner': HomeBanner;

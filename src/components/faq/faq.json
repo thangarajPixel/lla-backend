@@ -1,0 +1,18 @@
+{
+  "collectionName": "components_faq_faqs",
+  "info": {
+    "displayName": "faq"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Qa": {
+      "type": "component",
+      "component": "faq.qa",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

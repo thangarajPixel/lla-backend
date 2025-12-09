@@ -11,10 +11,13 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "Title": {
+      "type": "string"
+    },
     "faq": {
       "type": "dynamiczone",
       "components": [
-        "faq.banner"
+        "faq.faq"
       ]
     }
   }

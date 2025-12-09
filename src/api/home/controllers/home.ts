@@ -66,10 +66,7 @@ export default factories.createCoreController(
                       populate: {
                         Image: {
                           select: ["id", "name", "url"],
-                        },
-                        Thumbnail: {
-                          select: ["id", "name", "url"],
-                        },
+                        }
                       },
                     },
                   },
