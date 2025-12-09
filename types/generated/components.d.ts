@@ -312,7 +312,13 @@ export interface CourseInfo extends Struct.ComponentSchema {
     displayName: 'Info';
   };
   attributes: {
-    Description: Schema.Attribute.Text;
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Title: Schema.Attribute.String;
   };
 }
@@ -335,7 +341,13 @@ export interface CourseQa extends Struct.ComponentSchema {
     displayName: 'QA';
   };
   attributes: {
-    Description: Schema.Attribute.Text;
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Title: Schema.Attribute.String;
   };
 }
