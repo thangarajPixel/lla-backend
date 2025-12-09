@@ -67,7 +67,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
     }
 
     // Check if step_0 is false and send registration link email
-    if (createdRecord && createdRecord.step_0 === false && createdRecord.email && createdRecord.first_name) {
+    if (createdRecord && createdRecord.step_0 === true && createdRecord.email && createdRecord.first_name) {
       console.log('📧 step_0 is false, sending registration link email...');
       try {
         const emailService = require('../services/email').default;
