@@ -1018,6 +1018,46 @@ export interface ApiLifeLife extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiPrivacyPolicyPrivacyPolicy extends Struct.SingleTypeSchema {
+  collectionName: 'privacy_policies';
+  info: {
+    displayName: 'PrivacyPolicy';
+    pluralName: 'privacy-policies';
+    singularName: 'privacy-policy';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::privacy-policy.privacy-policy'
+    > &
+      Schema.Attribute.Private;
+    PrivacyPolicyCard: Schema.Attribute.Component<
+      'privacy-policy.privacy-policy',
+      true
+    >;
+    publishedAt: Schema.Attribute.DateTime;
+    SubTitle: Schema.Attribute.Text;
+    Title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSeoSeo extends Struct.SingleTypeSchema {
   collectionName: 'seos';
   info: {
@@ -1598,6 +1638,7 @@ declare module '@strapi/strapi' {
       'api::home.home': ApiHomeHome;
       'api::life-at-lla.life-at-lla': ApiLifeAtLlaLifeAtLla;
       'api::life.life': ApiLifeLife;
+      'api::privacy-policy.privacy-policy': ApiPrivacyPolicyPrivacyPolicy;
       'api::seo.seo': ApiSeoSeo;
       'api::state.state': ApiStateState;
       'plugin::content-releases.release': PluginContentReleasesRelease;

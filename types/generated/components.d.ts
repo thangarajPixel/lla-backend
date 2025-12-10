@@ -788,6 +788,23 @@ export interface PostGraduatePostGraduate extends Struct.ComponentSchema {
   };
 }
 
+export interface PrivacyPolicyPrivacyPolicy extends Struct.ComponentSchema {
+  collectionName: 'components_privacy_policy_privacy_policies';
+  info: {
+    displayName: 'PrivacyPolicy';
+  };
+  attributes: {
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Title: Schema.Attribute.String;
+  };
+}
+
 export interface SeoHome extends Struct.ComponentSchema {
   collectionName: 'components_seo_homes';
   info: {
@@ -896,6 +913,7 @@ declare module '@strapi/strapi' {
       'parent-guardian-spouse-details.parent-guardian-spouse-details': ParentGuardianSpouseDetailsParentGuardianSpouseDetails;
       'parent-guardian-spouse.parent-guardian-spouse-details': ParentGuardianSpouseParentGuardianSpouseDetails;
       'post-graduate.post-graduate': PostGraduatePostGraduate;
+      'privacy-policy.privacy-policy': PrivacyPolicyPrivacyPolicy;
       'seo.home': SeoHome;
       'under-graduate.under-graduate': UnderGraduateUnderGraduate;
       'upload-your-portfolio.upload-your-portfolio': UploadYourPortfolioUploadYourPortfolio;
