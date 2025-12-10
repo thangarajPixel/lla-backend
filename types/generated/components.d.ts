@@ -111,6 +111,7 @@ export interface BlogBlogCard extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
+    Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Title: Schema.Attribute.String;
   };
 }

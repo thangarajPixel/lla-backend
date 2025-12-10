@@ -8,6 +8,10 @@
     "Title": {
       "type": "string"
     },
+    "Slug": {
+      "type": "string",
+      "unique": true
+    },
     "Btn_txt": {
       "type": "string"
     },
