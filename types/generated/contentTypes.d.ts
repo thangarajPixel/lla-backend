@@ -955,7 +955,7 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
 export interface ApiLifeAtLlaLifeAtLla extends Struct.SingleTypeSchema {
   collectionName: 'life_at_llas';
   info: {
-    displayName: 'LifeAtLLA';
+    displayName: 'Life@Lla';
     pluralName: 'life-at-llas';
     singularName: 'life-at-lla';
   };
