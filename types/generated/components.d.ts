@@ -124,7 +124,9 @@ export interface CampusCard extends Struct.ComponentSchema {
   };
   attributes: {
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Slug: Schema.Attribute.String;
     Title: Schema.Attribute.String;
+    ViewCard: Schema.Attribute.Component<'faculty.view-card', true>;
   };
 }
 
@@ -422,6 +424,27 @@ export interface FacultyPhotography extends Struct.ComponentSchema {
     Heading: Schema.Attribute.String;
     SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
+  };
+}
+
+export interface FacultyViewCard extends Struct.ComponentSchema {
+  collectionName: 'components_faculty_view_cards';
+  info: {
+    displayName: 'ViewCard';
+    icon: 'code';
+  };
+  attributes: {
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
   };
 }
 
@@ -906,6 +929,7 @@ declare module '@strapi/strapi' {
       'faculty.faculty': FacultyFaculty;
       'faculty.filmmaking': FacultyFilmmaking;
       'faculty.photography': FacultyPhotography;
+      'faculty.view-card': FacultyViewCard;
       'faculty.visiting': FacultyVisiting;
       'faq.banner': FaqBanner;
       'faq.faq': FaqFaq;

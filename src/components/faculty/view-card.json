@@ -1,0 +1,28 @@
+{
+  "collectionName": "components_faculty_view_cards",
+  "info": {
+    "displayName": "ViewCard",
+    "icon": "code"
+  },
+  "options": {},
+  "attributes": {
+    "Description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    },
+    "Image": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}
