@@ -813,6 +813,24 @@ export interface SeoHome extends Struct.ComponentSchema {
   };
 }
 
+export interface TermsAndConditionTermsAndCondition
+  extends Struct.ComponentSchema {
+  collectionName: 'components_terms_and_condition_terms_and_conditions';
+  info: {
+    displayName: 'Terms&Condition';
+  };
+  attributes: {
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Title: Schema.Attribute.String;
+  };
+}
+
 export interface UnderGraduateUnderGraduate extends Struct.ComponentSchema {
   collectionName: 'components_under_graduate_under_graduates';
   info: {
@@ -912,6 +930,7 @@ declare module '@strapi/strapi' {
       'post-graduate.post-graduate': PostGraduatePostGraduate;
       'privacy-policy.privacy-policy': PrivacyPolicyPrivacyPolicy;
       'seo.home': SeoHome;
+      'terms-and-condition.terms-and-condition': TermsAndConditionTermsAndCondition;
       'under-graduate.under-graduate': UnderGraduateUnderGraduate;
       'upload-your-portfolio.upload-your-portfolio': UploadYourPortfolioUploadYourPortfolio;
       'work-experience.work-experience': WorkExperienceWorkExperience;

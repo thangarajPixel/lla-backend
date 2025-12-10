@@ -1112,6 +1112,47 @@ export interface ApiStateState extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiTermsAndConditionTermsAndCondition
+  extends Struct.SingleTypeSchema {
+  collectionName: 'terms_and_conditions';
+  info: {
+    displayName: 'Terms&Condition';
+    pluralName: 'terms-and-conditions';
+    singularName: 'terms-and-condition';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::terms-and-condition.terms-and-condition'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    SubTitle: Schema.Attribute.Text;
+    TermsAndConditionCard: Schema.Attribute.Component<
+      'terms-and-condition.terms-and-condition',
+      true
+    >;
+    Title: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -1641,6 +1682,7 @@ declare module '@strapi/strapi' {
       'api::privacy-policy.privacy-policy': ApiPrivacyPolicyPrivacyPolicy;
       'api::seo.seo': ApiSeoSeo;
       'api::state.state': ApiStateState;
+      'api::terms-and-condition.terms-and-condition': ApiTermsAndConditionTermsAndCondition;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

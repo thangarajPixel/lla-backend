@@ -1,0 +1,33 @@
+{
+  "kind": "singleType",
+  "collectionName": "terms_and_conditions",
+  "info": {
+    "singularName": "terms-and-condition",
+    "pluralName": "terms-and-conditions",
+    "displayName": "Terms&Condition"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "SubTitle": {
+      "type": "text"
+    },
+    "Description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    },
+    "TermsAndConditionCard": {
+      "type": "component",
+      "component": "terms-and-condition.terms-and-condition",
+      "repeatable": true
+    }
+  }
+}

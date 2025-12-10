@@ -1,0 +1,20 @@
+{
+  "collectionName": "components_terms_and_condition_terms_and_conditions",
+  "info": {
+    "displayName": "Terms&Condition"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    }
+  },
+  "config": {}
+}
