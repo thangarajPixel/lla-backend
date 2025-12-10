@@ -475,10 +475,7 @@ export interface GalleryGallery extends Struct.ComponentSchema {
     displayName: 'Gallery';
   };
   attributes: {
-    Image: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios',
-      true
-    >;
+    Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Type: Schema.Attribute.Enumeration<['Video', 'Gallery']>;
     Url: Schema.Attribute.Text;
   };
