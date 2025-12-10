@@ -100,6 +100,7 @@ export interface BlogBlogCard extends Struct.ComponentSchema {
   };
   attributes: {
     Btn_txt: Schema.Attribute.String;
+    CreatedDate: Schema.Attribute.Date;
     Description: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         'plugin::ckeditor5.CKEditor',

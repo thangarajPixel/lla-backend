@@ -31,6 +31,9 @@
       "options": {
         "preset": "defaultHtml"
       }
+    },
+    "CreatedDate": {
+      "type": "date"
     }
   },
   "config": {}
