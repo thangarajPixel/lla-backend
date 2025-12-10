@@ -8,6 +8,9 @@
     "Title": {
       "type": "string"
     },
+    "Slug": {
+      "type": "string"
+    },
     "Image": {
       "type": "media",
       "multiple": false,
@@ -17,6 +20,11 @@
         "videos",
         "audios"
       ]
+    },
+    "ViewCard": {
+      "type": "component",
+      "component": "faculty.view-card",
+      "repeatable": true
     }
   },
   "config": {}
