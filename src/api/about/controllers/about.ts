@@ -94,6 +94,13 @@ export default factories.createCoreController(
                         Image: {
                           select: ["id", "name", "url"],
                         },
+                        ViewCard : {
+                          populate: {
+                            Image: {
+                              select: ["id", "name", "url"],
+                            }
+                          }
+                        }
                       },
                     },
                   },

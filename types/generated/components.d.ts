@@ -601,6 +601,13 @@ export interface HomeCourse extends Struct.ComponentSchema {
   attributes: {
     Card: Schema.Attribute.Component<'home.card', true>;
     Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Title: Schema.Attribute.String;
   };
 }
