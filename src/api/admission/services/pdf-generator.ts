@@ -384,6 +384,12 @@ class PDFGenerator {
         <div class="right-column">
             <div class="section">
                 <div class="section-title">Personal Details</div>
+                {{#if Course}}
+                    <div class="field-row">
+                        <div class="field-label">Course Name</div>
+                        <div class="field-value">{{Course.Name}}</div>
+                    </div>
+                {{/if}}
                 <div class="field-row">
                     <div class="field-label">First Name</div>
                     <div class="field-value">{{first_name}}</div>
