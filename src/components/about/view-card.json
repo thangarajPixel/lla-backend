@@ -1,0 +1,23 @@
+{
+  "collectionName": "components_about_view_cards",
+  "info": {
+    "displayName": "ViewCard"
+  },
+  "options": {},
+  "attributes": {
+    "Link": {
+      "type": "text"
+    },
+    "Image": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  },
+  "config": {}
+}

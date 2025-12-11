@@ -40,6 +40,8 @@ export interface AboutFounderCard extends Struct.ComponentSchema {
     Description: Schema.Attribute.Blocks;
     Heading: Schema.Attribute.String;
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    Slug: Schema.Attribute.String;
+    ViewCard: Schema.Attribute.Component<'about.view-card', false>;
   };
 }
 
@@ -70,6 +72,20 @@ export interface AboutTeam extends Struct.ComponentSchema {
     Heading: Schema.Attribute.String;
     SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
+  };
+}
+
+export interface AboutViewCard extends Struct.ComponentSchema {
+  collectionName: 'components_about_view_cards';
+  info: {
+    displayName: 'ViewCard';
+  };
+  attributes: {
+    Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    Link: Schema.Attribute.Text;
   };
 }
 
@@ -906,6 +922,7 @@ declare module '@strapi/strapi' {
       'about.founder-card': AboutFounderCard;
       'about.legacy': AboutLegacy;
       'about.team': AboutTeam;
+      'about.view-card': AboutViewCard;
       'address.address': AddressAddress;
       'blog.blog': BlogBlog;
       'blog.blog-card': BlogBlogCard;

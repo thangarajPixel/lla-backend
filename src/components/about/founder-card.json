@@ -23,6 +23,14 @@
         "videos",
         "audios"
       ]
+    },
+    "Slug": {
+      "type": "string"
+    },
+    "ViewCard": {
+      "type": "component",
+      "component": "about.view-card",
+      "repeatable": false
     }
   },
   "config": {}
