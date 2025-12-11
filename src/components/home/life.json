@@ -8,13 +8,7 @@
     "Title": {
       "type": "string"
     },
-    "Heading": {
-      "type": "string"
-    },
     "Btn_txt": {
-      "type": "string"
-    },
-    "SubHeading": {
       "type": "string"
     },
     "Description": {

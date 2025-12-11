@@ -8,9 +8,6 @@
     "Title": {
       "type": "string"
     },
-    "Heading": {
-      "type": "string"
-    },
     "Description": {
       "type": "text"
     },
@@ -26,9 +23,6 @@
         "videos",
         "audios"
       ]
-    },
-    "SubHeading": {
-      "type": "string"
     }
   },
   "config": {}
