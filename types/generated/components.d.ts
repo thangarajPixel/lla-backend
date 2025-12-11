@@ -130,6 +130,28 @@ export interface BlogBlogCard extends Struct.ComponentSchema {
     >;
     Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Title: Schema.Attribute.String;
+    ViewCard: Schema.Attribute.Component<'blog.view-card', true>;
+  };
+}
+
+export interface BlogViewCard extends Struct.ComponentSchema {
+  collectionName: 'components_blog_view_cards';
+  info: {
+    displayName: 'ViewCard';
+  };
+  attributes: {
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    Title: Schema.Attribute.String;
   };
 }
 
@@ -966,6 +988,7 @@ declare module '@strapi/strapi' {
       'address.address': AddressAddress;
       'blog.blog': BlogBlog;
       'blog.blog-card': BlogBlogCard;
+      'blog.view-card': BlogViewCard;
       'campus.card': CampusCard;
       'campus.facilities': CampusFacilities;
       'campus.menu': CampusMenu;

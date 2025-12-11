@@ -34,6 +34,11 @@
     },
     "CreatedDate": {
       "type": "date"
+    },
+    "ViewCard": {
+      "type": "component",
+      "component": "blog.view-card",
+      "repeatable": true
     }
   },
   "config": {}
