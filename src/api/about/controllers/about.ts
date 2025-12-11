@@ -79,9 +79,9 @@ export default factories.createCoreController(
         return ctx.internalServerError("Failed to load home data");
       }
     },
-    async founderById(ctx) {
+    async founderBySlug(ctx) {
       try {
-        const cardId = Number(ctx.params.id);
+        const slug = ctx.params.slug;
 
         const entity = await strapi.db.query("api::about.about").findOne({
           populate: {
@@ -120,11 +120,10 @@ export default factories.createCoreController(
         let cards = founderBlock.Founder_card;
 
         // Split: selected card first, others next
-        const matchedCard = cards.find((c) => c.id === cardId);
-        const otherCards = cards.filter((c) => c.id !== cardId);
+        const matchedCard = cards.find((c) => c.Slug === slug);
 
         // Reorder
-        const finalCards = matchedCard ? [matchedCard, ...otherCards] : cards;
+        const finalCards = matchedCard ? [matchedCard] : cards;
 
         // Replace original array
         founderBlock.Founder_card = finalCards;

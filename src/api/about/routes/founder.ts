@@ -2,8 +2,8 @@ export default {
   routes: [
     {
       method: "GET",
-      path: "/about/founder/:id",
-      handler: "about.founderById",
+      path: "/about/founder/:slug",
+      handler: "about.founderBySlug",
       config: {
         auth: false,
       },
