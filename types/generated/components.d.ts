@@ -530,6 +530,13 @@ export interface HomeAbout extends Struct.ComponentSchema {
   attributes: {
     Btn_txt: Schema.Attribute.String;
     Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -558,6 +565,13 @@ export interface HomeCampus extends Struct.ComponentSchema {
     Bg_img: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Btn_txt: Schema.Attribute.String;
     Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Title: Schema.Attribute.String;
   };
 }
@@ -617,6 +631,13 @@ export interface HomeFaculty extends Struct.ComponentSchema {
     Btn_txt: Schema.Attribute.String;
     Card: Schema.Attribute.Component<'home.card', true>;
     Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Title: Schema.Attribute.String;
   };
 }
@@ -628,6 +649,13 @@ export interface HomeGallery extends Struct.ComponentSchema {
   };
   attributes: {
     Btn_txt: Schema.Attribute.String;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
@@ -646,6 +674,13 @@ export interface HomeLife extends Struct.ComponentSchema {
     Btn_txt: Schema.Attribute.String;
     Card: Schema.Attribute.Component<'home.card', true>;
     Description: Schema.Attribute.String;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Title: Schema.Attribute.String;
   };
 }
@@ -657,6 +692,13 @@ export interface HomeLlaTestimonials extends Struct.ComponentSchema {
   };
   attributes: {
     Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Slider: Schema.Attribute.Component<'home.slider', true>;
     Title: Schema.Attribute.String;
   };
@@ -698,6 +740,13 @@ export interface HomeTestimonial extends Struct.ComponentSchema {
   attributes: {
     Card: Schema.Attribute.Component<'home.card', true>;
     Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Title: Schema.Attribute.String;
   };
 }

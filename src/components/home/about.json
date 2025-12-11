@@ -5,6 +5,13 @@
   },
   "options": {},
   "attributes": {
+    "Heading": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    },
     "Title": {
       "type": "string"
     },
