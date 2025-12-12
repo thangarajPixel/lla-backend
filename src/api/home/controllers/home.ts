@@ -83,6 +83,9 @@ export default factories.createCoreController(
                     Image: {
                       select: ["id", "name", "url"],
                     },
+                    Vertical_Image: {
+                      select: ["id", "name", "url"],
+                    },
                   },
                 },
                 "home.about": {

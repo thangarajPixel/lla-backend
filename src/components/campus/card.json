@@ -21,6 +21,16 @@
         "audios"
       ]
     },
+    "Thumbnail": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
     "ViewCard": {
       "type": "component",
       "component": "faculty.view-card",

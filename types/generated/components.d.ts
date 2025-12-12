@@ -163,6 +163,7 @@ export interface CampusCard extends Struct.ComponentSchema {
   attributes: {
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Slug: Schema.Attribute.String;
+    Thumbnail: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Title: Schema.Attribute.String;
     ViewCard: Schema.Attribute.Component<'faculty.view-card', true>;
   };
