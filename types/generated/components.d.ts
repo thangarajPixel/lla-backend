@@ -686,6 +686,10 @@ export interface HomeGallery extends Struct.ComponentSchema {
       true
     >;
     Title: Schema.Attribute.String;
+    Vertical_Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
   };
 }
 

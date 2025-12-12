@@ -27,6 +27,16 @@
         "videos",
         "audios"
       ]
+    },
+    "Vertical_Image": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
     }
   },
   "config": {}
