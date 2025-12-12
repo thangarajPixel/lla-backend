@@ -204,7 +204,6 @@ export interface CourseBanner extends Struct.ComponentSchema {
   };
   attributes: {
     Btn_txt: Schema.Attribute.String;
-    Description: Schema.Attribute.Blocks;
     Duration: Schema.Attribute.String;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',

@@ -14,9 +14,6 @@
     "Duration": {
       "type": "string"
     },
-    "Description": {
-      "type": "blocks"
-    },
     "Btn_txt": {
       "type": "string"
     },
