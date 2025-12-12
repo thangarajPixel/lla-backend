@@ -8,9 +8,10 @@
     "Name": {
       "type": "string"
     },
-    "Slug": {
-      "type": "string",
-      "unique": true
+    "course_list": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::course-list.course-list"
     },
     "Menu": {
       "type": "component",

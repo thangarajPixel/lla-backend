@@ -314,13 +314,16 @@ export interface CourseDipProfessional extends Struct.ComponentSchema {
   };
   attributes: {
     Course_content: Schema.Attribute.Component<'course.course-module', false>;
+    course_list: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::course-list.course-list'
+    >;
     Faq: Schema.Attribute.Component<'course.faq', false>;
     HowToApply: Schema.Attribute.Component<'course.how-to-apply', false>;
     Menu: Schema.Attribute.Component<'course.banner', false>;
     Name: Schema.Attribute.String;
     Other_Info: Schema.Attribute.Component<'course.other-info', false>;
     Overview: Schema.Attribute.Component<'course.benefit', false>;
-    Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Student_testimonial: Schema.Attribute.Component<'home.testimonial', true>;
     Testimonial: Schema.Attribute.Component<'home.lla-testimonials', true>;
   };

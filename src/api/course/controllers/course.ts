@@ -90,6 +90,11 @@ export default factories.createCoreController(
                         },
                       },
                     },
+                    course_list: {
+                      populate: {
+                        "*": true,
+                      },
+                    },
                   },
                 },
               },
@@ -100,6 +105,16 @@ export default factories.createCoreController(
         if (!entity) {
           return ctx.notFound("About content not found");
         }
+
+        entity.Course?.forEach((component: any) => {
+          if (
+            component.__component === "course.dip-professional" &&
+            component.course_list
+          ) {
+             component.slug2 = component.course_list.Slug;
+             delete component.course_list;
+          }
+        });
 
         // Add base URL to media URLs
         // addBaseUrlToMediaUrls(entity);
