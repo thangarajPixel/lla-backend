@@ -111,8 +111,8 @@ export default factories.createCoreController(
             component.__component === "course.dip-professional" &&
             component.course_list
           ) {
-             component.Slug = component.course_list.Slug;
-             delete component.course_list;
+            component.Slug = component.course_list.Slug;
+            delete component.course_list;
           }
         });
 
@@ -215,6 +215,11 @@ export default factories.createCoreController(
                         },
                       },
                     },
+                    course_list: {
+                      populate: {
+                        "*": true,
+                      },
+                    },
                   },
                 },
               },
@@ -225,19 +230,28 @@ export default factories.createCoreController(
         if (!entity) {
           return ctx.notFound("Course not found");
         }
-        const courselistall = await strapi.db
-          .query("api::course-list.course-list")
-          .findMany();
 
+        entity.Course?.forEach((component: any) => {
+          if (
+            component.__component === "course.dip-professional" &&
+            component.course_list
+          ) {
+            component.Slug = component.course_list.Slug;
+            delete component.course_list;
+          }
+        });
 
-        const courseList = courselistall.find((course) => course.Slug === slug);
-
-        // Find the course with matching slug
         const courseComponent = entity.Course?.find(
           (component: any) =>
             component.__component === "course.dip-professional" &&
             component.Slug === slug
         );
+
+        const courselistall = await strapi.db
+          .query("api::course-list.course-list")
+          .findMany();
+
+        const courseList = courselistall.find((course) => course.Slug === slug);
 
         if (!courseComponent) {
           return ctx.notFound(`Course with slug "${slug}" not found`);
