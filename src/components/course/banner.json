@@ -11,6 +11,13 @@
     "SubTitle": {
       "type": "string"
     },
+    "Description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    },
     "Duration": {
       "type": "string"
     },
