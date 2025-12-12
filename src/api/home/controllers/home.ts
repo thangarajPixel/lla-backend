@@ -156,6 +156,9 @@ export default factories.createCoreController(
                         Vertical_Image: {
                           select: ["id", "name", "url"],
                         },
+                         course_list: {
+                          populate: { "*": true },
+                        },
                       },
                     },
                   },
@@ -168,6 +171,21 @@ export default factories.createCoreController(
         if (!entity) {
           return ctx.notFound("Home content not found");
         }
+
+          entity.Home?.forEach((component: any) => {
+          if (
+            component.__component === "home.course" &&
+            component.Card?.length
+          ) {
+            component.Card = component.Card.map((card: any) => {
+              if (card.course_list) {
+                card.Slug = card.course_list.Slug;
+                delete card.course_list;
+              }
+              return card;
+            });
+          }
+        });
 
         // Find the "course" component from Home array
         const courseComponent = entity.Home?.find(
