@@ -204,6 +204,13 @@ export interface CourseBanner extends Struct.ComponentSchema {
   };
   attributes: {
     Btn_txt: Schema.Attribute.String;
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Duration: Schema.Attribute.String;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
