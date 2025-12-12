@@ -111,7 +111,7 @@ export default factories.createCoreController(
             component.__component === "course.dip-professional" &&
             component.course_list
           ) {
-             component.slug2 = component.course_list.Slug;
+             component.Slug = component.course_list.Slug;
              delete component.course_list;
           }
         });
