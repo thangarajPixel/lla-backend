@@ -610,6 +610,10 @@ export interface HomeCard extends Struct.ComponentSchema {
   attributes: {
     Btn_txt: Schema.Attribute.String;
     Btn_txt2: Schema.Attribute.String;
+    course_list: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::course-list.course-list'
+    >;
     Description: Schema.Attribute.Text;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
@@ -622,7 +626,6 @@ export interface HomeCard extends Struct.ComponentSchema {
           preset: 'defaultHtml';
         }
       >;
-    Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Thumbnail: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Title: Schema.Attribute.String;
     Url: Schema.Attribute.Text;

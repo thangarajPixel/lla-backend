@@ -24,6 +24,9 @@ export default factories.createCoreController(
                         Image: {
                           select: ["id", "name", "url"],
                         },
+                        course_list: {
+                          populate: { "*": true },
+                        },
                       },
                     },
                   },
@@ -66,7 +69,7 @@ export default factories.createCoreController(
                       populate: {
                         Image: {
                           select: ["id", "name", "url"],
-                        }
+                        },
                       },
                     },
                   },
@@ -110,6 +113,21 @@ export default factories.createCoreController(
         if (!entity) {
           return ctx.notFound("Home content not found");
         }
+
+        entity.Home?.forEach((component: any) => {
+          if (
+            component.__component === "home.course" &&
+            component.Card?.length
+          ) {
+            component.Card = component.Card.map((card: any) => {
+              if (card.course_list) {
+                card.Slug = card.course_list.Slug;
+                delete card.course_list;
+              }
+              return card;
+            });
+          }
+        });
 
         // Add base URL to media URLs
         // addBaseUrlToMediaUrls(entity);

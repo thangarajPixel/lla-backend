@@ -18,10 +18,6 @@
     "Title": {
       "type": "string"
     },
-    "Slug": {
-      "type": "string",
-      "unique": true
-    },
     "Description": {
       "type": "text"
     },
@@ -50,6 +46,11 @@
     },
     "Url": {
       "type": "text"
+    },
+    "course_list": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::course-list.course-list"
     }
   },
   "config": {}
