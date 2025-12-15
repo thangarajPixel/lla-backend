@@ -647,6 +647,7 @@ export interface HomeCard extends Struct.ComponentSchema {
           preset: 'defaultHtml';
         }
       >;
+    Slug: Schema.Attribute.String;
     Thumbnail: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Title: Schema.Attribute.String;
     Url: Schema.Attribute.Text;
@@ -877,6 +878,21 @@ export interface LifeViewCardLifeViewCard extends Struct.ComponentSchema {
   };
 }
 
+export interface NilgirisImageCard extends Struct.ComponentSchema {
+  collectionName: 'components_nilgiris_image_cards';
+  info: {
+    displayName: 'ImageCard';
+  };
+  attributes: {
+    Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    Type: Schema.Attribute.Enumeration<['Image', 'Video']>;
+    Url: Schema.Attribute.Text;
+  };
+}
+
 export interface ParentGuardianSpouseDetailsParentGuardianSpouseDetails
   extends Struct.ComponentSchema {
   collectionName: 'components_parent_guardian_spouse_details_parent_guardian_spouse_details';
@@ -1063,6 +1079,7 @@ declare module '@strapi/strapi' {
       'language.language-and-proficiency': LanguageLanguageAndProficiency;
       'life-card.life-card': LifeCardLifeCard;
       'life-view-card.life-view-card': LifeViewCardLifeViewCard;
+      'nilgiris.image-card': NilgirisImageCard;
       'parent-guardian-spouse-details.parent-guardian-spouse-details': ParentGuardianSpouseDetailsParentGuardianSpouseDetails;
       'parent-guardian-spouse.parent-guardian-spouse-details': ParentGuardianSpouseParentGuardianSpouseDetails;
       'post-graduate.post-graduate': PostGraduatePostGraduate;

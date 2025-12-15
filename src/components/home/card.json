@@ -51,6 +51,9 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::course-list.course-list"
+    },
+    "Slug": {
+      "type": "string"
     }
   },
   "config": {}

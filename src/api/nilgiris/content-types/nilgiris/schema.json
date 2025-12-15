@@ -1,10 +1,10 @@
 {
   "kind": "singleType",
-  "collectionName": "lives",
+  "collectionName": "nilgirises",
   "info": {
-    "singularName": "life",
-    "pluralName": "lives",
-    "displayName": "Life"
+    "singularName": "nilgiris",
+    "pluralName": "nilgirises",
+    "displayName": "Nilgiris"
   },
   "options": {
     "draftAndPublish": true
@@ -14,18 +14,12 @@
     "Title": {
       "type": "string"
     },
-    "Heading": {
-      "type": "string"
-    },
-    "SubHeading": {
-      "type": "string"
-    },
     "Description": {
       "type": "text"
     },
-    "Card": {
+    "ImageCard": {
       "type": "component",
-      "component": "home.card",
+      "component": "nilgiris.image-card",
       "repeatable": true
     }
   }

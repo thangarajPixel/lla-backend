@@ -1,0 +1,30 @@
+{
+  "collectionName": "components_nilgiris_image_cards",
+  "info": {
+    "displayName": "ImageCard"
+  },
+  "options": {},
+  "attributes": {
+    "Image": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "Type": {
+      "type": "enumeration",
+      "enum": [
+        "Image",
+        "Video"
+      ]
+    },
+    "Url": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}

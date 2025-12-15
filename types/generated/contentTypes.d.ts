@@ -989,28 +989,29 @@ export interface ApiLifeAtLlaLifeAtLla extends Struct.SingleTypeSchema {
   };
 }
 
-export interface ApiLifeLife extends Struct.SingleTypeSchema {
-  collectionName: 'lives';
+export interface ApiNilgirisNilgiris extends Struct.SingleTypeSchema {
+  collectionName: 'nilgirises';
   info: {
-    displayName: 'Life';
-    pluralName: 'lives';
-    singularName: 'life';
+    displayName: 'Nilgiris';
+    pluralName: 'nilgirises';
+    singularName: 'nilgiris';
   };
   options: {
     draftAndPublish: true;
   };
   attributes: {
-    Card: Schema.Attribute.Component<'home.card', true>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     Description: Schema.Attribute.Text;
-    Heading: Schema.Attribute.String;
+    ImageCard: Schema.Attribute.Component<'nilgiris.image-card', true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::life.life'> &
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::nilgiris.nilgiris'
+    > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1678,7 +1679,7 @@ declare module '@strapi/strapi' {
       'api::gallery.gallery': ApiGalleryGallery;
       'api::home.home': ApiHomeHome;
       'api::life-at-lla.life-at-lla': ApiLifeAtLlaLifeAtLla;
-      'api::life.life': ApiLifeLife;
+      'api::nilgiris.nilgiris': ApiNilgirisNilgiris;
       'api::privacy-policy.privacy-policy': ApiPrivacyPolicyPrivacyPolicy;
       'api::seo.seo': ApiSeoSeo;
       'api::state.state': ApiStateState;
