@@ -7,12 +7,10 @@ export interface AboutAbout extends Struct.ComponentSchema {
   };
   attributes: {
     Description: Schema.Attribute.Blocks;
-    Heading: Schema.Attribute.String;
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Mobile_image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios'
     >;
-    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -24,8 +22,6 @@ export interface AboutFounder extends Struct.ComponentSchema {
   };
   attributes: {
     Founder_card: Schema.Attribute.Component<'about.founder-card', true>;
-    Heading: Schema.Attribute.String;
-    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
@@ -69,8 +65,6 @@ export interface AboutTeam extends Struct.ComponentSchema {
   attributes: {
     Card: Schema.Attribute.Component<'home.card', true>;
     Frame: Schema.Attribute.Component<'home.card', false>;
-    Heading: Schema.Attribute.String;
-    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }

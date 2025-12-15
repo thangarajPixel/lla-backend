@@ -8,12 +8,6 @@
     "Title": {
       "type": "string"
     },
-    "Heading": {
-      "type": "string"
-    },
-    "SubHeading": {
-      "type": "string"
-    },
     "Founder_card": {
       "type": "component",
       "component": "about.founder-card",
