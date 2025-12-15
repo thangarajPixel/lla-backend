@@ -255,7 +255,6 @@ export interface CourseCard extends Struct.ComponentSchema {
     displayName: 'Card';
   };
   attributes: {
-    Description: Schema.Attribute.Text;
     Heading: Schema.Attribute.String;
     Icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
   };
@@ -552,7 +551,6 @@ export interface FaqQa extends Struct.ComponentSchema {
     displayName: 'QA';
   };
   attributes: {
-    Answer: Schema.Attribute.Text;
     Question: Schema.Attribute.String;
   };
 }

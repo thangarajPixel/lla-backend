@@ -7,9 +7,6 @@
   "attributes": {
     "Question": {
       "type": "string"
-    },
-    "Answer": {
-      "type": "text"
     }
   },
   "config": {}

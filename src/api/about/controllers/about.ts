@@ -143,5 +143,74 @@ export default factories.createCoreController(
         return ctx.internalServerError("Failed to load founder data");
       }
     },
+    async teamBySlug(ctx) {
+      try {
+        const slug = ctx.params.slug;
+        const page = parseInt(String(ctx.query.page)) || 1;
+        const pageSize = parseInt(String(ctx.query.per_page)) || 1;
+
+        const entity = await strapi.db.query("api::about.about").findOne({
+          populate: {
+            about: {
+              on: {
+                "about.team": {
+                  populate: {
+                    Card: {
+                      populate: {
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (!entity) {
+          return ctx.notFound("Founder data not found");
+        }
+
+        // Get founder block
+        const teamBlock = entity.about.find(
+          (block) => block.__component === "about.team"
+        );
+
+        if (!teamBlock) {
+          return ctx.notFound("Team section not found");
+        }
+
+        let cards = teamBlock?.Card || [];
+        if (slug && page === 1) {
+          cards = cards.filter((card) => card.Slug === slug);
+        } else if (slug && page !== 1) {
+          cards = cards.filter((card) => card.Slug !== slug);
+        }
+
+        const totalCards = cards.length;
+        const totalPages = Math.ceil(totalCards / pageSize);
+        const start =(page - 1) * pageSize < totalCards ? (page - 1) * pageSize : 0;
+        const end = start + pageSize;
+
+        // Apply pagination on filtered cards
+        teamBlock.Card = cards.slice(start, end);
+
+        const sanitizedEntity = await super.sanitizeOutput(entity);
+
+        sanitizedEntity.pagination = {
+          page,
+          pageSize,
+          totalCards: totalCards,
+          totalPages: totalPages,
+        };
+
+        return { data: sanitizedEntity };
+      } catch (error) {
+        console.error("founderById error:", error);
+        return ctx.internalServerError("Failed to load founder data");
+      }
+    },
   })
 );
