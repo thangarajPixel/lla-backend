@@ -255,6 +255,13 @@ export interface CourseCard extends Struct.ComponentSchema {
     displayName: 'Card';
   };
   attributes: {
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Heading: Schema.Attribute.String;
     Icon: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
   };
@@ -551,6 +558,13 @@ export interface FaqQa extends Struct.ComponentSchema {
     displayName: 'QA';
   };
   attributes: {
+    Answer: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Question: Schema.Attribute.String;
   };
 }
