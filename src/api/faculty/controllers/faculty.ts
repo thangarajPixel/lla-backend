@@ -183,7 +183,7 @@ export default factories.createCoreController(
           cards = cards.filter((card) => card.Slug !== slug);
         }
 
-        const totalCards = cards.length;
+        const totalCards = component?.Card.length || 0;
         const totalPages = Math.ceil(totalCards / pageSize);
         const start =(page - 1) * pageSize < totalCards ? (page - 1) * pageSize : 0;
         const end = start + pageSize;
