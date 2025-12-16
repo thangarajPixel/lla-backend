@@ -2,26 +2,29 @@
  * life-at-lla controller
  */
 
-import { factories } from '@strapi/strapi';
+import { factories } from "@strapi/strapi";
 
-export default factories.createCoreController('api::life-at-lla.life-at-lla',
-     ({ strapi }) => ({
+export default factories.createCoreController(
+  "api::life-at-lla.life-at-lla",
+  ({ strapi }) => ({
     async find(ctx) {
       try {
         const page = parseInt(String(ctx.query.page)) || 1;
         const perPage = parseInt(String(ctx.query.per_page)) || 10;
 
-        const entity = await strapi.db.query("api::life-at-lla.life-at-lla").findOne({
-          populate: {
-            LifeCard: {
-              populate: {
-                Image: {
-                  select: ["id", "name", "url"],
+        const entity = await strapi.db
+          .query("api::life-at-lla.life-at-lla")
+          .findOne({
+            populate: {
+              LifeCard: {
+                populate: {
+                  Image: {
+                    select: ["id", "name", "url"],
+                  },
                 },
               },
             },
-          },
-        });
+          });
 
         if (!entity) {
           return ctx.notFound("Life content not found");
@@ -48,7 +51,7 @@ export default factories.createCoreController('api::life-at-lla.life-at-lla',
         };
 
         return {
-          data: sanitizedEntity
+          data: sanitizedEntity,
         };
       } catch (error) {
         console.error("Life find error:", error);
@@ -56,63 +59,62 @@ export default factories.createCoreController('api::life-at-lla.life-at-lla',
       }
     },
 
-async findCard(ctx) {
-  try {
-    const { slug } = ctx.params;
+    async findCard(ctx) {
+      try {
+        const { slug } = ctx.params;
 
-    if (!slug) {
-      return ctx.badRequest("Card slug is required");
-    }
+        if (!slug) {
+          return ctx.badRequest("Card slug is required");
+        }
 
-    // Fetch full life entity including cards
-    const entity = await strapi.db.query("api::life-at-lla.life-at-lla").findOne({
-      populate: {
-        LifeCard: {
-          populate: {
-            Image: {
-              select: ["id", "name", "url"],
-            },
-            LifeViewCard: {
-              populate: {
-                Images: {
-                  select: ["id", "name", "url"],
+        // Fetch full life entity including cards
+        const entity = await strapi.db
+          .query("api::life-at-lla.life-at-lla")
+          .findOne({
+            populate: {
+              LifeCard: {
+                populate: {
+                  Image: {
+                    select: ["id", "name", "url"],
+                  },
+                  LifeViewCard: {
+                    populate: {
+                      Images: {
+                        select: ["id", "name", "url"],
+                      },
+                    },
+                  },
                 },
               },
             },
+          });
+
+        if (!entity || !entity.LifeCard) {
+          return ctx.notFound("Life content not found");
+        }
+
+        // Find requested card
+        const card = entity.LifeCard.find((c) => c.Slug === String(slug));
+        if (!card) {
+          return ctx.notFound(`Card with slug ${slug} not found`);
+        }
+
+        // Latest 3 Cards
+        const latestCards = [...entity.LifeCard]
+          .sort((a, b) => b.id - a.id)
+          .filter((c) => c.id !== card.id)
+          .slice(0, 3);
+
+        return {
+          data: {
+            card,
+            latest: latestCards,
           },
-        },
-      },
-    });
-
-    if (!entity || !entity.LifeCard) {
-      return ctx.notFound("Life content not found");
-    }
-
-    // Find requested card
-    const card = entity.LifeCard.find((c) => c.Slug === String(slug));
-    if (!card) {
-      return ctx.notFound(`Card with slug ${slug} not found`);
-    }
-
-    // Latest 3 Cards
-    const latestCards = [...entity.LifeCard]
-      .sort((a, b) => b.id - a.id)
-      .slice(0, 3);
-
-    return {
-      data: {
-        card,
-        latest: latestCards,
-      },
-    };
-
-  } catch (error) {
-    console.error("Life findCard error:", error);
-    return ctx.internalServerError("Failed to load card data");
-  }
-}
-  }),
-
-
-
+        };
+      } catch (error) {
+        console.error("Life findCard error:", error);
+        return ctx.internalServerError("Failed to load card data");
+      }
+    },
+  })
 );

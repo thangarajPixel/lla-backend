@@ -91,6 +91,7 @@ export default factories.createCoreController(
     async findOne(ctx) {
       try {
         const { slug } = ctx.params;
+        const { key } = ctx.params;
         const page = parseInt(String(ctx.query.page)) || 1;
         const pageSize = parseInt(String(ctx.query.per_page)) || 1;
 
@@ -125,8 +126,18 @@ export default factories.createCoreController(
           return ctx.notFound("Faculty content not found");
         }
 
+        const modules = {
+          photography: "faculty.photography",
+          filmmaking: "faculty.filmmaking",
+          visiting: "faculty.visiting",
+        };
+
+        if (!modules[key]) {
+          return ctx.notFound("Faculty component not found");
+        }
+
         const photographyComponent = entity.Faculty.find(
-          (item) => item.__component === "faculty.photography"
+          (item) => item.__component === modules[key]
         );
 
         let cards = photographyComponent?.Card || [];
