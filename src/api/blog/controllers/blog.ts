@@ -105,8 +105,8 @@ export default factories.createCoreController(
 
         // Get latest 3 blog cards (excluding current card)
         const latestCards = [...entity.Blog.BlogCard]
-          .filter((c) => c.Slug !== String(slug)) // Exclude current card
-          .sort((a, b) => b.id - a.id)
+          .filter((c) => c.id !== card.id)
+          .sort(() => Math.random() - 0.5)
           .slice(0, 3);
 
         return {
