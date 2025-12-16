@@ -461,12 +461,10 @@ export interface FacultyFaculty extends Struct.ComponentSchema {
   };
   attributes: {
     Description: Schema.Attribute.Text;
-    Heading: Schema.Attribute.String;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
-    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
