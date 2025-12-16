@@ -100,15 +100,15 @@ export default factories.createCoreController(
         }
 
         // Latest 3 Cards
-        const latestCards = [...entity.LifeCard]
-          .sort((a, b) => b.id - a.id)
+        const randomCards = [...entity.LifeCard]
           .filter((c) => c.id !== card.id)
+          .sort(() => Math.random() - 0.5)
           .slice(0, 3);
 
         return {
           data: {
             card,
-            latest: latestCards,
+            latest: randomCards,
           },
         };
       } catch (error) {
