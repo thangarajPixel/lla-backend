@@ -143,6 +143,7 @@ export interface BlogBlogCard extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
+    ImageUrl: Schema.Attribute.Text;
     Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Title: Schema.Attribute.String;
     ViewCard: Schema.Attribute.Component<'blog.view-card', true>;
@@ -853,6 +854,7 @@ export interface LifeCardLifeCard extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
+    ImageUrl: Schema.Attribute.Text;
     LifeViewCard: Schema.Attribute.Component<
       'life-view-card.life-view-card',
       true
