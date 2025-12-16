@@ -144,6 +144,13 @@ export interface BlogBlogCard extends Struct.ComponentSchema {
       true
     >;
     ImageUrl: Schema.Attribute.Text;
+    LongDescription: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Title: Schema.Attribute.String;
     ViewCard: Schema.Attribute.Component<'blog.view-card', true>;
