@@ -90,8 +90,7 @@ export default factories.createCoreController(
     },
     async findOne(ctx) {
       try {
-        const { slug } = ctx.params;
-        const { key } = ctx.params;
+        const { slug, key } = ctx.params;
         const page = parseInt(String(ctx.query.page)) || 1;
         const pageSize = parseInt(String(ctx.query.per_page)) || 1;
 
@@ -100,6 +99,42 @@ export default factories.createCoreController(
             Faculty: {
               on: {
                 "faculty.photography": {
+                  populate: {
+                    Card: {
+                      populate: {
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
+                        ViewCard: {
+                          populate: {
+                            Image: {
+                              select: ["id", "name", "url"],
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                "faculty.filmmaking": {
+                  populate: {
+                    Card: {
+                      populate: {
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
+                        ViewCard: {
+                          populate: {
+                            Image: {
+                              select: ["id", "name", "url"],
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                "faculty.visiting": {
                   populate: {
                     Card: {
                       populate: {
@@ -136,14 +171,15 @@ export default factories.createCoreController(
           return ctx.notFound("Faculty component not found");
         }
 
-        const photographyComponent = entity.Faculty.find(
+        const component = entity.Faculty.find(
           (item) => item.__component === modules[key]
         );
 
-        let cards = photographyComponent?.Card || [];
+        let cards = component?.Card || [];
         if (slug && page === 1) {
           cards = cards.filter((card) => card.Slug === slug);
-        } else if (slug && page !== 1) {
+        }
+        if (slug && page > 1) {
           cards = cards.filter((card) => card.Slug !== slug);
         }
 
@@ -153,9 +189,9 @@ export default factories.createCoreController(
         const end = start + pageSize;
 
         // Apply pagination on filtered cards
-        photographyComponent.Card = cards.slice(start, end);
+        component.Card = cards.slice(start, end);
 
-        const sanitizedEntity = await super.sanitizeOutput(entity);
+        const sanitizedEntity = await super.sanitizeOutput(component);
 
         sanitizedEntity.pagination = {
           page,
