@@ -461,6 +461,13 @@ export interface FacultyFaculty extends Struct.ComponentSchema {
   };
   attributes: {
     Description: Schema.Attribute.Text;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Image: Schema.Attribute.Media<
       'images' | 'files' | 'videos' | 'audios',
       true
