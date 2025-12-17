@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Payment - Light and Life Academy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4945ff;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .btn {
+            background: #4945ff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .btn:hover {
+            background: #3730a3;
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Light and Life Academy</h1>
+            <h2>Payment System Test</h2>
+        </div>
+
+        <!-- Test Payment Link Generation -->
+        <div class="section">
+            <h3>1. Generate Payment Link</h3>
+            <div class="form-group">
+                <label for="admissionId">Admission ID:</label>
+                <input type="number" id="admissionId" placeholder="Enter admission ID (e.g., 1)" value="1">
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount (₹):</label>
+                <input type="number" id="amount" placeholder="Enter amount" value="1" step="0.01">
+            </div>
+            <button class="btn" onclick="generatePaymentLink()">Generate Payment Link</button>
+            <div id="paymentResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Test Direct Payment -->
+        <div class="section">
+            <h3>2. Direct Payment (API)</h3>
+            <div class="form-group">
+                <label for="directAdmissionId">Admission ID:</label>
+                <input type="number" id="directAdmissionId" placeholder="Enter admission ID" value="1">
+            </div>
+            <div class="form-group">
+                <label for="directAmount">Amount (₹):</label>
+                <input type="number" id="directAmount" placeholder="Enter amount" value="1" step="0.01">
+            </div>
+            <button class="btn" onclick="createDirectPayment()">Create Payment</button>
+            <button class="btn btn-success" onclick="processDirectPayment()" id="processBtn" style="display: none;">Process Payment</button>
+            <div id="directResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Payment Status Check -->
+        <div class="section">
+            <h3>3. Check Payment Status</h3>
+            <div class="form-group">
+                <label for="checkAdmissionId">Admission ID:</label>
+                <input type="number" id="checkAdmissionId" placeholder="Enter admission ID" value="1">
+            </div>
+            <button class="btn" onclick="checkPaymentStatus()">Check Status</button>
+            <div id="statusResult" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentPaymentData = null;
+
+        async function generatePaymentLink() {
+            const admissionId = document.getElementById('admissionId').value;
+            const amount = document.getElementById('amount').value;
+            const resultDiv = document.getElementById('paymentResult');
+            
+            if (!admissionId) {
+                showResult(resultDiv, 'Please enter admission ID', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Generating payment link...', 'info');
+                
+                const response = await fetch(`/api/admissions/${admissionId}/payment-link`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        amount: parseFloat(amount) || 1
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult(resultDiv, JSON.stringify(data, null, 2), 'success');
+                    
+                    // Auto-redirect to PayU if payment link is generated
+                    if (data.payment && data.payment.checkoutUrl) {
+                        if (confirm('Payment link generated! Do you want to proceed to PayU payment gateway?')) {
+                            redirectToPayU(data.payment);
+                        }
+                    }
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function createDirectPayment() {
+            const admissionId = document.getElementById('directAdmissionId').value;
+            const amount = document.getElementById('directAmount').value;
+            const resultDiv = document.getElementById('directResult');
+            
+            if (!admissionId) {
+                showResult(resultDiv, 'Please enter admission ID', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Creating payment...', 'info');
+                
+                const response = await fetch('/api/payment/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        admissionId: parseInt(admissionId),
+                        amount: parseFloat(amount) || 1
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentPaymentData = data;
+                    showResult(resultDiv, JSON.stringify(data, null, 2), 'success');
+                    document.getElementById('processBtn').style.display = 'inline-block';
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        function processDirectPayment() {
+            if (currentPaymentData && currentPaymentData.checkoutUrl) {
+                redirectToPayU(currentPaymentData);
+            } else {
+                alert('No payment data available. Please create payment first.');
+            }
+        }
+
+        function redirectToPayU(paymentData) {
+            // Create and submit PayU form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = paymentData.checkoutUrl;
+            
+            // Add all PayU parameters as hidden fields
+            Object.keys(paymentData.data).forEach(key => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = paymentData.data[key];
+                form.appendChild(input);
+            });
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+
+        async function checkPaymentStatus() {
+            const admissionId = document.getElementById('checkAdmissionId').value;
+            const resultDiv = document.getElementById('statusResult');
+            
+            if (!admissionId) {
+                showResult(resultDiv, 'Please enter admission ID', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Checking payment status...', 'info');
+                
+                const response = await fetch(`/api/admissions/${admissionId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (data.data) {
+                    const admission = data.data;
+                    const statusInfo = {
+                        id: admission.id,
+                        name: `${admission.first_name} ${admission.last_name}`,
+                        email: admission.email,
+                        paymentStatus: admission.Payment_Status,
+                        step1: admission.step_1,
+                        step2: admission.step_2,
+                        step3: admission.step_3,
+                        createdAt: admission.createdAt,
+                        updatedAt: admission.updatedAt
+                    };
+                    showResult(resultDiv, JSON.stringify(statusInfo, null, 2), 'success');
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        function showResult(element, message, type) {
+            element.style.display = 'block';
+            element.textContent = message;
+            element.className = `result ${type}`;
+        }
+    </script>
+</body>
+</html>

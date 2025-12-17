@@ -515,7 +515,10 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
       false
     >;
     passport_size_image: Schema.Attribute.Media<'images' | 'files'>;
-    Payment_Status: Schema.Attribute.Enumeration<['Paid', 'UnPaid']>;
+    Payment_Status: Schema.Attribute.Enumeration<
+      ['Paid', 'Completed', 'Pending', 'UnPaid']
+    > &
+      Schema.Attribute.DefaultTo<'Pending'>;
     photography_club: Schema.Attribute.String;
     pincode: Schema.Attribute.String;
     Post_Graduate: Schema.Attribute.Component<

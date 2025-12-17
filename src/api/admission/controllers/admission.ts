@@ -503,5 +503,144 @@ export default factories.createCoreController('api::admission.admission', ({ str
       console.error('Error checking email uniqueness:', error);
       ctx.throw(500, 'Error checking email: ' + error.message);
     }
+  },
+
+  async generatePaymentLink(ctx) {
+    try {
+      const { id } = ctx.params;
+      const { amount } = ctx.request.body;
+
+      console.log('========================================');
+      console.log('💳 PAYMENT LINK GENERATION');
+      console.log('Admission ID:', id);
+      console.log('Amount:', amount);
+      console.log('========================================');
+
+      // Find admission
+      let admission;
+      if (/^\d+$/.test(id)) {
+        const entities = await strapi.entityService.findMany('api::admission.admission', {
+          filters: { id: parseInt(id) },
+          populate: ['Course'],
+        });
+        admission = entities[0];
+      } else {
+        admission = await strapi.entityService.findOne('api::admission.admission', id, {
+          populate: ['Course'],
+        });
+      }
+
+      if (!admission) {
+        console.log('❌ Admission not found');
+        return ctx.notFound('Admission not found');
+      }
+
+      console.log('✅ Admission found:', admission.first_name, admission.last_name);
+      console.log('📊 Current Payment Status:', admission.Payment_Status);
+
+      // Check if already completed
+      if (admission.Payment_Status === 'Completed') {
+        console.log('✅ Payment already completed');
+        return {
+          success: true,
+          status: 'already_completed',
+          message: 'Payment already completed for this admission',
+          admission: {
+            id: admission.id,
+            name: `${admission.first_name} ${admission.last_name}`,
+            email: admission.email,
+            course: admission.Course?.title || 'Course',
+            paymentStatus: admission.Payment_Status
+          }
+        };
+      }
+
+      // Use provided amount or default to 1 rupee
+      const paymentAmount = amount || process.env.DEFAULT_PAYMENT_AMOUNT || '1';
+      console.log('💰 Payment amount:', paymentAmount);
+
+      // Generate payment link directly
+      const crypto = require("crypto");
+      const { v4: uuidv4 } = require("uuid");
+      const payu = require("../../../../config/payu");
+
+      // Generate unique transaction ID
+      const txnid = uuidv4().replace(/-/g, "").substring(0, 20);
+      
+      // Prepare payment data
+      const paymentData = {
+        amount: parseFloat(paymentAmount).toFixed(2),
+        productinfo: `Admission Fee - ${admission.Course?.title || 'Course'}`,
+        firstname: admission.first_name,
+        lastname: admission.last_name || '',
+        email: admission.email,
+        phone: admission.mobile_no?.toString() || '',
+        txnid,
+        surl: `${strapi.config.server.url}/api/payment/success`,
+        furl: `${strapi.config.server.url}/api/payment/failure`,
+        udf1: admission.id.toString(), // Store admission ID for reference
+        udf2: '', 
+        udf3: '',
+        udf4: '',
+        udf5: ''
+      };
+
+      // Create hash for PayU
+      const hashString = 
+        `${payu.KEY}|${paymentData.txnid}|${paymentData.amount}|${paymentData.productinfo}|${paymentData.firstname}|${paymentData.email}|${paymentData.udf1}|${paymentData.udf2}|${paymentData.udf3}|${paymentData.udf4}|${paymentData.udf5}||||||${payu.SALT}`;
+
+      const hash = crypto
+        .createHash("sha512")
+        .update(hashString)
+        .digest("hex");
+
+      // Update payment status to Pending
+      await strapi.entityService.update('api::admission.admission', admission.id, {
+        data: {
+          Payment_Status: 'Pending'
+        }
+      });
+
+      const paymentResponse = {
+        success: true,
+        status: 'payment_link_generated',
+        checkoutUrl: payu.BASE_URL,
+        method: "POST",
+        data: {
+          key: payu.KEY,
+          ...paymentData,
+          hash
+        }
+      };
+
+      console.log('✅ Payment link generated successfully');
+      console.log('🔗 Checkout URL:', payu.BASE_URL);
+      console.log('🆔 Transaction ID:', txnid);
+      console.log('========================================');
+
+      // Return complete response with saved API data
+      return {
+        success: true,
+        admission: {
+          id: admission.id,
+          name: `${admission.first_name} ${admission.last_name}`,
+          email: admission.email,
+          course: admission.Course?.title || 'Course',
+          paymentStatus: 'Pending'
+        },
+        payment: paymentResponse,
+        // Additional metadata for saving
+        metadata: {
+          transactionId: txnid,
+          amount: paymentData.amount,
+          generatedAt: new Date().toISOString(),
+          admissionId: admission.id
+        }
+      };
+
+    } catch (error) {
+      console.error('❌ Error generating payment link:', error);
+      ctx.throw(500, 'Error generating payment link: ' + error.message);
+    }
   }
 }));

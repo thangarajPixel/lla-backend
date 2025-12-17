@@ -129,8 +129,11 @@
     },
     "Payment_Status": {
       "type": "enumeration",
+      "default": "Pending",
       "enum": [
         "Paid",
+        "Completed",
+        "Pending",
         "UnPaid"
       ]
     },
