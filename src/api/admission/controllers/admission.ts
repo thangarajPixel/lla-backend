@@ -642,5 +642,151 @@ export default factories.createCoreController('api::admission.admission', ({ str
       console.error('❌ Error generating payment link:', error);
       ctx.throw(500, 'Error generating payment link: ' + error.message);
     }
+  },
+
+  async getPaymentStatus(ctx) {
+    try {
+      const { id } = ctx.params;
+
+      console.log('========================================');
+      console.log('💳 GET PAYMENT STATUS');
+      console.log('Admission ID:', id);
+      console.log('========================================');
+
+      // Find admission
+      let admission;
+      if (/^\d+$/.test(id)) {
+        const entities = await strapi.entityService.findMany('api::admission.admission', {
+          filters: { id: parseInt(id) },
+          populate: ['Course'],
+        });
+        admission = entities[0];
+      } else {
+        admission = await strapi.entityService.findOne('api::admission.admission', id, {
+          populate: ['Course'],
+        });
+      }
+
+      if (!admission) {
+        console.log('❌ Admission not found');
+        return ctx.notFound('Admission not found');
+      }
+
+      console.log('✅ Admission found:', admission.first_name, admission.last_name);
+      console.log('📊 Payment Status:', admission.Payment_Status);
+      console.log('========================================');
+
+      return {
+        success: true,
+        admission: {
+          id: admission.id,
+          name: `${admission.first_name} ${admission.last_name}`,
+          email: admission.email,
+          course: admission.Course?.title || 'Course',
+          paymentStatus: admission.Payment_Status,
+          step1: admission.step_1,
+          step2: admission.step_2,
+          step3: admission.step_3,
+          createdAt: admission.createdAt,
+          updatedAt: admission.updatedAt
+        }
+      };
+
+    } catch (error) {
+      console.error('❌ Error getting payment status:', error);
+      ctx.throw(500, 'Error getting payment status: ' + error.message);
+    }
+  },
+
+  async createPayment(ctx) {
+    try {
+      const { id } = ctx.params;
+      const { amount } = ctx.request.body;
+
+      console.log('========================================');
+      console.log('💳 CREATE PAYMENT');
+      console.log('Admission ID:', id);
+      console.log('Amount:', amount);
+      console.log('========================================');
+
+      // Use provided amount or default to 1 rupee
+      const paymentAmount = amount || process.env.DEFAULT_PAYMENT_AMOUNT || '1';
+
+      // Find admission
+      let admission;
+      if (/^\d+$/.test(id)) {
+        const entities = await strapi.entityService.findMany('api::admission.admission', {
+          filters: { id: parseInt(id) },
+          populate: ['Course'],
+        });
+        admission = entities[0];
+      } else {
+        admission = await strapi.entityService.findOne('api::admission.admission', id, {
+          populate: ['Course'],
+        });
+      }
+
+      if (!admission) {
+        console.log('❌ Admission not found');
+        return ctx.notFound('Admission not found');
+      }
+
+      console.log('✅ Admission found:', admission.first_name, admission.last_name);
+
+      // Check if already completed
+      if (admission.Payment_Status === 'Completed') {
+        console.log('✅ Payment already completed');
+        return {
+          success: true,
+          status: 'already_completed',
+          message: 'Payment already completed for this admission',
+          admission: {
+            id: admission.id,
+            name: `${admission.first_name} ${admission.last_name}`,
+            email: admission.email,
+            course: admission.Course?.title || 'Course',
+            paymentStatus: admission.Payment_Status
+          }
+        };
+      }
+
+      // Create payment using payment controller
+      const paymentController = require('../../payment/controllers/payment');
+      
+      // Create a mock context for payment creation
+      const paymentCtx = {
+        request: {
+          body: {
+            admissionId: admission.id,
+            amount: paymentAmount
+          }
+        },
+        send: (data) => data,
+        badRequest: (msg) => { throw new Error(msg); },
+        notFound: (msg) => { throw new Error(msg); },
+        internalServerError: (msg) => { throw new Error(msg); }
+      };
+
+      const paymentData = await paymentController.create(paymentCtx);
+
+      console.log('✅ Payment created successfully');
+      console.log('========================================');
+
+      return {
+        success: true,
+        admission: {
+          id: admission.id,
+          name: `${admission.first_name} ${admission.last_name}`,
+          email: admission.email,
+          course: admission.Course?.title || 'Course',
+          paymentStatus: 'Pending'
+        },
+        payment: paymentData
+      };
+
+    } catch (error) {
+      console.error('❌ Error creating payment:', error);
+      ctx.throw(500, 'Error creating payment: ' + error.message);
+    }
   }
 }));
