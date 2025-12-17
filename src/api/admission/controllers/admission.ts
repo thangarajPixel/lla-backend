@@ -203,6 +203,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
         populate: {
           passport_size_image: true,
           state: true,
+          Course:true,
           Language_Proficiency: true,
           Parent_Guardian_Spouse_Details: {
             populate: {

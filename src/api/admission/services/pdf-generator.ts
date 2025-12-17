@@ -385,11 +385,17 @@ class PDFGenerator {
             <div class="section">
                 <div class="section-title">Personal Details</div>
                 {{#if Course}}
+                 {{#if Course.Name}}
                     <div class="field-row">
                         <div class="field-label">Course Name</div>
                         <div class="field-value">{{Course.Name}}</div>
                     </div>
+                    {{/if}}
                 {{/if}}
+                <div class="field-row">
+                    <div class="field-label">Name Title</div>
+                    <div class="field-value">{{name_title}}</div>
+                </div>
                 <div class="field-row">
                     <div class="field-label">First Name</div>
                     <div class="field-value">{{first_name}}</div>
@@ -417,6 +423,18 @@ class PDFGenerator {
                 <div class="field-row">
                     <div class="field-label">Blood Group</div>
                     <div class="field-value">{{bloodGroupInfo}}</div>
+                </div>
+                <div class="field-row">
+                    <div class="field-label">Hobbie</div>
+                    <div class="field-value">{{hobbies}}</div>
+                </div>
+                <div class="field-row">
+                    <div class="field-label">Photography Club</div>
+                    <div class="field-value">{{photography_club}}</div>
+                </div>
+                  <div class="field-row">
+                    <div class="field-label">Blood Group</div>
+                    <div class="field-value">{{blood_group}}</div>
                 </div>
                 <div class="field-row">
                     <div class="field-label">Address</div>
