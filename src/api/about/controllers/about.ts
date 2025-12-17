@@ -38,7 +38,7 @@ export default factories.createCoreController(
                         Image: {
                           select: ["id", "name", "url"],
                         },
-                        ViewCard : {
+                        ViewCard: {
                           populate: {
                             Image: {
                               select: ["id", "name", "url"],
@@ -101,7 +101,7 @@ export default factories.createCoreController(
                         Image: {
                           select: ["id", "name", "url"],
                         },
-                        ViewCard : {
+                        ViewCard: {
                           populate: {
                             Image: {
                               select: ["id", "name", "url"],
@@ -153,8 +153,8 @@ export default factories.createCoreController(
     async teamBySlug(ctx) {
       try {
         const slug = ctx.params.slug;
-        const page = parseInt(String(ctx.query.page)) || 1;
-        const pageSize = parseInt(String(ctx.query.per_page)) || 1;
+        const page = parseInt(ctx.query.page) || 1;
+        const pageSize = parseInt(ctx.query.per_page) || 1;
 
         const entity = await strapi.db.query("api::about.about").findOne({
           populate: {
@@ -176,48 +176,51 @@ export default factories.createCoreController(
           },
         });
 
-        if (!entity) {
-          return ctx.notFound("Founder data not found");
-        }
+        if (!entity) return ctx.notFound("Founder data not found");
 
-        // Get founder block
         const teamBlock = entity.about.find(
           (block) => block.__component === "about.team"
         );
 
-        if (!teamBlock) {
-          return ctx.notFound("Team section not found");
+        if (!teamBlock) return ctx.notFound("Team section not found");
+
+        const allCards = teamBlock.Card || [];
+        const slugCard = allCards.find(card => card.Slug === slug);
+        const remainingCards = allCards.filter(card => card.Slug !== slug);
+
+        let paginatedCards = [];
+
+        if (page === 1 && slugCard) {
+          paginatedCards = [
+            slugCard,
+            ...remainingCards.slice(0, pageSize - 1),
+          ];
+        } else {
+          const start = (page - 1) * pageSize - 1;
+          paginatedCards = remainingCards.slice(start, start + pageSize);
         }
 
-        let cards = teamBlock?.Card || [];
-        if (slug && page === 1) {
-          cards = cards.filter((card) => card.Slug === slug);
-        } else if (slug && page !== 1) {
-          cards = cards.filter((card) => card.Slug !== slug);
-        }
+        teamBlock.Card = paginatedCards;
 
-        const totalCards = teamBlock?.Card?.length || 0;
-        const totalPages = Math.ceil(totalCards / pageSize) - 1;
-        const start =(page - 1) * pageSize < totalCards ? (page - 1) * pageSize : 0;
-        const end = start + pageSize;
-
-        // Apply pagination on filtered cards
-        teamBlock.Card = cards.slice(start, end);
+        const totalCards = allCards.length;
+        const totalPages = Math.ceil(totalCards / pageSize);
 
         const sanitizedEntity = await super.sanitizeOutput(entity);
 
         sanitizedEntity.pagination = {
           page,
           pageSize,
-          totalCards: totalCards,
-          totalPages: totalPages,
+          totalCards,
+          totalPages,
         };
 
         return { data: sanitizedEntity };
+
       } catch (error) {
-        console.error("founderById error:", error);
-        return ctx.internalServerError("Failed to load founder data");
+        console.error("teamBySlug error:", error);
+        return ctx.internalServerError("Failed to load team data");
       }
-    },
+    }
+
   })
 );
