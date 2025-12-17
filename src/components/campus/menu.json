@@ -8,12 +8,6 @@
     "Title": {
       "type": "string"
     },
-    "Heading": {
-      "type": "string"
-    },
-    "SubHeading": {
-      "type": "string"
-    },
     "Description": {
       "type": "blocks"
     },

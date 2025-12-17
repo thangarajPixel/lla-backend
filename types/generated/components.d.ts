@@ -212,9 +212,7 @@ export interface CampusMenu extends Struct.ComponentSchema {
   };
   attributes: {
     Description: Schema.Attribute.Blocks;
-    Heading: Schema.Attribute.String;
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
     Video: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
   };
