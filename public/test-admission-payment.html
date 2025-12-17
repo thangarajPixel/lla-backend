@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Admission Payment Flow</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4945ff;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .btn {
+            background: #4945ff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .btn:hover {
+            background: #3730a3;
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Test Admission Payment Flow</h1>
+            <p>Test automatic payment processing when updating admissions</p>
+        </div>
+
+        <!-- Test CREATE with Payment -->
+        <div class="section">
+            <h3>1. Create Admission with Step 3 = True (POST)</h3>
+            <p>This will trigger automatic payment processing on creation</p>
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" placeholder="Enter first name" value="Test User">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" placeholder="Enter email" value="test@example.com">
+            </div>
+            <div class="form-group">
+                <label for="mobile">Mobile:</label>
+                <input type="number" id="mobile" placeholder="Enter mobile number" value="9876543210">
+            </div>
+            <button class="btn" onclick="createWithStep3()">Create with Step 3 = True</button>
+            <button class="btn" onclick="createWithPaymentCompleted()">Create with Payment = Completed</button>
+            <div id="createResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Test Update with Step 3 -->
+        <div class="section">
+            <h3>2. Update Admission - Set Step 3 to True (PUT)</h3>
+            <p>This will trigger automatic payment processing</p>
+            <div class="form-group">
+                <label for="admissionId1">Admission ID:</label>
+                <input type="text" id="admissionId1" placeholder="Enter admission ID or documentId" value="1">
+            </div>
+            <button class="btn" onclick="updateStep3()">Set Step 3 = True</button>
+            <div id="step3Result" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Test Update with Payment Status -->
+        <div class="section">
+            <h3>3. Update Admission - Set Payment Status to Completed (PUT)</h3>
+            <p>This will trigger automatic step 3 completion</p>
+            <div class="form-group">
+                <label for="admissionId2">Admission ID:</label>
+                <input type="text" id="admissionId2" placeholder="Enter admission ID or documentId" value="1">
+            </div>
+            <button class="btn" onclick="updatePaymentStatus()">Set Payment Status = Completed</button>
+            <div id="paymentResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Test Both Together -->
+        <div class="section">
+            <h3>4. Update Both Step 3 and Payment Status (PUT)</h3>
+            <div class="form-group">
+                <label for="admissionId3">Admission ID:</label>
+                <input type="text" id="admissionId3" placeholder="Enter admission ID or documentId" value="1">
+            </div>
+            <button class="btn btn-success" onclick="updateBoth()">Set Both Step 3 = True & Payment = Completed</button>
+            <div id="bothResult" class="result" style="display: none;"></div>
+        </div>
+
+        <!-- Check Current Status -->
+        <div class="section">
+            <h3>5. Check Current Status</h3>
+            <div class="form-group">
+                <label for="checkId">Admission ID:</label>
+                <input type="text" id="checkId" placeholder="Enter admission ID or documentId" value="1">
+            </div>
+            <button class="btn" onclick="checkStatus()">Check Status</button>
+            <div id="statusResult" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        async function createWithStep3() {
+            const firstName = document.getElementById('firstName').value;
+            const email = document.getElementById('email').value;
+            const mobile = document.getElementById('mobile').value;
+            const resultDiv = document.getElementById('createResult');
+            
+            if (!firstName || !email || !mobile) {
+                showResult(resultDiv, 'Please fill all required fields', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Creating admission with step 3 = true...', 'info');
+                
+                const response = await fetch('/api/admissions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: {
+                            first_name: firstName,
+                            email: email,
+                            mobile_no: parseInt(mobile),
+                            step_3: true
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(resultDiv, JSON.stringify(data, null, 2), 'success');
+                    
+                    // Check if checkout link is available
+                    if (data.checkoutLink) {
+                        const proceedBtn = document.createElement('button');
+                        proceedBtn.className = 'btn btn-success';
+                        proceedBtn.textContent = 'Proceed to Payment Gateway';
+                        proceedBtn.style.marginTop = '10px';
+                        proceedBtn.onclick = () => redirectToPayU(data.checkoutLink);
+                        resultDiv.appendChild(proceedBtn);
+                    }
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function createWithPaymentCompleted() {
+            const firstName = document.getElementById('firstName').value;
+            const email = document.getElementById('email').value;
+            const mobile = document.getElementById('mobile').value;
+            const resultDiv = document.getElementById('createResult');
+            
+            if (!firstName || !email || !mobile) {
+                showResult(resultDiv, 'Please fill all required fields', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Creating admission with payment = completed...', 'info');
+                
+                const response = await fetch('/api/admissions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: {
+                            first_name: firstName,
+                            email: email + '2', // Different email to avoid conflicts
+                            mobile_no: parseInt(mobile) + 1,
+                            Payment_Status: 'Completed'
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(resultDiv, JSON.stringify(data, null, 2), 'success');
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function updateStep3() {
+            const admissionId = document.getElementById('admissionId1').value;
+            const resultDiv = document.getElementById('step3Result');
+            
+            if (!admissionId) {
+                showResult(resultDiv, 'Please enter admission ID', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Updating step 3...', 'info');
+                
+                const response = await fetch(`/api/admissions/${admissionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: {
+                            step_3: true
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(resultDiv, JSON.stringify(data, null, 2), 'success');
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function updatePaymentStatus() {
+            const admissionId = document.getElementById('admissionId2').value;
+            const resultDiv = document.getElementById('paymentResult');
+            
+            if (!admissionId) {
+                showResult(resultDiv, 'Please enter admission ID', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Updating payment status...', 'info');
+                
+                const response = await fetch(`/api/admissions/${admissionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: {
+                            Payment_Status: 'Completed'
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(resultDiv, JSON.stringify(data, null, 2), 'success');
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function updateBoth() {
+            const admissionId = document.getElementById('admissionId3').value;
+            const resultDiv = document.getElementById('bothResult');
+            
+            if (!admissionId) {
+                showResult(resultDiv, 'Please enter admission ID', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Updating both step 3 and payment status...', 'info');
+                
+                const response = await fetch(`/api/admissions/${admissionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: {
+                            step_3: true,
+                            Payment_Status: 'Completed'
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(resultDiv, JSON.stringify(data, null, 2), 'success');
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkStatus() {
+            const admissionId = document.getElementById('checkId').value;
+            const resultDiv = document.getElementById('statusResult');
+            
+            if (!admissionId) {
+                showResult(resultDiv, 'Please enter admission ID', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Checking status...', 'info');
+                
+                const response = await fetch(`/api/admissions/${admissionId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok && data.data) {
+                    const admission = data.data;
+                    const statusInfo = {
+                        id: admission.id,
+                        documentId: admission.documentId,
+                        name: `${admission.first_name} ${admission.last_name}`,
+                        email: admission.email,
+                        paymentStatus: admission.Payment_Status,
+                        step1: admission.step_1,
+                        step2: admission.step_2,
+                        step3: admission.step_3,
+                        updatedAt: admission.updatedAt
+                    };
+                    showResult(resultDiv, JSON.stringify(statusInfo, null, 2), 'success');
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        function showResult(element, message, type) {
+            element.style.display = 'block';
+            element.textContent = message;
+            element.className = `result ${type}`;
+        }
+
+        function redirectToPayU(checkoutData) {
+            if (!checkoutData || !checkoutData.checkoutUrl) {
+                alert('Invalid checkout data');
+                return;
+            }
+
+            // Create and submit PayU form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = checkoutData.checkoutUrl;
+            
+            // Add all PayU parameters as hidden fields
+            Object.keys(checkoutData.data).forEach(key => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = checkoutData.data[key];
+                form.appendChild(input);
+            });
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+</body>
+</html>

@@ -33,6 +33,122 @@ const addBaseUrlToMedia = (data: any, baseUrl: string): any => {
   return data;
 };
 
+// Helper function to determine if payment should be processed
+const shouldProcessPaymentHelper = (currentAdmission: any, updatedData: any, requestData: any): boolean => {
+  if (!currentAdmission || !updatedData) return false;
+
+  // Check if step_3 is being set to true and payment is not already completed
+  const step3Changed = requestData.step_3 === true && currentAdmission.step_3 !== true;
+  const paymentNotCompleted = updatedData.Payment_Status !== 'Completed';
+  
+  // Check if Payment_Status is being set to 'Completed'
+  const paymentStatusChanged = requestData.Payment_Status === 'Completed' && currentAdmission.Payment_Status !== 'Completed';
+
+  console.log('🔍 Payment Processing Check:');
+  console.log('   Step 3 changed to true:', step3Changed);
+  console.log('   Payment not completed:', paymentNotCompleted);
+  console.log('   Payment status changed to Completed:', paymentStatusChanged);
+  console.log('   Should process:', (step3Changed && paymentNotCompleted) || paymentStatusChanged);
+
+  return (step3Changed && paymentNotCompleted) || paymentStatusChanged;
+};
+
+// Helper function to determine if payment should be processed for CREATE
+const shouldProcessPaymentForCreate = (createdData: any, requestData: any): boolean => {
+  if (!createdData || !requestData) return false;
+
+  // Check if step_3 is set to true in the create request
+  const step3IsTrue = requestData.step_3 === true;
+  
+  // Check if Payment_Status is set to 'Completed' in the create request
+  const paymentStatusCompleted = requestData.Payment_Status === 'Completed';
+
+  console.log('🔍 Payment Processing Check (CREATE):');
+  console.log('   Step 3 is true:', step3IsTrue);
+  console.log('   Payment status is Completed:', paymentStatusCompleted);
+  console.log('   Should process:', step3IsTrue || paymentStatusCompleted);
+
+  return step3IsTrue || paymentStatusCompleted;
+};
+
+// Helper function to process automatic payment
+const processAutomaticPaymentHelper = async (admission: any): Promise<void> => {
+  console.log('💳 Processing automatic payment for admission:', admission.id);
+  
+  // Update admission to mark payment as completed and step_3 as true
+  await strapi.entityService.update('api::admission.admission', admission.id, {
+    data: {
+      Payment_Status: 'Completed',
+      step_3: true
+    }
+  });
+
+  console.log('✅ Admission payment status updated to Completed');
+  console.log('✅ Step 3 marked as completed');
+};
+
+// Helper function to generate checkout link
+const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
+  console.log('🔗 Generating checkout link for admission:', admission.id);
+  
+  const crypto = require("crypto");
+  const { v4: uuidv4 } = require("uuid");
+  const path = require("path");
+  const payu = require(path.join(process.cwd(), 'config', 'payu'));
+
+  // Use default amount of ₹1
+  const paymentAmount = process.env.DEFAULT_PAYMENT_AMOUNT || '1';
+
+  // Generate unique transaction ID
+  const txnid = uuidv4().replace(/-/g, "").substring(0, 20);
+  
+  // Prepare payment data
+  const paymentData = {
+    amount: parseFloat(paymentAmount).toFixed(2),
+    productinfo: `Admission Fee - ${admission.Course?.title || 'Course'}`,
+    firstname: admission.first_name,
+    lastname: admission.last_name || '',
+    email: admission.email,
+    phone: admission.mobile_no?.toString() || '',
+    txnid,
+    surl: `${strapi.config.server.url}/api/payment/success`,
+    furl: `${strapi.config.server.url}/api/payment/failure`,
+    udf1: admission.id.toString(), // Store admission ID for reference
+    udf2: '', 
+    udf3: '',
+    udf4: '',
+    udf5: ''
+  };
+
+  // Create hash for PayU
+  const hashString = 
+    `${payu.KEY}|${paymentData.txnid}|${paymentData.amount}|${paymentData.productinfo}|${paymentData.firstname}|${paymentData.email}|${paymentData.udf1}|${paymentData.udf2}|${paymentData.udf3}|${paymentData.udf4}|${paymentData.udf5}||||||${payu.SALT}`;
+
+  const hash = crypto
+    .createHash("sha512")
+    .update(hashString)
+    .digest("hex");
+
+  return {
+    success: true,
+    checkoutUrl: payu.BASE_URL,
+    method: "POST",
+    transactionId: txnid,
+    amount: paymentData.amount,
+    data: {
+      key: payu.KEY,
+      ...paymentData,
+      hash
+    },
+    // Additional info for frontend
+    admissionInfo: {
+      id: admission.id,
+      name: `${admission.first_name} ${admission.last_name}`,
+      email: admission.email
+    }
+  };
+};
+
 export default factories.createCoreController('api::admission.admission', ({ strapi }) => ({
   async create(ctx) {
     console.log('========================================');
@@ -79,17 +195,200 @@ export default factories.createCoreController('api::admission.admission', ({ str
       }
     }
 
+    // Check if payment processing is needed for CREATE
+    if (createdRecord) {
+      console.log('📊 Created Payment Status:', createdRecord.Payment_Status);
+      console.log('📊 Created Step 3:', createdRecord.step_3);
+      
+      const shouldProcessPayment = shouldProcessPaymentForCreate(createdRecord, ctx.request.body.data);
+      
+      if (shouldProcessPayment) {
+        console.log('💳 Payment processing triggered on CREATE!');
+        
+        try {
+          // Auto-process payment
+          await processAutomaticPaymentHelper(createdRecord);
+          console.log('✅ Automatic payment processed successfully on CREATE');
+          
+          // Fetch updated admission data after payment processing
+          let finalAdmission;
+          if (createdRecord.id) {
+            const entities = await strapi.entityService.findMany('api::admission.admission', {
+              filters: { id: createdRecord.id },
+              limit: 1,
+            });
+            finalAdmission = entities[0];
+          }
+          
+          if (finalAdmission) {
+            createdRecord = finalAdmission;
+          }
+          
+        } catch (paymentError) {
+          console.error('❌ Automatic payment processing failed on CREATE:', paymentError);
+          // Don't fail the create if payment fails
+        }
+      }
+    }
+
+    // Generate checkout link if step_3 is true in CREATE request
+    let checkoutLink = null;
+    const finalCreatedRecord = createdRecord || response.data;
+    const shouldGenerateCheckoutForCreate = ctx.request.body.data?.step_3 === true;
+    
+    if (shouldGenerateCheckoutForCreate && finalCreatedRecord) {
+      console.log('🔗 Generating checkout link for new admission with step_3:', finalCreatedRecord.id);
+      
+      try {
+        // Temporarily set payment status to Pending for checkout link generation
+        const tempAdmissionData = {
+          ...finalCreatedRecord,
+          Payment_Status: 'Pending'
+        };
+        checkoutLink = await generateCheckoutLinkHelper(tempAdmissionData);
+        console.log('✅ Checkout link generated successfully for CREATE with step_3');
+      } catch (checkoutError) {
+        console.error('❌ Failed to generate checkout link for CREATE:', checkoutError);
+      }
+    }
+
     console.log('========================================');
     const baseUrl = process.env.ADMIN_BASE_URL || `${ctx.request.protocol}://${ctx.request.host}`;
+    
     if (createdRecord) {
-      return { data: addBaseUrlToMedia(createdRecord, baseUrl) };
+      const responseData = { data: addBaseUrlToMedia(createdRecord, baseUrl) };
+      
+      // Add checkout link to response if available
+      if (checkoutLink) {
+        return {
+          ...responseData,
+          checkoutLink: checkoutLink
+        };
+      }
+      
+      return responseData;
     }
     
     if (response?.data) {
       response.data = addBaseUrlToMedia(response.data, baseUrl);
+      
+      // Add checkout link to response if available
+      if (checkoutLink) {
+        return {
+          ...response,
+          checkoutLink: checkoutLink
+        };
+      }
     }
+    
     return response;
   },
+
+  async update(ctx) {
+    console.log('========================================');
+    console.log('📝 UPDATE API called');
+    console.log('Admission ID:', ctx.params.id);
+    console.log('Update Data:', JSON.stringify(ctx.request.body.data, null, 2));
+    console.log('========================================');
+
+    // Get current admission data before update
+    const { id } = ctx.params;
+    let currentAdmission;
+    
+    try {
+      if (/^\d+$/.test(id)) {
+        const entities = await strapi.entityService.findMany('api::admission.admission', {
+          filters: { id: parseInt(id) },
+          limit: 1,
+        });
+        currentAdmission = entities[0];
+      } else {
+        currentAdmission = await strapi.entityService.findOne('api::admission.admission', id);
+      }
+    } catch (error) {
+      console.log('❌ Error fetching current admission:', error);
+    }
+
+    // Call default update
+    const response = await super.update(ctx);
+    const updatedData = response.data;
+
+    console.log('✅ Admission updated - ID:', updatedData?.id);
+    console.log('📊 Updated Payment Status:', updatedData?.Payment_Status);
+    console.log('📊 Updated Step 3:', updatedData?.step_3);
+
+    // Generate checkout link BEFORE processing payment if step_3 is being set to true
+    let checkoutLink = null;
+    const shouldGenerateCheckout = ctx.request.body.data?.step_3 === true && currentAdmission?.step_3 !== true;
+    
+    if (shouldGenerateCheckout && updatedData) {
+      console.log('🔗 Generating checkout link for step_3 activation:', updatedData.id);
+      
+      try {
+        // Temporarily set payment status to Pending for checkout link generation
+        const tempAdmissionData = {
+          ...updatedData,
+          Payment_Status: 'Pending'
+        };
+        checkoutLink = await generateCheckoutLinkHelper(tempAdmissionData);
+        console.log('✅ Checkout link generated successfully for step_3 activation');
+      } catch (checkoutError) {
+        console.error('❌ Failed to generate checkout link:', checkoutError);
+      }
+    }
+
+    // Check if payment processing is needed
+    const shouldProcessPayment = shouldProcessPaymentHelper(currentAdmission, updatedData, ctx.request.body.data);
+    
+    if (shouldProcessPayment) {
+      console.log('💳 Payment processing triggered!');
+      
+      try {
+        // Auto-process payment
+        await processAutomaticPaymentHelper(updatedData);
+        console.log('✅ Automatic payment processed successfully');
+        
+        // Fetch updated admission data after payment processing
+        let finalAdmission;
+        if (/^\d+$/.test(id)) {
+          const entities = await strapi.entityService.findMany('api::admission.admission', {
+            filters: { id: parseInt(id) },
+            limit: 1,
+          });
+          finalAdmission = entities[0];
+        } else {
+          finalAdmission = await strapi.entityService.findOne('api::admission.admission', id);
+        }
+        
+        if (finalAdmission) {
+          response.data = finalAdmission;
+        }
+        
+      } catch (paymentError) {
+        console.error('❌ Automatic payment processing failed:', paymentError);
+        // Don't fail the update if payment fails
+      }
+    }
+
+    console.log('========================================');
+    const baseUrl = process.env.ADMIN_BASE_URL || `${ctx.request.protocol}://${ctx.request.host}`;
+    
+    if (response?.data) {
+      response.data = addBaseUrlToMedia(response.data, baseUrl);
+    }
+
+    // Add checkout link to response if available
+    if (checkoutLink) {
+      return {
+        ...response,
+        checkoutLink: checkoutLink
+      };
+    }
+    
+    return response;
+  },
+
+
 
   async findOne(ctx) {
     const { id } = ctx.params;

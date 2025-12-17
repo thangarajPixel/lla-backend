@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test PUT Method Checkout Link</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4945ff;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .btn {
+            background: #4945ff;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .btn:hover {
+            background: #3730a3;
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .checkout-info {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Test PUT Method - PayU Checkout Link</h1>
+            <p>Test if PUT method returns checkout link in response</p>
+        </div>
+
+        <div class="form-group">
+            <label for="admissionId">Admission ID (numeric or documentId):</label>
+            <input type="text" id="admissionId" placeholder="e.g., 1 or yjldn38feraccqfjp20ygrhe" value="1">
+        </div>
+
+        <div class="form-group">
+            <label>Test Scenarios:</label>
+            <button class="btn" onclick="testSetStep3()">PUT: Set step_3 = true</button>
+            <button class="btn" onclick="testSetPending()">PUT: Set Payment_Status = Pending</button>
+            <button class="btn" onclick="testBothFields()">PUT: Set Both Fields</button>
+        </div>
+
+        <div id="result" class="result" style="display: none;"></div>
+        <div id="checkoutInfo" class="checkout-info" style="display: none;"></div>
+    </div>
+
+    <script>
+        async function testSetStep3() {
+            const admissionId = document.getElementById('admissionId').value;
+            const resultDiv = document.getElementById('result');
+            const checkoutDiv = document.getElementById('checkoutInfo');
+            
+            if (!admissionId) {
+                showResult(resultDiv, 'Please enter admission ID', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Testing PUT with step_3 = true...\n(Should return checkout link AND set Payment_Status = Completed)', 'info');
+                checkoutDiv.style.display = 'none';
+                
+                const response = await fetch(`/api/admissions/${admissionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: {
+                            step_3: true
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(resultDiv, JSON.stringify(data, null, 2), 'success');
+                    
+                    // Check if checkout link is in response
+                    if (data.checkoutLink) {
+                        showCheckoutInfo(checkoutDiv, data.checkoutLink);
+                    } else {
+                        checkoutDiv.innerHTML = '<strong>No checkout link in response</strong> - step_3 may already be true for this admission.';
+                        checkoutDiv.style.display = 'block';
+                    }
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSetPending() {
+            const admissionId = document.getElementById('admissionId').value;
+            const resultDiv = document.getElementById('result');
+            const checkoutDiv = document.getElementById('checkoutInfo');
+            
+            if (!admissionId) {
+                showResult(resultDiv, 'Please enter admission ID', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Testing PUT with Payment_Status = Pending...', 'info');
+                checkoutDiv.style.display = 'none';
+                
+                const response = await fetch(`/api/admissions/${admissionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: {
+                            Payment_Status: 'Pending'
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(resultDiv, JSON.stringify(data, null, 2), 'success');
+                    
+                    // Check if checkout link is in response
+                    if (data.checkoutLink) {
+                        showCheckoutInfo(checkoutDiv, data.checkoutLink);
+                    } else {
+                        checkoutDiv.innerHTML = '<strong>No checkout link in response</strong> - Check conditions in code.';
+                        checkoutDiv.style.display = 'block';
+                    }
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testBothFields() {
+            const admissionId = document.getElementById('admissionId').value;
+            const resultDiv = document.getElementById('result');
+            const checkoutDiv = document.getElementById('checkoutInfo');
+            
+            if (!admissionId) {
+                showResult(resultDiv, 'Please enter admission ID', 'error');
+                return;
+            }
+
+            try {
+                showResult(resultDiv, 'Testing PUT with both step_3 = true and Payment_Status = Pending...', 'info');
+                checkoutDiv.style.display = 'none';
+                
+                const response = await fetch(`/api/admissions/${admissionId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        data: {
+                            step_3: true,
+                            Payment_Status: 'Pending'
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showResult(resultDiv, JSON.stringify(data, null, 2), 'success');
+                    
+                    // Check if checkout link is in response
+                    if (data.checkoutLink) {
+                        showCheckoutInfo(checkoutDiv, data.checkoutLink);
+                    } else {
+                        checkoutDiv.innerHTML = '<strong>No checkout link in response</strong> - Check server logs for details.';
+                        checkoutDiv.style.display = 'block';
+                    }
+                } else {
+                    showResult(resultDiv, `Error: ${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(resultDiv, `Error: ${error.message}`, 'error');
+            }
+        }
+
+        function showResult(element, message, type) {
+            element.style.display = 'block';
+            element.textContent = message;
+            element.className = `result ${type}`;
+        }
+
+        function showCheckoutInfo(element, checkoutLink) {
+            element.innerHTML = `
+                <h4>✅ Checkout Link Generated!</h4>
+                <p><strong>Checkout URL:</strong> ${checkoutLink.checkoutUrl}</p>
+                <p><strong>Transaction ID:</strong> ${checkoutLink.transactionId}</p>
+                <p><strong>Amount:</strong> ₹${checkoutLink.amount}</p>
+                <p><strong>Admission:</strong> ${checkoutLink.admissionInfo?.name} (${checkoutLink.admissionInfo?.email})</p>
+                <button class="btn btn-success" onclick="redirectToPayU(${JSON.stringify(checkoutLink).replace(/"/g, '&quot;')})">
+                    Proceed to PayU Gateway
+                </button>
+            `;
+            element.style.display = 'block';
+        }
+
+        function redirectToPayU(checkoutData) {
+            if (!checkoutData || !checkoutData.checkoutUrl) {
+                alert('Invalid checkout data');
+                return;
+            }
+
+            // Create and submit PayU form
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = checkoutData.checkoutUrl;
+            
+            // Add all PayU parameters as hidden fields
+            Object.keys(checkoutData.data).forEach(key => {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = checkoutData.data[key];
+                form.appendChild(input);
+            });
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+</body>
+</html>

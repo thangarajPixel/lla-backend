@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const { v4: uuidv4 } = require("uuid");
-const payu = require("../../../../config/payu");
+const path = require("path");
+const payu = require(path.join(process.cwd(), 'config', 'payu'));
 
 module.exports = {
   async create(ctx) {

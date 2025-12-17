@@ -11,7 +11,7 @@ export default {
         const emailService = require('../../services/email').default;
         
         // Send registration emails
-        await emailService.sendRegistrationEmail(result);
+        //await emailService.sendRegistrationEmail(result);
         
         console.log('Registration emails sent successfully');
       } catch (error) {
