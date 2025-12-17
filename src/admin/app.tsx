@@ -21,6 +21,35 @@ export default {
         const [stepValue, setStepValue] = useState('');
         const [yearValue, setYearValue] = useState('');
 
+        // Initialize dropdown values based on URL parameters
+        React.useEffect(() => {
+          const urlParams = new URLSearchParams(window.location.search);
+          
+          // Check for step filters in URL (handle URL encoding)
+          if (urlParams.get('filters[step_1][$eq]') === '1' || urlParams.get('filters[step_1][%24eq]') === '1') {
+            setStepValue('Step1');
+          } else if (urlParams.get('filters[step_2][$eq]') === '1' || urlParams.get('filters[step_2][%24eq]') === '1') {
+            setStepValue('Step2');
+          } else if (urlParams.get('filters[step_3][$eq]') === '1' || urlParams.get('filters[step_3][%24eq]') === '1') {
+            setStepValue('Step3');
+          } else {
+            setStepValue('');
+          }
+
+          // Check for year filters in URL (handle URL encoding)
+          const startDate = urlParams.get('filters[createdAt][$gte]') || urlParams.get('filters[createdAt][%24gte]');
+          const endDate = urlParams.get('filters[createdAt][$lte]') || urlParams.get('filters[createdAt][%24lte]');
+          
+          if (startDate && endDate) {
+            const startYear = startDate.split('-')[0];
+            const endYear = endDate.split('-')[0];
+            const academicYear = `${startYear}-${endYear}`;
+            setYearValue(academicYear);
+          } else {
+            setYearValue('');
+          }
+        }, [location.search]);
+
         if (!location.pathname.includes('api::admission.admission')) {
           return null;
         }
