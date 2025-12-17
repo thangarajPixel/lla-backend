@@ -212,6 +212,13 @@ export interface CampusMenu extends Struct.ComponentSchema {
   };
   attributes: {
     Description: Schema.Attribute.Blocks;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Title: Schema.Attribute.String;
     Video: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
