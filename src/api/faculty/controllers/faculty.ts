@@ -80,7 +80,7 @@ export default factories.createCoreController(
           return ctx.notFound("Faculty content not found");
         }
 
-        const sanitizedEntity = await super.sanitizeOutput(entity , ctx);
+        const sanitizedEntity = await super.sanitizeOutput(entity, ctx);
 
         return super.transformResponse(sanitizedEntity);
       } catch (error) {
@@ -98,68 +98,15 @@ export default factories.createCoreController(
           populate: {
             Faculty: {
               on: {
-                "faculty.photography": {
-                  populate: {
-                    Card: {
-                      populate: {
-                        Image: {
-                          select: ["id", "name", "url"],
-                        },
-                        ViewCard: {
-                          populate: {
-                            Image: {
-                              select: ["id", "name", "url"],
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                "faculty.filmmaking": {
-                  populate: {
-                    Card: {
-                      populate: {
-                        Image: {
-                          select: ["id", "name", "url"],
-                        },
-                        ViewCard: {
-                          populate: {
-                            Image: {
-                              select: ["id", "name", "url"],
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
-                "faculty.visiting": {
-                  populate: {
-                    Card: {
-                      populate: {
-                        Image: {
-                          select: ["id", "name", "url"],
-                        },
-                        ViewCard: {
-                          populate: {
-                            Image: {
-                              select: ["id", "name", "url"],
-                            },
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
+                "faculty.photography": { populate: { Card: { populate: ["Image", "ViewCard.Image"] } } },
+                "faculty.filmmaking": { populate: { Card: { populate: ["Image", "ViewCard.Image"] } } },
+                "faculty.visiting": { populate: { Card: { populate: ["Image", "ViewCard.Image"] } } },
               },
             },
           },
         });
 
-        if (!entity) {
-          return ctx.notFound("Faculty content not found");
-        }
+        if (!entity) return ctx.notFound("Faculty content not found");
 
         const modules = {
           photography: "faculty.photography",
@@ -167,44 +114,55 @@ export default factories.createCoreController(
           visiting: "faculty.visiting",
         };
 
-        if (!modules[key]) {
-          return ctx.notFound("Faculty component not found");
-        }
+        if (!modules[key]) return ctx.notFound("Faculty component not found");
 
         const component = entity.Faculty.find(
           (item) => item.__component === modules[key]
         );
 
-        let cards = component?.Card || [];
-        if (slug && page === 1) {
-          cards = cards.filter((card) => card.Slug === slug);
-        }
-        if (slug && page > 1) {
-          cards = cards.filter((card) => card.Slug !== slug);
+        if (!component) return ctx.notFound("Faculty block missing");
+
+        const allCards = component.Card || [];
+
+        // 🔑 Slug card
+        const slugCard = allCards.find(card => card.Slug === slug);
+
+        // 🔑 Remaining cards (slug removed)
+        const remainingCards = allCards.filter(card => card.Slug !== slug);
+
+        let paginatedCards = [];
+
+        if (page === 1 && slugCard) {
+          paginatedCards = [
+            slugCard,
+            ...remainingCards.slice(0, pageSize - 1),
+          ];
+        } else {
+          const start = (page - 1) * pageSize - 1;
+          paginatedCards = remainingCards.slice(start, start + pageSize);
         }
 
-        const totalCards = component?.Card.length || 0;
-        const totalPages = Math.ceil(totalCards / pageSize) - 1;
-        const start =(page - 1) * pageSize < totalCards ? (page - 1) * pageSize : 0;
-        const end = start + pageSize;
+        component.Card = paginatedCards;
 
-        // Apply pagination on filtered cards
-        component.Card = cards.slice(start, end);
+        const totalCards = allCards.length;
+        const totalPages = Math.ceil(totalCards / pageSize);
 
         const sanitizedEntity = await super.sanitizeOutput(component);
 
         sanitizedEntity.pagination = {
           page,
           pageSize,
-          totalCards: totalCards,
-          totalPages: totalPages,
+          totalCards,
+          totalPages,
         };
 
         return { data: sanitizedEntity };
+
       } catch (error) {
-        console.error("Home find error:", error);
-        return ctx.internalServerError("Failed to load home data");
+        console.error("Faculty findOne error:", error);
+        return ctx.internalServerError("Failed to load faculty data");
       }
-    },
+    }
+
   })
 );
