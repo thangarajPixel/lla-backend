@@ -11,6 +11,7 @@ export default factories.createCoreController(
       try {
         const page = parseInt(String(ctx.query.page)) || 1;
         const pageSize = parseInt(String(ctx.query.per_page)) || 10;
+        const search = ctx.query.search as string;
 
         const entity = await strapi.db.query("api::blog.blog").findOne({
           populate: {
@@ -34,6 +35,17 @@ export default factories.createCoreController(
 
         let cards = entity.Blog.BlogCard || [];
 
+        // Apply search filter if search query is provided
+        if (search && search.trim()) {
+          const searchTerm = search.trim().toLowerCase();
+          cards = cards.filter((card: any) => {
+            const title = card.Title?.toLowerCase() || '';
+            const description = card.Description?.toLowerCase() || '';
+            
+            return title.includes(searchTerm) || description.includes(searchTerm);
+          });
+        }
+
         const totalCards = cards.length;
         const start = (page - 1) * pageSize;
         const end = start + pageSize;
@@ -48,6 +60,7 @@ export default factories.createCoreController(
           pageSize,
           total: totalCards,
           totalPages: Math.ceil(totalCards / pageSize),
+          search: search || null,
         };
 
         // Add base URL to media URLs
