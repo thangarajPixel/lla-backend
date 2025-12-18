@@ -703,9 +703,11 @@ export interface ApiCourseListCourseList extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::admission.admission'
     >;
+    Amount: Schema.Attribute.Decimal;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    GstAmount: Schema.Attribute.Decimal;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -715,6 +717,7 @@ export interface ApiCourseListCourseList extends Struct.CollectionTypeSchema {
     Name: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     Slug: Schema.Attribute.String & Schema.Attribute.Unique;
+    TotalAmount: Schema.Attribute.Decimal;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
