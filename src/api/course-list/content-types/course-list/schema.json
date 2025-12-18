@@ -23,6 +23,15 @@
       "relation": "oneToMany",
       "target": "api::admission.admission",
       "mappedBy": "Course"
+    },
+    "Amount": {
+      "type": "decimal"
+    },
+    "GstAmount": {
+      "type": "decimal"
+    },
+    "TotalAmount": {
+      "type": "decimal"
     }
   }
 }
