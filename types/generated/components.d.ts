@@ -906,6 +906,8 @@ export interface LifeViewCardLifeViewCard extends Struct.ComponentSchema {
       true
     >;
     Title: Schema.Attribute.String;
+    Type: Schema.Attribute.Enumeration<['Normal', 'Slide', 'Video']>;
+    Url: Schema.Attribute.Text;
   };
 }
 
