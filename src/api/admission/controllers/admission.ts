@@ -104,15 +104,15 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
   
   // Prepare payment data
   const paymentData = {
-    amount: parseFloat(paymentAmount).toFixed(2),
+    amount: paymentAmount,
     productinfo: `Admission Fee - ${admission.Course?.title || 'Course'}`,
     firstname: admission.first_name,
     lastname: admission.last_name || '',
     email: admission.email,
     phone: admission.mobile_no?.toString() || '',
     txnid,
-    surl: `${strapi.config.server.url}/api/payment/success`,
-    furl: `${strapi.config.server.url}/api/payment/failure`,
+    surl:  process.env.PAYU_SUCCESS_URL || '',
+    furl:  process.env.PAYU_FAILURE_URL || '',
     udf1: admission.id.toString(), // Store admission ID for reference
     udf2: '', 
     udf3: '',
