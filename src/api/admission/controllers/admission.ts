@@ -97,7 +97,7 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
   const payu = require(path.join(process.cwd(), 'config', 'payu'));
 
   // Use default amount of ₹1
-  const paymentAmount = process.env.DEFAULT_PAYMENT_AMOUNT || '1';
+  const paymentAmount = process.env.DEFAULT_PAYMENT_AMOUNT || '1770';
 
   // Generate unique transaction ID
   const txnid = uuidv4().replace(/-/g, "").substring(0, 20);
