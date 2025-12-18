@@ -104,8 +104,8 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
   
   // Prepare payment data
   const paymentData = {
-    amount: paymentAmount,
-    productinfo: `Admission Fee - ${admission.Course?.title || 'Course'}`,
+    amount:1,
+    productinfo: `Admission Fee - ${admission.Course?.Name || 'Course'}`,
     firstname: admission.first_name,
     lastname: admission.last_name || '',
     email: admission.email,
