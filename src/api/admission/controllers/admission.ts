@@ -104,17 +104,17 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
   
   // Prepare payment data
   const paymentData = {
-    amount:1,
+    amount:admission?.Course?.TotalAmount || 1,
     productinfo: `Admission Fee - ${admission.Course?.Name || 'Course'}`,
     firstname: admission.first_name,
     lastname: admission.last_name || '',
     email: admission.email,
     phone: admission.mobile_no?.toString() || '',
     txnid,
-    surl:  process.env.PAYU_SUCCESS_URL || '',
-    furl:  process.env.PAYU_FAILURE_URL || '',
+    surl: `${payu.PAYU_URL}/${admission.documentId}/payment/success` || '',
+    furl: `${payu.PAYU_URL}/${admission.documentId}/payment/failure`|| '',
     udf1: admission.id.toString(), // Store admission ID for reference
-    udf2: '', 
+    udf2: admission.documentId, 
     udf3: '',
     udf4: '',
     udf5: ''
@@ -325,11 +325,28 @@ export default factories.createCoreController('api::admission.admission', ({ str
       console.log('🔗 Generating checkout link for step_3 activation:', updatedData.id);
       
       try {
-        // Temporarily set payment status to Pending for checkout link generation
+        let admissionData;
+        const populateConfig = {
+        populate: {
+          Course:true,
+        },
+      };
+
+      if (/^\d+$/.test(id)) {
+        const entities = await strapi.entityService.findMany('api::admission.admission', {
+          filters: { id: parseInt(updatedData.id) },
+          ...populateConfig,
+        });
+        admissionData = entities[0];
+      } else {
+        // Find by documentId
+        admissionData = await strapi.entityService.findOne('api::admission.admission', updatedData.id, populateConfig);
+      }
         const tempAdmissionData = {
-          ...updatedData,
+          ...admissionData,
           Payment_Status: 'Pending'
         };
+
         checkoutLink = await generateCheckoutLinkHelper(tempAdmissionData);
         console.log('✅ Checkout link generated successfully for step_3 activation');
       } catch (checkoutError) {
@@ -867,22 +884,22 @@ export default factories.createCoreController('api::admission.admission', ({ str
       const txnid = uuidv4().replace(/-/g, "").substring(0, 20);
       
       // Prepare payment data
-      const paymentData = {
-        amount: parseFloat(paymentAmount).toFixed(2),
-        productinfo: `Admission Fee - ${admission.Course?.title || 'Course'}`,
-        firstname: admission.first_name,
-        lastname: admission.last_name || '',
-        email: admission.email,
-        phone: admission.mobile_no?.toString() || '',
-        txnid,
-        surl: `${strapi.config.server.url}/api/payment/success`,
-        furl: `${strapi.config.server.url}/api/payment/failure`,
-        udf1: admission.id.toString(), // Store admission ID for reference
-        udf2: '', 
-        udf3: '',
-        udf4: '',
-        udf5: ''
-      };
+       const paymentData = {
+            amount:admission?.Course?.TotalAmount || 1,
+            productinfo: `Admission Fee - ${admission.Course?.Name || 'Course'}`,
+            firstname: admission.first_name,
+            lastname: admission.last_name || '',
+            email: admission.email,
+            phone: admission.mobile_no?.toString() || '',
+            txnid,
+            surl: `${payu.PAYU_URL}/${admission.documentId}/payment/success` || '',
+            furl: `${payu.PAYU_URL}/${admission.documentId}/payment/failure`|| '',
+            udf1: admission.id.toString(), // Store admission ID for reference
+            udf2: admission.documentId, 
+            udf3: '',
+            udf4: '',
+            udf5: ''
+          };
 
       // Create hash for PayU
       const hashString = 
