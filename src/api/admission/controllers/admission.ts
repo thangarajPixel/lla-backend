@@ -112,7 +112,7 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
     phone: admission.mobile_no?.toString() || '',
     txnid,
     surl: `${payu.PAYU_URL}/admission/${admission.documentId}/payment/success` || '',
-    furl: `${payu.PAYU_URL}/admission/${admission.documentId}/payment/failure`|| '',
+    furl: `${payu.PAYU_URL}/admission/${admission.documentId}/payment/failed`|| '',
     udf1: admission.id.toString(), // Store admission ID for reference
     udf2: admission.documentId, 
     udf3: '',
@@ -893,7 +893,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
             phone: admission.mobile_no?.toString() || '',
             txnid,
             surl: `${payu.PAYU_URL}/${admission.documentId}/payment/success` || '',
-            furl: `${payu.PAYU_URL}/${admission.documentId}/payment/failure`|| '',
+            furl: `${payu.PAYU_URL}/${admission.documentId}/payment/failed`|| '',
             udf1: admission.id.toString(), // Store admission ID for reference
             udf2: admission.documentId, 
             udf3: '',
