@@ -134,7 +134,8 @@
         "Paid",
         "Completed",
         "Pending",
-        "UnPaid"
+        "UnPaid",
+        "Failed"
       ]
     },
     "step_0": {
