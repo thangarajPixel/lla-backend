@@ -1,7 +1,7 @@
 {
   "collectionName": "components_seo_homes",
   "info": {
-    "displayName": "home"
+    "displayName": "Seo Card"
   },
   "options": {},
   "attributes": {
@@ -9,6 +9,26 @@
       "type": "string"
     },
     "description": {
+      "type": "text"
+    },
+    "page": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "Home",
+        "Campus",
+        "About-Us",
+        "Faculty",
+        "Gallery",
+        "Life-At-Lla",
+        "Blog",
+        "Contact-Us",
+        "Faq",
+        "Privacy-Policy",
+        "Terms-And-Condition"
+      ]
+    },
+    "KeyWords": {
       "type": "text"
     }
   },

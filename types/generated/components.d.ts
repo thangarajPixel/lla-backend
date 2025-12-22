@@ -996,10 +996,27 @@ export interface PrivacyPolicyPrivacyPolicy extends Struct.ComponentSchema {
 export interface SeoHome extends Struct.ComponentSchema {
   collectionName: 'components_seo_homes';
   info: {
-    displayName: 'home';
+    displayName: 'Seo Card';
   };
   attributes: {
     description: Schema.Attribute.Text;
+    KeyWords: Schema.Attribute.Text;
+    page: Schema.Attribute.Enumeration<
+      [
+        'Home',
+        'Campus',
+        'About-Us',
+        'Faculty',
+        'Gallery',
+        'Life-At-Lla',
+        'Blog',
+        'Contact-Us',
+        'Faq',
+        'Privacy-Policy',
+        'Terms-And-Condition',
+      ]
+    > &
+      Schema.Attribute.Required;
     title: Schema.Attribute.String;
   };
 }

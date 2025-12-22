@@ -1068,7 +1068,7 @@ export interface ApiPrivacyPolicyPrivacyPolicy extends Struct.SingleTypeSchema {
 export interface ApiSeoSeo extends Struct.SingleTypeSchema {
   collectionName: 'seos';
   info: {
-    displayName: 'seo';
+    displayName: 'Seo';
     pluralName: 'seos';
     singularName: 'seo';
   };
@@ -1083,7 +1083,7 @@ export interface ApiSeoSeo extends Struct.SingleTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::seo.seo'> &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    seo: Schema.Attribute.DynamicZone<['seo.home']>;
+    SeoCard: Schema.Attribute.Component<'seo.home', true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
