@@ -1015,6 +1015,7 @@ export interface SeoHome extends Struct.ComponentSchema {
         'Faq',
         'Privacy-Policy',
         'Terms-And-Condition',
+        'Admission',
       ]
     > &
       Schema.Attribute.Required;
