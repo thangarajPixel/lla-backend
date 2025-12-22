@@ -154,6 +154,12 @@
       "relation": "manyToOne",
       "target": "api::course-list.course-list",
       "inversedBy": "admissions"
+    },
+    "Paid_Amount": {
+      "type": "decimal"
+    },
+    "EncryptId": {
+      "type": "string"
     }
   }
 }

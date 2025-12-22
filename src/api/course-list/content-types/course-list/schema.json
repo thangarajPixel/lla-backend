@@ -27,10 +27,7 @@
     "Amount": {
       "type": "decimal"
     },
-    "GstAmount": {
-      "type": "decimal"
-    },
-    "TotalAmount": {
+    "Percentage": {
       "type": "decimal"
     }
   }

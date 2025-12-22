@@ -175,8 +175,8 @@ class PDFGenerator {
         }
         
         .logo-icon {
-            width: 35px;
-            height: 35px;
+            width: 55px;
+            height: 55px;
         }
         
         .logo-icon img {
