@@ -891,6 +891,7 @@ export interface LifeCardLifeCard extends Struct.ComponentSchema {
           preset: 'defaultHtml';
         }
       >;
+    SeoViewCard: Schema.Attribute.Component<'seo.seo-card', false>;
     Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Title: Schema.Attribute.String;
   };

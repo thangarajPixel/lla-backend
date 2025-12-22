@@ -45,6 +45,11 @@
       "type": "component",
       "component": "life-view-card.life-view-card",
       "repeatable": true
+    },
+    "SeoViewCard": {
+      "type": "component",
+      "component": "seo.seo-card",
+      "repeatable": false
     }
   },
   "config": {}
