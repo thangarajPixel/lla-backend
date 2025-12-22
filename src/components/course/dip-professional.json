@@ -52,6 +52,11 @@
       "type": "component",
       "component": "course.faq",
       "repeatable": false
+    },
+    "SeoViewCard": {
+      "type": "component",
+      "component": "seo.seo-card",
+      "repeatable": false
     }
   },
   "config": {}

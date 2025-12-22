@@ -372,6 +372,7 @@ export interface CourseDipProfessional extends Struct.ComponentSchema {
     Name: Schema.Attribute.String;
     Other_Info: Schema.Attribute.Component<'course.other-info', false>;
     Overview: Schema.Attribute.Component<'course.benefit', false>;
+    SeoViewCard: Schema.Attribute.Component<'seo.seo-card', false>;
     Student_testimonial: Schema.Attribute.Component<'home.testimonial', true>;
     Testimonial: Schema.Attribute.Component<'home.lla-testimonials', true>;
   };
@@ -1021,6 +1022,18 @@ export interface SeoHome extends Struct.ComponentSchema {
   };
 }
 
+export interface SeoSeoCard extends Struct.ComponentSchema {
+  collectionName: 'components_seo_seo_cards';
+  info: {
+    displayName: 'SeoViewCard';
+  };
+  attributes: {
+    Description: Schema.Attribute.Text;
+    KeyWords: Schema.Attribute.Text;
+    Title: Schema.Attribute.String;
+  };
+}
+
 export interface TermsAndConditionTermsAndCondition
   extends Struct.ComponentSchema {
   collectionName: 'components_terms_and_condition_terms_and_conditions';
@@ -1142,6 +1155,7 @@ declare module '@strapi/strapi' {
       'post-graduate.post-graduate': PostGraduatePostGraduate;
       'privacy-policy.privacy-policy': PrivacyPolicyPrivacyPolicy;
       'seo.home': SeoHome;
+      'seo.seo-card': SeoSeoCard;
       'terms-and-condition.terms-and-condition': TermsAndConditionTermsAndCondition;
       'under-graduate.under-graduate': UnderGraduateUnderGraduate;
       'upload-your-portfolio.upload-your-portfolio': UploadYourPortfolioUploadYourPortfolio;

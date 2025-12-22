@@ -220,6 +220,9 @@ export default factories.createCoreController(
                         "*": true,
                       },
                     },
+                    SeoViewCard: {
+                      populate:true,
+                     }
                   },
                 },
               },

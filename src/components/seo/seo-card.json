@@ -1,0 +1,19 @@
+{
+  "collectionName": "components_seo_seo_cards",
+  "info": {
+    "displayName": "SeoViewCard"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "text"
+    },
+    "KeyWords": {
+      "type": "text"
+    }
+  },
+  "config": {}
+}
