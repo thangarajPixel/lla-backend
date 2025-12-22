@@ -246,8 +246,6 @@ export interface CourseBanner extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
-    SubTitle: Schema.Attribute.String;
-    Title: Schema.Attribute.String;
   };
 }
 
