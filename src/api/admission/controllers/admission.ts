@@ -114,8 +114,8 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
     email: admission.email,
     phone: admission.mobile_no?.toString() || '',
     txnid,
-    surl: `${payu.PAYU_URL}/admission/${admission.EncryptId ?? admission.documentId}/payment/success` || '',
-    furl: `${payu.PAYU_URL}/admission/${admission.EncryptId ?? admission.documentId}/payment/failed`|| '',
+    surl: `${payu.PAYU_URL}/admission/${admission.EncryptId ?? ''}/payment/success` || '',
+    furl: `${payu.PAYU_URL}/admission/${admission.EncryptId ?? ''}/payment/failed`|| '',
     udf1: admission.id.toString(), // Store admission ID for reference
     udf2: admission.documentId, 
     udf3: '',
@@ -897,8 +897,8 @@ export default factories.createCoreController('api::admission.admission', ({ str
             email: admission.email,
             phone: admission.mobile_no?.toString() || '',
             txnid,
-            surl: `${payu.PAYU_URL}/${admission.EncryptId ?? admission.documentId}/payment/success` || '',
-            furl: `${payu.PAYU_URL}/${admission.EncryptId ?? admission.documentId}/payment/failed`|| '',
+            surl: `${payu.PAYU_URL}/${admission.EncryptId ?? ''}/payment/success` || '',
+            furl: `${payu.PAYU_URL}/${admission.EncryptId ??''}/payment/failed`|| '',
             udf1: admission.id.toString(), // Store admission ID for reference
             udf2: admission.documentId, 
             udf3: '',
