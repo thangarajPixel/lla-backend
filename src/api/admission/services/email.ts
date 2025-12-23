@@ -205,7 +205,8 @@ export default {
 
       const studentName = `${admission.name_title} ${admission.first_name} ${admission.last_name}`;
       console.log('👤 Student Name:', studentName);
-
+const baseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
+const pdfDownloadUrl = `${baseUrl}/api/admissions/${admission.id}/pdf`;
       // Email to student
       const studentEmailHtml = `
         <!DOCTYPE html>
@@ -230,6 +231,7 @@ export default {
               <p>Congratulations! Your registration has been successfully completed.</p>
               <p><strong>Application ID:</strong> ${admission.id}</p>
               <p><strong>Payment Status:</strong> ${admission.Payment_Status}</p>
+              <a href="${pdfDownloadUrl}" target="_blank" style="display:inline-block;padding:8px 20px;border-radius:20px;background:#ff6b6b;color:#fff;text-decoration:none;font-size:13px;font-weight:600;">Download</a>
               <p>We are excited to have you join Light and Life Academy. Our team will contact you shortly with further details.</p>
               <p>Thank you for choosing us!</p>
             </div>

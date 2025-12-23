@@ -145,7 +145,15 @@ class PDFGenerator {
             padding: 0;
             box-sizing: border-box;
         }
-        
+        @page {
+            size: A4;
+            margin: 20px;
+        }
+        .page-break {
+            page-break-before: always;
+            break-before: page;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.4;
@@ -174,15 +182,8 @@ class PDFGenerator {
             margin-bottom: 20px;
         }
         
-        .logo-icon {
-            width: 55px;
-            height: 55px;
-        }
-        
         .logo-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+            width: 100% !important;
         }
         
         .logo-text {
@@ -364,7 +365,7 @@ class PDFGenerator {
         <div class="left-column">
             <div class="logo">
                 ${logoBase64 ? `<div class="logo-icon"><img src="${logoBase64}" alt="LLA Logo" /></div>` : ''}
-                <div class="logo-text">Light & Life Academy<br>PHOTOGRAPHY</div>
+              
             </div>
             
             <div class="review-title">Review Application</div>
@@ -580,7 +581,8 @@ class PDFGenerator {
                 <div class="section-title">Where did you first out about LLA?</div>
                 <div class="field-value" style="text-align: left;">{{photographyClub}}</div>
             </div>
-            
+            <div class="page-break"></div>
+            <br>     <br>
             {{#if hasPortfolio}}
             <div class="section">
                 <div class="section-title">Portfolio Images</div>

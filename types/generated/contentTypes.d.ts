@@ -487,6 +487,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     email: Schema.Attribute.Email &
       Schema.Attribute.Required &
       Schema.Attribute.Unique;
+    EncryptId: Schema.Attribute.String;
     first_name: Schema.Attribute.String & Schema.Attribute.Required;
     hobbies: Schema.Attribute.String;
     Language_Proficiency: Schema.Attribute.Component<
@@ -510,6 +511,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     mobile_no: Schema.Attribute.BigInteger & Schema.Attribute.Required;
     name_title: Schema.Attribute.Enumeration<['Mr.', 'Ms.', 'Mrs.']>;
     nationality: Schema.Attribute.String;
+    Paid_Amount: Schema.Attribute.Decimal;
     Parent_Guardian_Spouse_Details: Schema.Attribute.Component<
       'parent-guardian-spouse.parent-guardian-spouse-details',
       false
@@ -707,7 +709,6 @@ export interface ApiCourseListCourseList extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    GstAmount: Schema.Attribute.Decimal;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -715,9 +716,9 @@ export interface ApiCourseListCourseList extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     Name: Schema.Attribute.String;
+    Percentage: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
     Slug: Schema.Attribute.String & Schema.Attribute.Unique;
-    TotalAmount: Schema.Attribute.Decimal;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
