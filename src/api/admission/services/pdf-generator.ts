@@ -576,11 +576,12 @@ class PDFGenerator {
                 {{/each}}
             </div>
             {{/if}}
-            
+            {{#if Message}}
             <div class="section">
                 <div class="section-title">Where did you first out about LLA?</div>
-                <div class="field-value" style="text-align: left;">{{photographyClub}}</div>
+                <div class="field-value" style="text-align: left;">{{Message}}</div>
             </div>
+            {{/if}}
             <div class="page-break"></div>
             <br>     <br>
             {{#if hasPortfolio}}
