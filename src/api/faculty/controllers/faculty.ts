@@ -162,7 +162,72 @@ export default factories.createCoreController(
         console.error("Faculty findOne error:", error);
         return ctx.internalServerError("Failed to load faculty data");
       }
-    }
+    },
+
+    async founderBySlug(ctx) {
+      try {
+        const { slug } = ctx.params;
+        const entity = await strapi.db.query("api::faculty.faculty").findOne({
+          populate: {
+            Faculty: {
+              on: {
+                "about.founder": {
+                  populate: {
+                    Founder_card: {
+                      populate: {
+                        Image: {
+                          select: ["id", "name", "url"],
+                        },
+                        ViewCard: {
+                          populate: {
+                            Image: {
+                              select: ["id", "name", "url"],
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (!entity) {
+          return ctx.notFound("Founder data not found");
+        }
+
+        // Get founder block from Faculty array
+        const founderBlock = entity.Faculty?.find(
+          (block) => block.__component === "about.founder"
+        );
+
+        if (!founderBlock) {
+          return ctx.notFound("Founder section not found");
+        }
+
+        // Cards array
+        const cards = founderBlock.Founder_card || [];
+
+        // Find the matched card by slug
+        const matchedCard = cards.find((c) => c.Slug === slug);
+
+        if (!matchedCard) {
+          return ctx.notFound("Founder with this slug not found");
+        }
+
+        // Return only the matched card
+        founderBlock.Founder_card = [matchedCard];
+
+        const sanitizedEntity = await super.sanitizeOutput(founderBlock, ctx);
+
+        return super.transformResponse(sanitizedEntity);
+      } catch (error) {
+        console.error("founderBySlug error:", error);
+        return ctx.internalServerError("Failed to load founder data");
+      }
+    },
 
   })
 );
