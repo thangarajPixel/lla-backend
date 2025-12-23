@@ -103,16 +103,19 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
   const txnid = uuidv4().replace(/-/g, "").substring(0, 20);
   
   // Prepare payment data
-  const paymentData = {
-    amount:admission?.Course?.TotalAmount || 1,
+   const totalAmount = admission?.Course?.Amount + (admission?.Course?.Amount * admission?.Course?.Percentage) / 100;
+    console.log(totalAmount+'amount');
+    console.log(admission?.Course?.Percentage);
+   const paymentData = {
+    amount: totalAmount || 1,
     productinfo: `Admission Fee - ${admission.Course?.Name || 'Course'}`,
     firstname: admission.first_name,
     lastname: admission.last_name || '',
     email: admission.email,
     phone: admission.mobile_no?.toString() || '',
     txnid,
-    surl: `${payu.PAYU_URL}/admission/${admission.documentId}/payment/success` || '',
-    furl: `${payu.PAYU_URL}/admission/${admission.documentId}/payment/failed`|| '',
+    surl: `${payu.PAYU_URL}/admission/${admission.EncryptId ?? ''}/payment/success` || '',
+    furl: `${payu.PAYU_URL}/admission/${admission.EncryptId ?? ''}/payment/failed`|| '',
     udf1: admission.id.toString(), // Store admission ID for reference
     udf2: admission.documentId, 
     udf3: '',
@@ -884,16 +887,18 @@ export default factories.createCoreController('api::admission.admission', ({ str
       const txnid = uuidv4().replace(/-/g, "").substring(0, 20);
       
       // Prepare payment data
+       const totalAmount = admission?.Course?.Amount  + (admission?.Course?.Amount * admission?.Course?.Percentage) / 100;
+      console.log(totalAmount+'amount1');
        const paymentData = {
-            amount:admission?.Course?.TotalAmount || 1,
+            amount:totalAmount || 1,
             productinfo: `Admission Fee - ${admission.Course?.Name || 'Course'}`,
             firstname: admission.first_name,
             lastname: admission.last_name || '',
             email: admission.email,
             phone: admission.mobile_no?.toString() || '',
             txnid,
-            surl: `${payu.PAYU_URL}/${admission.documentId}/payment/success` || '',
-            furl: `${payu.PAYU_URL}/${admission.documentId}/payment/failed`|| '',
+            surl: `${payu.PAYU_URL}/${admission.EncryptId ?? ''}/payment/success` || '',
+            furl: `${payu.PAYU_URL}/${admission.EncryptId ??''}/payment/failed`|| '',
             udf1: admission.id.toString(), // Store admission ID for reference
             udf2: admission.documentId, 
             udf3: '',

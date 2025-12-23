@@ -145,7 +145,15 @@ class PDFGenerator {
             padding: 0;
             box-sizing: border-box;
         }
-        
+        @page {
+            size: A4;
+            margin: 20px;
+        }
+        .page-break {
+            page-break-before: always;
+            break-before: page;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.4;
@@ -174,15 +182,8 @@ class PDFGenerator {
             margin-bottom: 20px;
         }
         
-        .logo-icon {
-            width: 35px;
-            height: 35px;
-        }
-        
         .logo-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+            width: 100% !important;
         }
         
         .logo-text {
@@ -364,7 +365,7 @@ class PDFGenerator {
         <div class="left-column">
             <div class="logo">
                 ${logoBase64 ? `<div class="logo-icon"><img src="${logoBase64}" alt="LLA Logo" /></div>` : ''}
-                <div class="logo-text">Light & Life Academy<br>PHOTOGRAPHY</div>
+              
             </div>
             
             <div class="review-title">Review Application</div>
@@ -393,12 +394,8 @@ class PDFGenerator {
                     {{/if}}
                 {{/if}}
                 <div class="field-row">
-                    <div class="field-label">Name Title</div>
-                    <div class="field-value">{{name_title}}</div>
-                </div>
-                <div class="field-row">
                     <div class="field-label">First Name</div>
-                    <div class="field-value">{{first_name}}</div>
+                    <div class="field-value">{{name_title}} {{first_name}}</div>
                 </div>
                 <div class="field-row">
                     <div class="field-label">Last Name</div>
@@ -409,7 +406,7 @@ class PDFGenerator {
                     <div class="field-value">{{nationality}}</div>
                 </div>
                 <div class="field-row">
-                    <div class="field-label">E-mail</div>
+                    <div class="field-label">Email</div>
                     <div class="field-value">{{email}}</div>
                 </div>
                 <div class="field-row">
@@ -420,22 +417,24 @@ class PDFGenerator {
                     <div class="field-label">Date of Birth</div>
                     <div class="field-value">{{formattedDate}}</div>
                 </div>
+                {{#if bloodGroupInfo}}
                 <div class="field-row">
                     <div class="field-label">Blood Group</div>
                     <div class="field-value">{{bloodGroupInfo}}</div>
                 </div>
+                {{/if}}
+                {{#if hobbies}}
                 <div class="field-row">
                     <div class="field-label">Hobbie</div>
                     <div class="field-value">{{hobbies}}</div>
                 </div>
+                {{/if}}
+                {{#if photography_club}}
                 <div class="field-row">
                     <div class="field-label">Photography Club</div>
                     <div class="field-value">{{photography_club}}</div>
                 </div>
-                  <div class="field-row">
-                    <div class="field-label">Blood Group</div>
-                    <div class="field-value">{{blood_group}}</div>
-                </div>
+                 {{/if}}
                 <div class="field-row">
                     <div class="field-label">Address</div>
                     <div class="field-value">{{addressInfo}}</div>
@@ -478,7 +477,7 @@ class PDFGenerator {
                     <div class="field-value">{{parentProfession}}</div>
                 </div>
                 <div class="field-row">
-                    <div class="field-label">E-mail</div>
+                    <div class="field-label">Email</div>
                     <div class="field-value">{{parentEmail}}</div>
                 </div>
                 <div class="field-row">
@@ -534,7 +533,7 @@ class PDFGenerator {
                         <div class="field-value"></div>
                     </div>
                     <div class="field-row">
-                        <div class="field-label">College Name</div>
+                        <div class="field-label">Degree</div>
                         <div class="field-value">{{ugDegree}}</div>
                     </div>
                     <div class="field-row">
@@ -552,6 +551,35 @@ class PDFGenerator {
                         </div>
                     </div>
                 </div>
+                
+                {{#if pgDegree.length}}
+                <div class="subsection">
+                    <div class="field-row">
+                        <div class="field-label">Post  Graduate</div>
+                        <div class="field-value"></div>
+                    </div>
+                     {{#each pgDegree}}
+                    <div class="field-row">
+                        <div class="field-label">Degree</div>
+                        <div class="field-value">{{degree}}</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label">Status</div>
+                        <div class="field-value">{{pg_status}}</div>
+                    </div>
+                    <div class="field-row">
+                        <div class="field-label">Document</div>
+                        <div class="field-value">
+                            {{#if marksheet}}
+                            <span class="document-link">✓ View Document</span>
+                            {{else}}
+                            Not Uploaded
+                            {{/if}}
+                        </div>
+                    </div>
+                     {{/each}}
+                </div>
+                {{/if}}
             </div>
             
             {{#if workExperienceList.length}}
@@ -575,12 +603,14 @@ class PDFGenerator {
                 {{/each}}
             </div>
             {{/if}}
-            
+            {{#if Message}}
             <div class="section">
                 <div class="section-title">Where did you first out about LLA?</div>
-                <div class="field-value" style="text-align: left;">{{photographyClub}}</div>
+                <div class="field-value" style="text-align: left;">{{Message}}</div>
             </div>
-            
+            {{/if}}
+            <div class="page-break"></div>
+            <br>     
             {{#if hasPortfolio}}
             <div class="section">
                 <div class="section-title">Portfolio Images</div>
@@ -746,6 +776,7 @@ class PDFGenerator {
         // Format education details
         const ugDegree = admission.Under_Graduate?.degree || 'Not Provided';
         const ugStatus = admission.Under_Graduate?.ug_status || 'Not Provided';
+        const pgDegree = admission.Post_Graduate;
 
         // Format work experience as array
         const workExperienceList = admission.Work_Experience?.map((work: any) => {
@@ -792,6 +823,7 @@ class PDFGenerator {
             parentAddress, // Now formatted as: address, city, state, district, pincode
             ugDegree,
             ugStatus,
+            pgDegree,
             workExperienceList,
             portfolioImages,
             hasPortfolio: portfolioImages.length > 0,

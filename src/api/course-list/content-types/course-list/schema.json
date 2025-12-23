@@ -25,13 +25,14 @@
       "mappedBy": "Course"
     },
     "Amount": {
-      "type": "decimal"
+      "type": "decimal",
+      "min": 1,
+      "max": 100000
     },
-    "GstAmount": {
-      "type": "decimal"
-    },
-    "TotalAmount": {
-      "type": "decimal"
+    "Percentage": {
+      "type": "decimal",
+      "min": 1,
+      "max": 10000
     }
   }
 }
