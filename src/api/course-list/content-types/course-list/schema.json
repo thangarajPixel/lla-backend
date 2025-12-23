@@ -25,10 +25,14 @@
       "mappedBy": "Course"
     },
     "Amount": {
-      "type": "decimal"
+      "type": "decimal",
+      "min": 1,
+      "max": 100000
     },
     "Percentage": {
-      "type": "decimal"
+      "type": "decimal",
+      "min": 1,
+      "max": 10000
     }
   }
 }
