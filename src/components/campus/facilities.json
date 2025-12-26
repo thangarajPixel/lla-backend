@@ -8,10 +8,24 @@
     "Title": {
       "type": "string"
     },
+    "Heading": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    },
     "Card": {
       "type": "component",
       "component": "campus.card",
       "repeatable": true
+    },
+    "Description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
     }
   },
   "config": {}

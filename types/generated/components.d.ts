@@ -201,6 +201,20 @@ export interface CampusFacilities extends Struct.ComponentSchema {
   };
   attributes: {
     Card: Schema.Attribute.Component<'campus.card', true>;
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Heading: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
     Title: Schema.Attribute.String;
   };
 }
