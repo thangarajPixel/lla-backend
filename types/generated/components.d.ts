@@ -201,8 +201,6 @@ export interface CampusFacilities extends Struct.ComponentSchema {
   };
   attributes: {
     Card: Schema.Attribute.Component<'campus.card', true>;
-    Heading: Schema.Attribute.String;
-    SubHeading: Schema.Attribute.String;
     Title: Schema.Attribute.String;
   };
 }
