@@ -12,7 +12,7 @@ export default factories.createCoreController(
               select: ["id", "name", "url"],
             },
             Icon: {
-              select: ["id", "name", "url"],
+              select: ["id", "name", "url", "caption"],
             },
           },
         });
