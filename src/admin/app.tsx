@@ -166,11 +166,14 @@ export default {
                 if (!recordId) {
                   for (let i = 0; i < row.attributes.length; i++) {
                     const attr = row.attributes[i];
-                    if (attr.value && /^\d+$/.test(attr.value)) { // numeric value
-                      recordId = attr.value;
+                   if (attr.value) {
+                      const normalized = attr.value.replace(/,/g, '');
+                      if (/^\d+$/.test(normalized)) {
+                       recordId = String(Number(normalized));
                       console.log('Found numeric ID in row attribute:', attr.name, recordId);
                       break;
                     }
+                   }
                   }
                 }
 
