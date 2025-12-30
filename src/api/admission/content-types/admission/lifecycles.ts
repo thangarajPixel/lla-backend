@@ -11,7 +11,7 @@ export default {
         const emailService = require('../../services/email').default;
           console.log(result);
         // Send registration emails
-        //await emailService.sendRegistrationEmail(result);
+       await emailService.sendRegistrationEmail(result);
        await emailService.getPaymentIDStatus(result);
        
   
