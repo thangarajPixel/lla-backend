@@ -147,7 +147,7 @@ class PDFGenerator {
         }
         @page {
             size: A4;
-            margin: 20px;
+            margin: 30px;
         }
         .page-break {
             page-break-before: always;
