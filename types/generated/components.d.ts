@@ -341,7 +341,6 @@ export interface CourseContentCard extends Struct.ComponentSchema {
         'Type8',
         'Type9',
         'Type10',
-        'SingeImage',
       ]
     > &
       Schema.Attribute.DefaultTo<'Type1'>;
