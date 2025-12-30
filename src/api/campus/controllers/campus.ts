@@ -22,6 +22,9 @@ export default factories.createCoreController(
                     Video: {
                       select: ["id", "name", "url"],
                     },
+                    MobileVideo: {
+                      select: ["id", "name", "url"],
+                    },
                   },
                 },
                 "campus.facilities": {
