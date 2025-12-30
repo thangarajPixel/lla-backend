@@ -212,6 +212,7 @@ const baseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeaca
 const siteBaseUrl = process.env.FRONTEND_URL || 'https://dev.lightandlifeacademy.in';
 const pdfDownloadUrl = `${baseUrl}/api/admissions/${admission.id}/pdf`;
 const viewUrl = `${siteBaseUrl}/admission/${admission.encryptedId}`;
+const portfolioUrl = `${siteBaseUrl}/admission/${admission.encryptedId}/preview?section=portfolio`;
       // Email to student
       const studentEmailHtml = `
         <!DOCTYPE html>
@@ -253,7 +254,7 @@ const viewUrl = `${siteBaseUrl}/admission/${admission.encryptedId}`;
         <strong>PG Diploma in Professional Photography & Digital Production</strong>
         for the academic year <strong>2024–2025</strong>.
       </p>
-      <p><strong>Payment Reference ID:</strong> ${admission.id}</p>
+      <p><strong>Payment Reference ID:</strong> ${admission.mihpayid || ''}</p>
       <p style="margin-top:20px;">
         Please feel free to contact us if you need any further clarification.
         Our team will reach out to you shortly with the next steps.
@@ -325,16 +326,19 @@ const viewUrl = `${siteBaseUrl}/admission/${admission.encryptedId}`;
         <p><strong>Name:</strong> ${studentName}</p>
         <p><strong>Email:</strong> ${admission.email}</p>
         <p><strong>Phone Number:</strong> ${admission.mobile_no}</p>
-        <p><strong>Unique ID (PayU):</strong> ${admission.id}</p>
-        <p><strong>Payment Transaction ID:</strong> ${admission.id}</p>
+        <p><strong>Unique ID (PayU):</strong> ${admission.PayUId || ''}</p>
+        <p><strong>Payment Transaction ID:</strong> ${admission.txnid || ''}</p>
       </div>
 
       <div style="margin-top:15px;">
-        <a href="${viewUrl}" target="_blank" class="btn">
+        <a href="${viewUrl}" target="_blank" class="btn primary">
           View Application
         </a>
         <a href="${pdfDownloadUrl}" target="_blank" class="btn secondary">
           Download Application
+        </a>
+         <a href="${portfolioUrl}" target="_blank" class="btn warning">
+          Portfolio
         </a>
       </div>
     </div>
