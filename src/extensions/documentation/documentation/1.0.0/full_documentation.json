@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-12-18T05:25:44.764Z"
+    "x-generation-date": "2025-12-30T06:19:24.482Z"
   },
   "servers": [
     {
@@ -11120,6 +11120,19 @@
                 ],
                 "example": "string or id"
               },
+              "Paid_Amount": {
+                "type": "number",
+                "format": "float"
+              },
+              "EncryptId": {
+                "type": "string"
+              },
+              "txnid": {
+                "type": "string"
+              },
+              "PayUIId": {
+                "type": "string"
+              },
               "locale": {
                 "type": "string"
               },
@@ -12188,6 +12201,19 @@
                         }
                       }
                     },
+                    "Paid_Amount": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "EncryptId": {
+                      "type": "string"
+                    },
+                    "txnid": {
+                      "type": "string"
+                    },
+                    "PayUIId": {
+                      "type": "string"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -12366,6 +12392,19 @@
                 "type": "string"
               }
             }
+          },
+          "Paid_Amount": {
+            "type": "number",
+            "format": "float"
+          },
+          "EncryptId": {
+            "type": "string"
+          },
+          "txnid": {
+            "type": "string"
+          },
+          "PayUIId": {
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -17378,6 +17417,19 @@
                       }
                     }
                   }
+                },
+                "Paid_Amount": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "EncryptId": {
+                  "type": "string"
+                },
+                "txnid": {
+                  "type": "string"
+                },
+                "PayUIId": {
+                  "type": "string"
                 },
                 "createdAt": {
                   "type": "string",
@@ -24730,6 +24782,19 @@
                       }
                     }
                   }
+                },
+                "Paid_Amount": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "EncryptId": {
+                  "type": "string"
+                },
+                "txnid": {
+                  "type": "string"
+                },
+                "PayUIId": {
+                  "type": "string"
                 },
                 "createdAt": {
                   "type": "string",
