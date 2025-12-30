@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "thank_you_pages",
+  "info": {
+    "singularName": "thank-you-page",
+    "pluralName": "thank-you-pages",
+    "displayName": "Thank you page"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Type": {
+      "type": "enumeration",
+      "enum": [
+        "Success",
+        "Error"
+      ]
+    },
+    "Title": {
+      "type": "text"
+    },
+    "Description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    },
+    "LongDescription": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    }
+  }
+}
