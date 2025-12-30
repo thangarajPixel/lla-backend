@@ -254,8 +254,7 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.encryptedId}/preview?
       </p>
       <p><strong>Payment Reference ID:</strong> ${admission.mihpayid || ''}</p>
       <p style="margin-top:20px;">
-        Please feel free to contact us if you need any further clarification.
-        Our team will reach out to you shortly with the next steps.
+       Please feel free to contact us in case of any further clarifications.
       </p>
 
       <p>
