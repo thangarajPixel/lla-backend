@@ -250,9 +250,7 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.encryptedId}/preview?
       <p>Greetings from <strong>Light & Life Academy!</strong></p>
 
       <p>
-        Congratulations! You have successfully completed the application process for the
-        <strong>PG Diploma in Professional Photography & Digital Production</strong>
-        for the academic year <strong>2024–2025</strong>.
+        You have completed the application process for the PG Diploma in Professional Photography & Digital Production Course 2024-2025.</strong>.
       </p>
       <p><strong>Payment Reference ID:</strong> ${admission.mihpayid || ''}</p>
       <p style="margin-top:20px;">
