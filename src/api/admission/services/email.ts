@@ -206,84 +206,146 @@ export default {
       const studentName = `${admission.name_title} ${admission.first_name} ${admission.last_name}`;
       console.log('👤 Student Name:', studentName);
 const baseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
+const siteBaseUrl = process.env.FRONTEND_URL || 'https://dev.lightandlifeacademy.in';
 const pdfDownloadUrl = `${baseUrl}/api/admissions/${admission.id}/pdf`;
+const viewUrl = `${siteBaseUrl}/admission/${admission.encryptedId}`;
       // Email to student
       const studentEmailHtml = `
         <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #4945ff; color: white; padding: 20px; text-align: center; }
-            .content { padding: 20px; background: #f8f9fa; }
-            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>Light and Life Academy</h1>
-              <h2>Registration Successful!</h2>
-            </div>
-            <div class="content">
-              <p>Dear ${studentName},</p>
-              <p>Congratulations! Your registration has been successfully completed.</p>
-              <p><strong>Application ID:</strong> ${admission.id}</p>
-              <p><strong>Payment Status:</strong> ${admission.Payment_Status}</p>
-              <a href="${pdfDownloadUrl}" target="_blank" style="display:inline-block;padding:8px 20px;border-radius:20px;background:#ff6b6b;color:#fff;text-decoration:none;font-size:13px;font-weight:600;">Download</a>
-              <p>We are excited to have you join Light and Life Academy. Our team will contact you shortly with further details.</p>
-              <p>Thank you for choosing us!</p>
-            </div>
-            <div class="footer">
-              <p>Light and Life Academy</p>
-              <p>This is an automated email. Please do not reply.</p>
-            </div>
-          </div>
-        </body>
-        </html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #4945ff; color: white; padding: 20px; text-align: center; }
+    .content { padding: 20px; background: #f8f9fa; }
+    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+    .btn {
+      display:inline-block;
+      padding:10px 22px;
+      border-radius:20px;
+      background:#ff6b6b;
+      color:#fff;
+      text-decoration:none;
+      font-size:13px;
+      font-weight:600;
+      margin-top:10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Light & Life Academy</h1>
+      <h2>Application Completed Successfully</h2>
+    </div>
+
+    <div class="content">
+      <p>Hello <strong>${studentName}</strong>,</p>
+
+      <p>Greetings from <strong>Light & Life Academy!</strong></p>
+
+      <p>
+        Congratulations! You have successfully completed the application process for the
+        <strong>PG Diploma in Professional Photography & Digital Production</strong>
+        for the academic year <strong>2024–2025</strong>.
+      </p>
+      <p><strong>Payment Reference ID:</strong> ${admission.id}</p>
+      <p style="margin-top:20px;">
+        Please feel free to contact us if you need any further clarification.
+        Our team will reach out to you shortly with the next steps.
+      </p>
+
+      <p>
+        <strong>Best Wishes!</strong><br />
+        Team Light & Life Academy
+      </p>
+    </div>
+
+    <div class="footer">
+      <p>
+        W: <a href="https://www.llacademy.org" target="_blank">www.llacademy.org</a> |
+        M: +91 75982 87370
+      </p>
+      <p>This is an automated email. Please do not reply.</p>
+    </div>
+  </div>
+</body>
+</html>
       `;
 
       // Email to admin
       const adminEmailHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #4945ff; color: white; padding: 20px; text-align: center; }
-            .content { padding: 20px; background: #f8f9fa; }
-            .info { margin: 10px 0; padding: 10px; background: white; border-radius: 4px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>New Student Registration</h1>
-            </div>
-            <div class="content">
-              <p><strong>A new student has completed registration!</strong></p>
-              <div class="info">
-                <p><strong>Name:</strong> ${studentName}</p>
-                <p><strong>Email:</strong> ${admission.email}</p>
-                <p><strong>Mobile:</strong> ${admission.mobile_no}</p>
-                <p><strong>Application ID:</strong> ${admission.id}</p>
-                <p><strong>Payment Status:</strong> ${admission.Payment_Status}</p>
-                <p><strong>Date:</strong> ${new Date().toLocaleString()}</p>
-              </div>
-            </div>
-          </div>
-        </body>
-        </html>
-      `;
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    .container { max-width: 650px; margin: 0 auto; padding: 20px; }
+    .header { background: #4945ff; color: white; padding: 20px; text-align: center; }
+    .content { padding: 20px; background: #f8f9fa; }
+    .info {
+      margin: 10px 0;
+      padding: 12px;
+      background: white;
+      border-radius: 4px;
+    }
+    .info p { margin: 6px 0; }
+    .btn {
+      display:inline-block;
+      padding:8px 18px;
+      margin-right:8px;
+      border-radius:18px;
+      background:#4945ff;
+      color:#fff;
+      text-decoration:none;
+      font-size:13px;
+      font-weight:600;
+    }
+    .btn.secondary { background:#6c757d; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>New Student Application</h1>
+    </div>
+
+    <div class="content">
+      <p>
+        <strong>${studentName}</strong> has applied for the
+        <strong>PG Diploma in Professional Photography & Digital Production</strong>
+        for the academic year <strong>2025–2026</strong>.
+      </p>
+
+      <div class="info">
+        <p><strong>Name:</strong> ${studentName}</p>
+        <p><strong>Email:</strong> ${admission.email}</p>
+        <p><strong>Phone Number:</strong> ${admission.mobile_no}</p>
+        <p><strong>Unique ID (PayU):</strong> ${admission.id}</p>
+        <p><strong>Payment Transaction ID:</strong> ${admission.id}</p>
+      </div>
+
+      <div style="margin-top:15px;">
+        <a href="${viewUrl}" target="_blank" class="btn">
+          View Application
+        </a>
+        <a href="${pdfDownloadUrl}" target="_blank" class="btn secondary">
+          Download Application
+        </a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+`;
 
       // Send email to student
       console.log('📤 Sending email to student...');
       const studentEmailResult = await transporter.sendMail({
         from: process.env.SMTP_FROM,
         to: admission.email,
-        subject: 'Registration Successful - Light and Life Academy',
+        subject: ' Light & Life Academy | Congratulations on completing your application process.',
         html: studentEmailHtml,
       });
 
@@ -296,7 +358,8 @@ const pdfDownloadUrl = `${baseUrl}/api/admissions/${admission.id}/pdf`;
       const adminEmailResult = await transporter.sendMail({
         from: process.env.SMTP_FROM,
         to: process.env.SMTP_FROM, // Send to admin email
-        subject: `New Student Registration - ${studentName}`,
+        subject: `${studentName} has successfully applied for PG Diploma in Professional Photography & Digital Production
+`,
         html: adminEmailHtml,
       });
 

@@ -131,7 +131,12 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
     .createHash("sha512")
     .update(hashString)
     .digest("hex");
-
+  await strapi.entityService.update('api::admission.admission', admission.id, {
+        data: {
+          Payment_Status: 'UnPaid',
+          txnid:txnid
+        }
+    });
   return {
     success: true,
     checkoutUrl: payu.BASE_URL,
@@ -918,7 +923,8 @@ export default factories.createCoreController('api::admission.admission', ({ str
       // Update payment status to Pending
       await strapi.entityService.update('api::admission.admission', admission.id, {
         data: {
-          Payment_Status: 'Pending'
+          Payment_Status: 'UnPaid',
+          txnid:txnid
         }
       });
 

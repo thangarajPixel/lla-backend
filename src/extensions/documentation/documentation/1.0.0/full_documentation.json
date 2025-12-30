@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-12-18T05:25:44.764Z"
+    "x-generation-date": "2025-12-30T06:17:11.644Z"
   },
   "servers": [
     {
@@ -11099,7 +11099,8 @@
                   "Paid",
                   "Completed",
                   "Pending",
-                  "UnPaid"
+                  "UnPaid",
+                  "Failed"
                 ]
               },
               "step_0": {
@@ -11118,6 +11119,19 @@
                   }
                 ],
                 "example": "string or id"
+              },
+              "Paid_Amount": {
+                "type": "number",
+                "format": "float"
+              },
+              "EncryptId": {
+                "type": "string"
+              },
+              "txnid": {
+                "type": "string"
+              },
+              "PayUIId": {
+                "type": "string"
               },
               "locale": {
                 "type": "string"
@@ -12087,7 +12101,8 @@
                         "Paid",
                         "Completed",
                         "Pending",
-                        "UnPaid"
+                        "UnPaid",
+                        "Failed"
                       ]
                     },
                     "step_0": {
@@ -12124,6 +12139,14 @@
                               }
                             }
                           }
+                        },
+                        "Amount": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "Percentage": {
+                          "type": "number",
+                          "format": "float"
                         },
                         "createdAt": {
                           "type": "string",
@@ -12177,6 +12200,19 @@
                           }
                         }
                       }
+                    },
+                    "Paid_Amount": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "EncryptId": {
+                      "type": "string"
+                    },
+                    "txnid": {
+                      "type": "string"
+                    },
+                    "PayUIId": {
+                      "type": "string"
                     },
                     "createdAt": {
                       "type": "string",
@@ -12336,7 +12372,8 @@
               "Paid",
               "Completed",
               "Pending",
-              "UnPaid"
+              "UnPaid",
+              "Failed"
             ]
           },
           "step_0": {
@@ -12355,6 +12392,19 @@
                 "type": "string"
               }
             }
+          },
+          "Paid_Amount": {
+            "type": "number",
+            "format": "float"
+          },
+          "EncryptId": {
+            "type": "string"
+          },
+          "txnid": {
+            "type": "string"
+          },
+          "PayUIId": {
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -12761,6 +12811,17 @@
                 }
               }
             }
+          },
+          "Type": {
+            "type": "string",
+            "enum": [
+              "Normal",
+              "Slide",
+              "Video"
+            ]
+          },
+          "Url": {
+            "type": "string"
           }
         }
       },
@@ -13931,14 +13992,14 @@
           "Heading": {
             "type": "string"
           },
-          "SubHeading": {
-            "type": "string"
-          },
           "Card": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/CampusCardComponent"
             }
+          },
+          "Description": {
+            "type": "string"
           }
         }
       },
@@ -15501,9 +15562,6 @@
           "Title": {
             "type": "string"
           },
-          "SubTitle": {
-            "type": "string"
-          },
           "Duration": {
             "type": "string"
           },
@@ -16163,6 +16221,23 @@
           }
         }
       },
+      "SeoSeoCardComponent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "Title": {
+            "type": "string"
+          },
+          "Description": {
+            "type": "string"
+          },
+          "KeyWords": {
+            "type": "string"
+          }
+        }
+      },
       "CourseDipProfessionalComponent": {
         "type": "object",
         "properties": {
@@ -16218,6 +16293,9 @@
           },
           "Faq": {
             "$ref": "#/components/schemas/CourseFaqComponent"
+          },
+          "SeoViewCard": {
+            "$ref": "#/components/schemas/SeoSeoCardComponent"
           }
         }
       },
@@ -16249,6 +16327,14 @@
                   ],
                   "example": "string or id"
                 }
+              },
+              "Amount": {
+                "type": "number",
+                "format": "float"
+              },
+              "Percentage": {
+                "type": "number",
+                "format": "float"
               },
               "locale": {
                 "type": "string"
@@ -17103,7 +17189,8 @@
                     "Paid",
                     "Completed",
                     "Pending",
-                    "UnPaid"
+                    "UnPaid",
+                    "Failed"
                   ]
                 },
                 "step_0": {
@@ -17140,6 +17227,14 @@
                           }
                         }
                       }
+                    },
+                    "Amount": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "Percentage": {
+                      "type": "number",
+                      "format": "float"
                     },
                     "createdAt": {
                       "type": "string",
@@ -17194,6 +17289,19 @@
                     }
                   }
                 },
+                "Paid_Amount": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "EncryptId": {
+                  "type": "string"
+                },
+                "txnid": {
+                  "type": "string"
+                },
+                "PayUIId": {
+                  "type": "string"
+                },
                 "createdAt": {
                   "type": "string",
                   "format": "date-time"
@@ -17247,6 +17355,14 @@
                 }
               }
             }
+          },
+          "Amount": {
+            "type": "number",
+            "format": "float"
+          },
+          "Percentage": {
+            "type": "number",
+            "format": "float"
           },
           "createdAt": {
             "type": "string",
@@ -22009,6 +22125,17 @@
                 }
               }
             }
+          },
+          "Type": {
+            "type": "string",
+            "enum": [
+              "Normal",
+              "Slide",
+              "Video"
+            ]
+          },
+          "Url": {
+            "type": "string"
           }
         }
       },
@@ -22177,6 +22304,9 @@
             "items": {
               "$ref": "#/components/schemas/LifeViewCardLifeViewCardComponent"
             }
+          },
+          "SeoViewCard": {
+            "$ref": "#/components/schemas/SeoSeoCardComponent"
           }
         }
       },
@@ -23064,20 +23194,10 @@
           "data": {
             "type": "object",
             "properties": {
-              "seo": {
+              "SeoCard": {
                 "type": "array",
                 "items": {
-                  "anyOf": [
-                    {
-                      "$ref": "#/components/schemas/SeoHomeComponent"
-                    }
-                  ]
-                },
-                "discriminator": {
-                  "propertyName": "__component",
-                  "mapping": {
-                    "seo.home": "#/components/schemas/SeoHomeComponent"
-                  }
+                  "$ref": "#/components/schemas/SeoHomeComponent"
                 }
               },
               "locale": {
@@ -23145,20 +23265,10 @@
           "documentId": {
             "type": "string"
           },
-          "seo": {
+          "SeoCard": {
             "type": "array",
             "items": {
-              "anyOf": [
-                {
-                  "$ref": "#/components/schemas/SeoHomeComponent"
-                }
-              ]
-            },
-            "discriminator": {
-              "propertyName": "__component",
-              "mapping": {
-                "seo.home": "#/components/schemas/SeoHomeComponent"
-              }
+              "$ref": "#/components/schemas/SeoHomeComponent"
             }
           },
           "createdAt": {
@@ -23461,20 +23571,10 @@
                 "documentId": {
                   "type": "string"
                 },
-                "seo": {
+                "SeoCard": {
                   "type": "array",
                   "items": {
-                    "anyOf": [
-                      {
-                        "$ref": "#/components/schemas/SeoHomeComponent"
-                      }
-                    ]
-                  },
-                  "discriminator": {
-                    "propertyName": "__component",
-                    "mapping": {
-                      "seo.home": "#/components/schemas/SeoHomeComponent"
-                    }
+                    "$ref": "#/components/schemas/SeoHomeComponent"
                   }
                 },
                 "createdAt": {
@@ -23550,16 +23650,30 @@
           "id": {
             "type": "number"
           },
-          "__component": {
-            "type": "string",
-            "enum": [
-              "seo.home"
-            ]
-          },
           "title": {
             "type": "string"
           },
           "description": {
+            "type": "string"
+          },
+          "page": {
+            "type": "string",
+            "enum": [
+              "Home",
+              "Campus",
+              "About-Us",
+              "Faculty",
+              "Gallery",
+              "Life-At-Lla",
+              "Blog",
+              "Contact-Us",
+              "Faq",
+              "Privacy-Policy",
+              "Terms-And-Condition",
+              "Admission"
+            ]
+          },
+          "KeyWords": {
             "type": "string"
           }
         }
@@ -24440,7 +24554,8 @@
                     "Paid",
                     "Completed",
                     "Pending",
-                    "UnPaid"
+                    "UnPaid",
+                    "Failed"
                   ]
                 },
                 "step_0": {
@@ -24477,6 +24592,14 @@
                           }
                         }
                       }
+                    },
+                    "Amount": {
+                      "type": "number",
+                      "format": "float"
+                    },
+                    "Percentage": {
+                      "type": "number",
+                      "format": "float"
                     },
                     "createdAt": {
                       "type": "string",
@@ -24530,6 +24653,19 @@
                       }
                     }
                   }
+                },
+                "Paid_Amount": {
+                  "type": "number",
+                  "format": "float"
+                },
+                "EncryptId": {
+                  "type": "string"
+                },
+                "txnid": {
+                  "type": "string"
+                },
+                "PayUIId": {
+                  "type": "string"
                 },
                 "createdAt": {
                   "type": "string",

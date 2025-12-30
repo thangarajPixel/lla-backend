@@ -521,6 +521,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
       ['Paid', 'Completed', 'Pending', 'UnPaid', 'Failed']
     > &
       Schema.Attribute.DefaultTo<'Pending'>;
+    PayUIId: Schema.Attribute.String;
     photography_club: Schema.Attribute.String;
     pincode: Schema.Attribute.String;
     Post_Graduate: Schema.Attribute.Component<
@@ -533,6 +534,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     step_1: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     step_2: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     step_3: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    txnid: Schema.Attribute.String;
     Under_Graduate: Schema.Attribute.Component<
       'under-graduate.under-graduate',
       false

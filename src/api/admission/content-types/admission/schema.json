@@ -160,6 +160,12 @@
     },
     "EncryptId": {
       "type": "string"
+    },
+    "txnid": {
+      "type": "string"
+    },
+    "PayUIId": {
+      "type": "string"
     }
   }
 }
