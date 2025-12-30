@@ -361,7 +361,7 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.encryptedId}/preview?
       console.log('📤 Sending email to admin...');
       const adminEmailResult = await transporter.sendMail({
         from: process.env.SMTP_FROM,
-        to: process.env.SMTP_FROM, // Send to admin email
+        to: admission.email, // Send to admin email
         subject: `${studentName} has successfully applied for PG Diploma in Professional Photography & Digital Production
 `,
         html: adminEmailHtml,
