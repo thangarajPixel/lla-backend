@@ -78,7 +78,7 @@ const processAutomaticPaymentHelper = async (admission: any): Promise<void> => {
   // Update admission to mark payment as completed and step_3 as true
   await strapi.entityService.update('api::admission.admission', admission.id, {
     data: {
-      Payment_Status: 'Completed',
+      //Payment_Status: 'Completed',
       step_3: true
     }
   });
