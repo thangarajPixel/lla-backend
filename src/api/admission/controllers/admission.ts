@@ -131,7 +131,9 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
     .createHash("sha512")
     .update(hashString)
     .digest("hex");
-  if(admission?.Payment_Status && admission.Payment_Status == "Completed"){
+console.log('🔄 Updating payment status to Pending...'+ admission.Payment_Status);
+console.log(txnid+'txnid');
+  if(admission?.Payment_Status && admission.Payment_Status == "Completed" || admission?.Payment_Status == "Pending"){
     await strapi.entityService.update('api::admission.admission', admission.id, {
           data: {
             Payment_Status: 'UnPaid',
@@ -354,7 +356,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
       }
         const tempAdmissionData = {
           ...admissionData,
-          Payment_Status: 'Pending'
+          //Payment_Status: 'Pending'
         };
 
         checkoutLink = await generateCheckoutLinkHelper(tempAdmissionData);
@@ -414,9 +416,6 @@ export default factories.createCoreController('api::admission.admission', ({ str
     
     return response;
   },
-
-
-
   async findOne(ctx) {
     const { id } = ctx.params;
 
@@ -923,7 +922,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
         .digest("hex");
 
       // Update payment status to Pending
-     if(admission?.Payment_Status && admission.Payment_Status == "Completed"){
+    if(admission?.Payment_Status && admission.Payment_Status == "Completed" || admission?.Payment_Status == "Pending"){
         await strapi.entityService.update('api::admission.admission', admission.id, {
               data: {
                 Payment_Status: 'UnPaid',
@@ -973,6 +972,33 @@ export default factories.createCoreController('api::admission.admission', ({ str
       console.error('❌ Error generating payment link:', error);
       ctx.throw(500, 'Error generating payment link: ' + error.message);
     }
+  },
+  async getPaymentIDStatus(txnid) {
+  try {
+    if (!txnid) throw new Error('Transaction ID is required');
+      const crypto = require("crypto");
+    const { v4: uuidv4 } = require("uuid");
+    const payu = require("../../../../config/payu");
+    const command = 'verify_payment';
+    const axios = require('axios');
+    const hashString = `${payu.KEY}|${command}|${txnid}|${payu.SALT}`;
+       // Generate payment link directly
+
+    const hash = crypto.createHash('sha512').update(hashString).digest('hex');
+    const postData = new URLSearchParams({
+        key: String(payu.KEY),
+        command,
+        var1: String(txnid),   // ✅ MUST be string
+        hash: String(hash),
+      });
+    const response = await axios.post(payu.STATUS_URL, postData.toString(), {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching payment status:', error.message);
+    throw error;
+  }
   },
 
   async getPaymentStatus(ctx) {

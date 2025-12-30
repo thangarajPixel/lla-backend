@@ -508,6 +508,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
           preset: 'defaultHtml';
         }
       >;
+    mihpayid: Schema.Attribute.String;
     mobile_no: Schema.Attribute.BigInteger & Schema.Attribute.Required;
     name_title: Schema.Attribute.Enumeration<['Mr.', 'Ms.', 'Mrs.']>;
     nationality: Schema.Attribute.String;
@@ -517,11 +518,12 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
       false
     >;
     passport_size_image: Schema.Attribute.Media<'images' | 'files'>;
+    payment_response: Schema.Attribute.JSON;
     Payment_Status: Schema.Attribute.Enumeration<
-      ['Paid', 'Completed', 'Pending', 'UnPaid', 'Failed']
+      ['Paid', 'UnPaid', 'Completed', 'Pending', 'Failed']
     > &
       Schema.Attribute.DefaultTo<'Pending'>;
-    PayUIId: Schema.Attribute.String;
+    PayUId: Schema.Attribute.String;
     photography_club: Schema.Attribute.String;
     pincode: Schema.Attribute.String;
     Post_Graduate: Schema.Attribute.Component<

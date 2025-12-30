@@ -132,9 +132,9 @@
       "default": "Pending",
       "enum": [
         "Paid",
+        "UnPaid",
         "Completed",
         "Pending",
-        "UnPaid",
         "Failed"
       ]
     },
@@ -164,7 +164,13 @@
     "txnid": {
       "type": "string"
     },
-    "PayUIId": {
+    "PayUId": {
+      "type": "string"
+    },
+    "payment_response": {
+      "type": "json"
+    },
+    "mihpayid": {
       "type": "string"
     }
   }

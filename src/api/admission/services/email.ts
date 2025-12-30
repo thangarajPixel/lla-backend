@@ -1,4 +1,7 @@
 import nodemailer from 'nodemailer';
+import axios from 'axios';
+import crypto from 'crypto';
+import path from 'path';
 import { encryptAdmissionId } from './id-encryption';
 
 export default {
@@ -379,4 +382,126 @@ const viewUrl = `${siteBaseUrl}/admission/${admission.encryptedId}`;
       throw error;
     }
   },
+  async getPaymentIDStatus(admission: any) {
+    try {
+      // =========================
+      // 1️⃣ BASIC VALIDATIONS
+      // =========================
+      if (!admission?.id) {
+        throw new Error('Admission ID missing');
+      }
+
+      if (!admission?.txnid) {
+        throw new Error('Transaction ID is required');
+      }
+
+      // 🛑 VERY IMPORTANT: stop repeat calls
+      if (admission.Payment_Status === 'Paid' && admission.mihpayid) {
+        console.log('Payment already verified. Skipping PayU call.');
+        return true;
+      }
+
+      const txnid = admission.txnid;
+
+      // =========================
+      // 2️⃣ PAYU CONFIG
+      // =========================
+      const payu = require(path.join(process.cwd(), 'config', 'payu'));
+
+      const command = 'verify_payment';
+
+      const hashString = `${payu.KEY}|${command}|${txnid}|${payu.SALT}`;
+      const hash = crypto
+        .createHash('sha512')
+        .update(hashString)
+        .digest('hex');
+
+      const postData = new URLSearchParams({
+        key: String(payu.KEY),
+        command: String(command),
+        var1: String(txnid),
+        hash: String(hash),
+      });
+
+      // =========================
+      // 3️⃣ PAYU API CALL
+      // =========================
+      const response = await axios.post(
+        'https://info.payu.in/merchant/postservice?form=2',
+        postData.toString(),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          timeout: 15000,
+        }
+      );
+
+      const paymentStatus = response?.data;
+
+      if (!paymentStatus || paymentStatus.status !== 1) {
+        console.log('PayU verification failed or transaction not found');
+
+        await strapi.entityService.update(
+          'api::admission.admission',
+          admission.id,
+          {
+            data: {
+              Payment_Status: 'UnPaid',
+            },
+          }
+        );
+
+        return false;
+      }
+
+      // =========================
+      // 4️⃣ FETCH TRANSACTION DATA
+      // =========================
+      const txnData = paymentStatus.transaction_details?.[txnid];
+
+      if (!txnData || txnData.status !== 'success') {
+        console.log('Transaction not successful yet');
+
+        await strapi.entityService.update(
+          'api::admission.admission',
+          admission.id,
+          {
+            data: {
+              Payment_Status: 'UnPaid',
+              payment_response: txnData ?? {},
+            },
+          }
+        );
+
+        return false;
+      }
+
+      // =========================
+      // 5️⃣ UPDATE ADMISSION (ONCE)
+      // =========================
+      await strapi.entityService.update(
+        'api::admission.admission',
+        admission.id,
+        {
+          data: {
+            Payment_Status: 'Paid',
+            mihpayid: txnData.mihpayid ?? '',
+            PayUId: txnData.bank_ref_num ?? '',
+            payment_response: txnData,
+          },
+        }
+      );
+
+      console.log('Payment verified & saved successfully');
+      return true;
+    } catch (error: any) {
+      console.error(
+        'Error fetching payment status:',
+        error?.response?.data || error.message
+      );
+      throw error;
+    }
+  },
+
 };
