@@ -1177,6 +1177,50 @@ export interface ApiTermsAndConditionTermsAndCondition
   };
 }
 
+export interface ApiThankYouPageThankYouPage
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'thank_you_pages';
+  info: {
+    displayName: 'Thank you page';
+    pluralName: 'thank-you-pages';
+    singularName: 'thank-you-page';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::thank-you-page.thank-you-page'
+    > &
+      Schema.Attribute.Private;
+    LongDescription: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    publishedAt: Schema.Attribute.DateTime;
+    Title: Schema.Attribute.Text;
+    Type: Schema.Attribute.Enumeration<['Success', 'Error']>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface PluginContentReleasesRelease
   extends Struct.CollectionTypeSchema {
   collectionName: 'strapi_releases';
@@ -1707,6 +1751,7 @@ declare module '@strapi/strapi' {
       'api::seo.seo': ApiSeoSeo;
       'api::state.state': ApiStateState;
       'api::terms-and-condition.terms-and-condition': ApiTermsAndConditionTermsAndCondition;
+      'api::thank-you-page.thank-you-page': ApiThankYouPageThankYouPage;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
