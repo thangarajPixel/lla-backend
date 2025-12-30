@@ -234,9 +234,6 @@ export interface CampusMenu extends Struct.ComponentSchema {
         }
       >;
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
-    MobileVideo: Schema.Attribute.Media<
-      'images' | 'files' | 'videos' | 'audios'
-    >;
     Title: Schema.Attribute.String;
     Video: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
   };
