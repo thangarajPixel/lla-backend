@@ -190,10 +190,13 @@ export default {
                       console.log(`Found DocumentId in column ${index}:`, cellText);
                     }
                     // Check if it's a numeric ID
-                    else if (!finalId && /^\d+$/.test(cellText) && cellText !== '0' && cellText !== '1') {
-                      finalId = cellText;
-                      console.log(`Found numeric ID in column ${index}:`, cellText);
-                    }
+                   else if (!finalId) {
+                        const normalized = cellText.replace(/,/g, '');
+                        if (/^\d+$/.test(normalized) && normalized !== '0' && normalized !== '1') {
+                          finalId = normalized;
+                          console.log(`Found numeric ID in column ${index}:`, finalId);
+                        }
+                      }
                   }
                 });
 
