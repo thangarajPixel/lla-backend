@@ -9,12 +9,10 @@ export default {
         
         // Get the email service
         const emailService = require('../../services/email').default;
-          console.log(result);
         // Send registration emails
-       await emailService.sendRegistrationEmail(result);
+       const em= await emailService.sendRegistrationEmail(result);
        await emailService.getPaymentIDStatus(result);
-       
-  
+        console.log(em);
         console.log('Registration emails sent successfully');
       } catch (error) {
         console.error('Error sending registration emails:', error);
