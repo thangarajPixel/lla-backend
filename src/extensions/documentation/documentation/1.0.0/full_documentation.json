@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-12-30T10:09:38.310Z"
+    "x-generation-date": "2025-12-30T10:23:09.350Z"
   },
   "servers": [
     {
@@ -16522,7 +16522,8 @@
               "Type7",
               "Type8",
               "Type9",
-              "Type10"
+              "Type10",
+              "SingeImage"
             ]
           },
           "OuterTitle": {
