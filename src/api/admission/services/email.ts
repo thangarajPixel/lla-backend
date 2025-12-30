@@ -211,8 +211,8 @@ export default {
 const baseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
 const siteBaseUrl = process.env.FRONTEND_URL || 'https://dev.lightandlifeacademy.in';
 const pdfDownloadUrl = `${baseUrl}/api/admissions/${admission.id}/pdf`;
-const viewUrl = `${siteBaseUrl}/admission/${admission.encryptedId}`;
-const portfolioUrl = `${siteBaseUrl}/admission/${admission.encryptedId}/preview?section=portfolio`;
+const viewUrl = `${siteBaseUrl}/admission/${admission.EncryptId}`;
+const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?section=portfolio`;
       // Email to student
       const studentEmailHtml = `
         <!DOCTYPE html>
@@ -331,10 +331,12 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.encryptedId}/preview?
         <a href="${viewUrl}" target="_blank" class="btn primary">
           View Application
         </a>
-        <a href="${pdfDownloadUrl}" target="_blank" class="btn secondary">
+        <br>
+        <a href="${pdfDownloadUrl}" target="_blank" class="btn primary">
           Download Application
         </a>
-         <a href="${portfolioUrl}" target="_blank" class="btn warning">
+        <br>
+         <a href="${portfolioUrl}" target="_blank" class="btn primary">
           Portfolio
         </a>
       </div>
