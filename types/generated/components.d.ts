@@ -618,7 +618,7 @@ export interface GalleryGallery extends Struct.ComponentSchema {
   attributes: {
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     Type: Schema.Attribute.Enumeration<['Video', 'Gallery']>;
-    Url: Schema.Attribute.Text;
+    VideoUrl: Schema.Attribute.Text;
   };
 }
 

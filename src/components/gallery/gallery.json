@@ -22,7 +22,7 @@
         "Gallery"
       ]
     },
-    "Url": {
+    "VideoUrl": {
       "type": "text"
     }
   },
