@@ -138,7 +138,7 @@ console.log(admission);
       Step4Date: admission.Payment_Status === 'Completed' || admission.Payment_Status === 'Paid' ? admission.updatedAt : null,
       document_id: admission.documentId,
       synced_at: new Date(),
-      payment_response:admission.payment_response,
+      payment_response:admission?.payment_response ? JSON.stringify(admission?.payment_response) : null,
       Work_Experience:(admission as any).Work_Experience || [],
       Upload_Your_Portfolio:(admission as any).Upload_Your_Portfolio || []
     };
