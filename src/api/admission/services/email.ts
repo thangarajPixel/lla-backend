@@ -214,6 +214,10 @@ const pdfDownloadUrl = `${baseUrl}/api/admissions/${admission.id}/pdf`;
 const viewUrl = `${siteBaseUrl}/admission/${admission.EncryptId}`;
 const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?section=portfolio`;
       // Email to student
+    admission = await strapi.entityService.findOne('api::admission.admission', admission.id, {
+      populate: ['Course'],
+    });
+    console.log(admission.Course.Name);
       const studentEmailHtml = `
         <!DOCTYPE html>
 <html>
@@ -328,14 +332,14 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
       </div>
 
       <div style="margin-top:15px;">
-        <a href="${viewUrl}" target="_blank" class="btn primary">
+        <a href="${viewUrl}" target="_blank" class="btn primary" >
           View Application
         </a>
-        <br>
+      <br><br>
         <a href="${pdfDownloadUrl}" target="_blank" class="btn primary">
           Download Application
         </a>
-        <br>
+        <br><br>
          <a href="${portfolioUrl}" target="_blank" class="btn primary">
           Portfolio
         </a>
