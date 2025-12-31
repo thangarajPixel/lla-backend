@@ -3,6 +3,7 @@
  */
 
 import { factories } from '@strapi/strapi'
+import { syncAdmissionWithCourse } from '../../../admission-course-sync'
 
 // Helper function to add base URL to media fields
 const addBaseUrlToMedia = (data: any, baseUrl: string): any => {
@@ -241,6 +242,20 @@ export default factories.createCoreController('api::admission.admission', ({ str
           // Don't fail the create if payment fails
         }
       }
+
+      // Sync admission with course data to second database
+      try {
+        console.log('🔄 Syncing admission with course data to second database...');
+        const syncSuccess = await syncAdmissionWithCourse(createdRecord.id);
+        if (syncSuccess) {
+          console.log('✅ Admission synced to second database successfully');
+        } else {
+          console.log('⚠️ Failed to sync admission to second database');
+        }
+      } catch (syncError) {
+        console.error('❌ Error syncing admission to second database:', syncError);
+        // Don't fail the create if sync fails
+      }
     }
 
     // Generate checkout link if step_3 is true in CREATE request
@@ -397,6 +412,20 @@ export default factories.createCoreController('api::admission.admission', ({ str
         console.error('❌ Automatic payment processing failed:', paymentError);
         // Don't fail the update if payment fails
       }
+    }
+
+    // Sync admission with course data to second database
+    try {
+      console.log('🔄 Syncing updated admission with course data to second database...');
+      const syncSuccess = await syncAdmissionWithCourse(updatedData.id);
+      if (syncSuccess) {
+        console.log('✅ Updated admission synced to second database successfully');
+      } else {
+        console.log('⚠️ Failed to sync updated admission to second database');
+      }
+    } catch (syncError) {
+      console.error('❌ Error syncing updated admission to second database:', syncError);
+      // Don't fail the update if sync fails
     }
 
     console.log('========================================');
