@@ -281,13 +281,13 @@ console.log(admission);
     }
 
     // Step 6: Sync Portfolio to llawp_lla_portfolio table
-    if (admissionData.Upload_Your_Portfolio?.portfolio_files && admissionData.Upload_Your_Portfolio.portfolio_files.images.length > 0) {
+    if (admissionData.Upload_Your_Portfolio?.images && admissionData.Upload_Your_Portfolio.images.length > 0) {
       // Delete existing portfolio records for this admission
-      await connection.execute('DELETE FROM llawp_lla_portfolio WHERE personsid = ?', [admissionId]);
-      
+      await connection.execute('DELETE FROM llawp_lla_portfolio WHERE personsid = ?', [admissionDbId]);
+      console.log(admissionData.Upload_Your_Portfolio.images);
       // Insert new portfolio records
-      for (let i = 0; i < admissionData.Upload_Your_Portfolio.portfolio_files?.images.length; i++) {
-        const portfolio = admissionData.Upload_Your_Portfolio.portfolio_files.images[i];
+      for (let i = 0; i < admissionData.Upload_Your_Portfolio.images.length; i++) {
+        const portfolio = admissionData.Upload_Your_Portfolio.images[i];
         await connection.execute(`
           INSERT INTO llawp_lla_portfolio (
             personsid, portfolioid, portfolio, caption
@@ -299,7 +299,7 @@ console.log(admission);
           portfolio.name || ''
         ]);
       }
-      console.log(`Synced ${admissionData.Upload_Your_Portfolio.portfolio_files.length} portfolio records`);
+      console.log(`Synced portfolio records`);
     }
     if (admissionData.payment_response && admissionData.txnid) {
       // Delete existing portfolio records for this admission
