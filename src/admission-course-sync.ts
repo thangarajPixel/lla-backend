@@ -144,11 +144,19 @@ console.log(admission);
 
     // Step 4: Check if record exists and update or create in llawp_lla_admission
     const [existingRows] = await connection.execute(
-      'SELECT document_id FROM llawp_lla_admission WHERE document_id = ?',
+      'SELECT lla_id, document_id FROM llawp_lla_admission WHERE document_id = ?',
       [admissionData.document_id]
     );
 
+    let admissionDbId: number;
+
+    console.log('🔍 Existing rows:', existingRows);
+
     if (Array.isArray(existingRows) && existingRows.length > 0) {
+      console.log('📝 Taking UPDATE path');
+      // Get the existing admission ID
+      admissionDbId = (existingRows[0] as any).lla_id;
+      console.log('📋 Found existing record with lla_id:', admissionDbId);
       // Update existing record
       const updateSQL = `
         UPDATE llawp_lla_admission SET 
@@ -193,10 +201,10 @@ console.log(admission);
       console.log('📊 Value count:', updateValues.length);
       console.log('📋 Values:', JSON.stringify(updateValues, null, 2));
       
-      await connection.execute(updateSQL, updateValues);
-      
+     const [result] =  await connection.execute(updateSQL, updateValues);
       console.log(`Updated admission ${admissionId} in llawp_lla_admission table`);
     } else {
+      console.log('📝 Taking INSERT path');
       // Create new record
       const insertSQL = `
         INSERT INTO llawp_lla_admission ( name, lastname, signup, gender, dob, payment, amount, txnid, mobileno, email,
@@ -235,57 +243,63 @@ console.log(admission);
       console.log('📊 Placeholder count:', (insertSQL.match(/\?/g) || []).length);
       console.log('📋 Values:', JSON.stringify(insertValues, null, 2));
       
-      await connection.execute(insertSQL, insertValues);
+     const [result] =  await connection.execute(insertSQL, insertValues);
+      
+      // Store the new admission ID
+      admissionDbId = (result as any).insertId;
+      console.log('📋 New record created with ID:', admissionDbId);
       
       console.log(`Created new admission ${admissionId} in llawp_lla_admission table`);
     }
 
-    // Step 5: Sync Work Experience to llawp_lla_experience table
-    // if (admissionData.Work_Experience && admissionData.Work_Experience.length > 0) {
-    //   // Delete existing experience records for this admission
-    //   await connection.execute('DELETE FROM llawp_lla_experience WHERE personsid = ?', [admissionId]);
+    console.log('🔍 Final admissionDbId:', admissionDbId);
+    console.log(admissionDbId +'insert id');
+    //Step 5: Sync Work Experience to llawp_lla_experience table
+    if (admissionData.Work_Experience && admissionData.Work_Experience.length > 0) {
+      // Delete existing experience records for this admission
+      await connection.execute('DELETE FROM llawp_lla_experience WHERE personsid = ?', [admissionDbId]);
       
-    //   // Insert new experience records
-    //   for (let i = 0; i < admissionData.Work_Experience.length; i++) {
-    //     const exp = admissionData.Work_Experience[i];
-    //     await connection.execute(`
-    //       INSERT INTO llawp_lla_experience (
-    //         personsid, expid, role, employer, duration, refferenceletter, date
-    //       ) VALUES (?, ?, ?, ?, ?, ?, ?)
-    //     `, [
-    //       admissionId,
-    //       i + 1,
-    //       exp.designation || '',
-    //       exp.employer || '',
-    //       `${exp.duration_start || ''} to ${exp.duration_end || ''}`.trim(),
-    //       exp.reference_letter?.url || '',
-    //       exp.createdAt || new Date()
-    //     ]);
-    //   }
-    //   console.log(`Synced ${admissionData.Work_Experience.length} experience records`);
-    // }
+      // Insert new experience records
+      for (let i = 0; i < admissionData.Work_Experience.length; i++) {
+        const exp = admissionData.Work_Experience[i];
+        await connection.execute(`
+          INSERT INTO llawp_lla_experience (
+            personsid, expid, role, employer, duration, refferenceletter, date
+          ) VALUES (?, ?, ?, ?, ?, ?, ?)
+        `, [
+          admissionDbId,
+          i + 1,
+          exp.designation || '',
+          exp.employer || '',
+          `${exp.duration_start || ''} to ${exp.duration_end || ''}`.trim(),
+          exp.reference_letter?.url || '',
+          exp.createdAt || new Date()
+        ]);
+      }
+      console.log(`Synced ${admissionData.Work_Experience.length} experience records`);
+    }
 
-    // // Step 6: Sync Portfolio to llawp_lla_portfolio table
-    // if (admissionData.Upload_Your_Portfolio?.portfolio_files && admissionData.Upload_Your_Portfolio.portfolio_files.length > 0) {
-    //   // Delete existing portfolio records for this admission
-    //   await connection.execute('DELETE FROM llawp_lla_portfolio WHERE personsid = ?', [admissionId]);
+    // Step 6: Sync Portfolio to llawp_lla_portfolio table
+    if (admissionData.Upload_Your_Portfolio?.portfolio_files && admissionData.Upload_Your_Portfolio.portfolio_files.length > 0) {
+      // Delete existing portfolio records for this admission
+      await connection.execute('DELETE FROM llawp_lla_portfolio WHERE personsid = ?', [admissionId]);
       
-    //   // Insert new portfolio records
-    //   for (let i = 0; i < admissionData.Upload_Your_Portfolio.portfolio_files.length; i++) {
-    //     const portfolio = admissionData.Upload_Your_Portfolio.portfolio_files[i];
-    //     await connection.execute(`
-    //       INSERT INTO llawp_lla_portfolio (
-    //         personsid, portfolioid, portfolio, caption
-    //       ) VALUES (?, ?, ?, ?)
-    //     `, [
-    //       admissionId,
-    //       i + 1,
-    //       portfolio.url || '',
-    //       portfolio.name || ''
-    //     ]);
-    //   }
-    //   console.log(`Synced ${admissionData.Upload_Your_Portfolio.portfolio_files.length} portfolio records`);
-    // }
+      // Insert new portfolio records
+      for (let i = 0; i < admissionData.Upload_Your_Portfolio.portfolio_files?.images.length; i++) {
+        const portfolio = admissionData.Upload_Your_Portfolio.portfolio_files.images[i];
+        await connection.execute(`
+          INSERT INTO llawp_lla_portfolio (
+            personsid, portfolioid, portfolio, caption
+          ) VALUES (?, ?, ?, ?)
+        `, [
+          admissionDbId,
+          i + 1,
+          portfolio.url || '',
+          portfolio.name || ''
+        ]);
+      }
+      console.log(`Synced ${admissionData.Upload_Your_Portfolio.portfolio_files.length} portfolio records`);
+    }
 
     return true;
 
