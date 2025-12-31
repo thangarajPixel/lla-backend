@@ -92,7 +92,7 @@ console.log(admission);
       language: (admission as any).Language_Proficiency ? JSON.stringify((admission as any).Language_Proficiency) : '',
       skype: '', // Not available in current schema
       portfoliolink: '', // Will be handled in portfolio table
-      address: admission.address ? JSON.stringify(admission.address) : '',
+      address: admission.address?.[0]?.children?.[0] && 'text' in admission.address[0].children[0] ? admission.address[0].children[0].text : '',
       hobbies: admission.hobbies || '',
       club: admission.photography_club || '',
       gradstatus: 1,
@@ -117,7 +117,7 @@ console.log(admission);
       parentname: `${(admission as any).Parent_Guardian_Spouse_Details?.first_name || ''} ${(admission as any).Parent_Guardian_Spouse_Details?.last_name || ''}`.trim(),
       parentcontact: (admission as any).Parent_Guardian_Spouse_Details?.mobile_no || '',
       parentoccupation: (admission as any).Parent_Guardian_Spouse_Details?.profession || '',
-      parentaddress: (admission as any).Parent_Guardian_Spouse_Details?.address ? JSON.stringify((admission as any).Parent_Guardian_Spouse_Details.address) : '',
+      parentaddress: (admission as any).Parent_Guardian_Spouse_Details?.address?.[0]?.children?.[0]?.text || '',
       parentemail: (admission as any).Parent_Guardian_Spouse_Details?.email || '',
       bloodgroup: admission.blood_group || '',
       AdmissionYear: new Date(admission.createdAt).getFullYear(),
@@ -138,6 +138,7 @@ console.log(admission);
       Step4Date: admission.Payment_Status === 'Completed' || admission.Payment_Status === 'Paid' ? admission.updatedAt : null,
       document_id: admission.documentId,
       synced_at: new Date(),
+      payment_response:admission.payment_response,
       Work_Experience:(admission as any).Work_Experience || [],
       Upload_Your_Portfolio:(admission as any).Upload_Your_Portfolio || []
     };
@@ -280,7 +281,7 @@ console.log(admission);
     }
 
     // Step 6: Sync Portfolio to llawp_lla_portfolio table
-    if (admissionData.Upload_Your_Portfolio?.portfolio_files && admissionData.Upload_Your_Portfolio.portfolio_files.length > 0) {
+    if (admissionData.Upload_Your_Portfolio?.portfolio_files && admissionData.Upload_Your_Portfolio.portfolio_files.images.length > 0) {
       // Delete existing portfolio records for this admission
       await connection.execute('DELETE FROM llawp_lla_portfolio WHERE personsid = ?', [admissionId]);
       
@@ -300,7 +301,22 @@ console.log(admission);
       }
       console.log(`Synced ${admissionData.Upload_Your_Portfolio.portfolio_files.length} portfolio records`);
     }
-
+    if (admissionData.payment_response && admissionData.txnid) {
+      // Delete existing portfolio records for this admission
+      await connection.execute('DELETE FROM llawp_lla_pay WHERE userid = ?', [admissionDbId]);
+      
+        await connection.execute(`
+          INSERT INTO llawp_lla_pay (
+            userid, transid, transaction, status
+          ) VALUES (?, ?, ?, ?)
+        `, [
+          admissionDbId,
+          admissionData.txnid,
+          admissionData.payment_response,
+          'success'
+        ]);
+      console.log(`Synced payment records`);
+    }
     return true;
 
   } catch (error) {
