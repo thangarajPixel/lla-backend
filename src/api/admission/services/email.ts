@@ -254,7 +254,7 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
       <p>Greetings from <strong>Light & Life Academy!</strong></p>
 
       <p>
-        You have completed the application process for the ${admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"} Course 2025-2026.</strong>.
+        You have completed the application process for the ${admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"} Course 2026-2027.</strong>.
       </p>
       <p><strong>Payment Reference ID:</strong> ${admission.mihpayid || ''}</p>
       <p style="margin-top:20px;">
@@ -320,7 +320,7 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
       <p>
         <strong>${studentName}</strong> has applied for the
         <strong>${ admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"}</strong>
-        for the academic year <strong>2025–2026</strong>.
+        for the academic year <strong>2026–2027</strong>.
       </p>
 
       <div class="info">
@@ -367,7 +367,7 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
       console.log('📤 Sending email to admin...');
       const adminEmailResult = await transporter.sendMail({
         from: process.env.SMTP_FROM,
-        to: admission.email, // Send to admin email
+        to: "manikandan21112002g@gmail.com", // Send to admin email
         subject: `${studentName} has successfully applied for ${ admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"}`,
         html: adminEmailHtml,
       });
