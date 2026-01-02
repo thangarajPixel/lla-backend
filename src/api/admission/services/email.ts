@@ -332,11 +332,11 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
       </div>
 
       <div style="margin-top:15px;">
-        <a href="${viewUrl}" target="_blank" class="btn primary" >
+        <a href="${viewUrl}" target="_blank" class="btn primary" style="color: #fff;" >
           View Application
         </a>
       <br><br>
-        <a href="${pdfDownloadUrl}" target="_blank" class="btn primary">
+        <a href="${pdfDownloadUrl}" target="_blank" class="btn primary text-white">
           Download Application
         </a>
         <br><br>
