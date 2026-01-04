@@ -208,16 +208,17 @@ export default {
 
       const studentName = `${admission.name_title} ${admission.first_name} ${admission.last_name}`;
       console.log('👤 Student Name:', studentName);
+      console.log('💳 Payment Reference ID (mihpayid):', admission.mihpayid);
+      console.log('🏦 PayU ID (bank_ref_num):', admission.PayUId);
+      console.log('📝 Transaction ID (txnid):', admission.txnid);
+      
 const baseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
 const siteBaseUrl = process.env.FRONTEND_URL || 'https://dev.lightandlifeacademy.in';
 const pdfDownloadUrl = `${baseUrl}/api/admissions/${admission.id}/pdf`;
 const viewUrl = `${siteBaseUrl}/admission/${admission.EncryptId}`;
 const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?section=portfolio`;
+      
       // Email to student
-    admission = await strapi.entityService.findOne('api::admission.admission', admission.id, {
-      populate: ['Course'],
-    });
-    console.log(admission.Course.Name);
       const studentEmailHtml = `
         <!DOCTYPE html>
 <html>
@@ -228,6 +229,13 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
     .header { background: #4945ff; color: white; padding: 20px; text-align: center; }
     .content { padding: 20px; background: #f8f9fa; }
     .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
+    .info-box {
+      background: white;
+      padding: 15px;
+      border-radius: 5px;
+      margin: 15px 0;
+      border-left: 4px solid #4945ff;
+    }
     .btn {
       display:inline-block;
       padding:10px 22px;
@@ -254,9 +262,14 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
       <p>Greetings from <strong>Light & Life Academy!</strong></p>
 
       <p>
-        You have completed the application process for the ${admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"} Course 2026-2027.</strong>.
+        You have completed the application process for the <strong>${admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"} Course 2026-2027</strong>.
       </p>
-      <p><strong>Payment Reference ID:</strong> ${admission.mihpayid || ''}</p>
+      
+      <div class="info-box">
+        <p style="margin: 5px 0;"><strong>Payment Reference ID:</strong> ${admission.mihpayid || 'N/A'}</p>
+        <p style="margin: 5px 0;"><strong>Transaction ID:</strong> ${admission.txnid || 'N/A'}</p>
+      </div>
+      
       <p style="margin-top:20px;">
        Please feel free to contact us in case of any further clarifications.
       </p>
@@ -319,7 +332,7 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
     <div class="content">
       <p>
         <strong>${studentName}</strong> has applied for the
-        <strong>${ admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"}</strong>
+        <strong>${admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"}</strong>
         for the academic year <strong>2026–2027</strong>.
       </p>
 
@@ -327,8 +340,9 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
         <p><strong>Name:</strong> ${studentName}</p>
         <p><strong>Email:</strong> ${admission.email}</p>
         <p><strong>Phone Number:</strong> ${admission.mobile_no}</p>
-        <p><strong>Unique ID (PayU):</strong> ${admission.PayUId || ''}</p>
-        <p><strong>Payment Transaction ID:</strong> ${admission.txnid || ''}</p>
+        <p><strong>Unique ID (PayU):</strong> ${admission.PayUId || 'N/A'}</p>
+        <p><strong>Payment Reference ID:</strong> ${admission.mihpayid || 'N/A'}</p>
+        <p><strong>Payment Transaction ID:</strong> ${admission.txnid || 'N/A'}</p>
       </div>
 
       <div style="margin-top:15px;">

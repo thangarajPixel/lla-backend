@@ -31,9 +31,24 @@ export default {
         // Get the email service
         const emailService = require('../../services/email').default;
         
-        // Send registration emails
-        const em = await emailService.sendRegistrationEmail(result);
+        // IMPORTANT: First get payment status to update mihpayid and PayUId
+        console.log('Fetching payment status from PayU...');
         await emailService.getPaymentIDStatus(result);
+        
+        // Fetch the updated admission data with payment details
+        console.log('Fetching updated admission data...');
+        const updatedAdmission = await strapi.entityService.findOne(
+          'api::admission.admission',
+          result.id,
+          {
+            populate: ['Course'],
+          }
+        );
+        
+        console.log('Payment details - mihpayid:', updatedAdmission.mihpayid, 'PayUId:', updatedAdmission.PayUId);
+        
+        // Now send registration emails with complete payment details
+        const em = await emailService.sendRegistrationEmail(updatedAdmission);
         console.log(em);
         console.log('Registration emails sent successfully');
         
