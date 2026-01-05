@@ -195,15 +195,28 @@ export default factories.createCoreController('api::admission.admission', ({ str
       }
     }
 
-    // Check if step_0 is false and send registration link email
+    // Check if step_0 is true and send registration link email
     if (createdRecord && createdRecord.step_0 === true && createdRecord.email && createdRecord.first_name) {
-      console.log('📧 step_0 is false, sending registration link email...');
+      console.log('📧 step_0 is true, sending registration link email...');
       try {
         const emailService = require('../services/email').default;
         await emailService.sendRegistrationLinkEmail(createdRecord);
         console.log('✅ Registration link email sent successfully');
       } catch (emailError) {
         console.error('❌ Failed to send registration link email:', emailError);
+        // Don't fail the request if email fails
+      }
+    }
+
+    // Check if step_1 is true and step_0 is false and send step 1 completion email
+    if (createdRecord && createdRecord.step_1 === true && createdRecord.step_0 === false && createdRecord.email && createdRecord.first_name) {
+      console.log('📧 step_1 is true and step_0 is false, sending step 1 completion email...');
+      try {
+        const emailService = require('../services/email').default;
+        await emailService.sendRegistrationLinkEmail(createdRecord);
+        console.log('✅ Step 1 completion email sent successfully');
+      } catch (emailError) {
+        console.error('❌ Failed to send step 1 completion email:', emailError);
         // Don't fail the request if email fails
       }
     }
@@ -343,6 +356,20 @@ export default factories.createCoreController('api::admission.admission', ({ str
     console.log('✅ Admission updated - ID:', updatedData?.id);
     console.log('📊 Updated Payment Status:', updatedData?.Payment_Status);
     console.log('📊 Updated Step 3:', updatedData?.step_3);
+
+    // Check if step_1 is being set to true and step_0 is false, send step 1 completion email
+    const step1Changed = ctx.request.body.data?.step_1 === true && currentAdmission?.step_1 !== true;
+    if (step1Changed && updatedData?.step_0 === false && updatedData?.email && updatedData?.first_name) {
+      console.log('📧 step_1 changed to true and step_0 is false, sending step 1 completion email...');
+      try {
+        const emailService = require('../services/email').default;
+        await emailService.sendStep1CompletionEmail(updatedData);
+        console.log('✅ Step 1 completion email sent successfully');
+      } catch (emailError) {
+        console.error('❌ Failed to send step 1 completion email:', emailError);
+        // Don't fail the update if email fails
+      }
+    }
 
     // Generate checkout link BEFORE processing payment if step_3 is being set to true
     let checkoutLink = null;
