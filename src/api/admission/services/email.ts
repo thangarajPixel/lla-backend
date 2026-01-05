@@ -152,7 +152,7 @@ export default {
               <h3>PHOTOGRAPHY</h3>
             </div>
             <div class="content">
-              <p>Hi <strong>${admission.first_name}${admission.last_name}</strong>,</p>
+              <p>Hi <strong>${admission.first_name} ${admission.last_name}</strong>,</p>
               <p>Thank you for your interest in Light & Life Academy!</p>
               <p>To complete your registration, please click the button below:</p>
               <div style="text-align: center;">
