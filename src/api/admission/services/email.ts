@@ -4,6 +4,19 @@ import crypto from 'crypto';
 import path from 'path';
 import { encryptAdmissionId } from './id-encryption';
 
+/**
+ * Email Service for Light & Life Academy
+ * 
+ * Environment Variables Required:
+ * - SMTP_HOST: SMTP server host
+ * - SMTP_PORT: SMTP server port (default: 587)
+ * - SMTP_USERNAME: SMTP authentication username
+ * - SMTP_PASSWORD: SMTP authentication password
+ * - SMTP_FROM: Sender email address
+ * - ADMIN_EMAILS: Comma-separated list of admin email addresses (e.g., "admin1@example.com,admin2@example.com")
+ * - ADMIN_CC_EMAILS: (Optional) Comma-separated list of CC email addresses
+ */
+
 export default {
   async sendRequestInformationEmail(contact: any) {
     console.log('========================================');
@@ -377,14 +390,28 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
       console.log('   To:', admission.email);
       console.log('   Message ID:', studentEmailResult.messageId);
 
-      // Send email to admin
+      // Send email to admin with multiple recipients and CC
       console.log('📤 Sending email to admin...');
-      const adminEmailResult = await transporter.sendMail({
+      
+      // Configure multiple TO recipients (comma-separated)
+      const adminEmails = process.env.ADMIN_EMAILS || "manikandan@pixel-studios.com,admissions@llacademy.org";
+      
+      // Configure CC recipients (comma-separated) - optional
+      const ccEmails = process.env.ADMIN_CC_EMAILS || "";
+      
+      const mailOptions: any = {
         from: process.env.SMTP_FROM,
-        to: "manikandan@pixel-studios.com", // Send to admin email
+        to: adminEmails, // Multiple emails: "email1@example.com, email2@example.com"
         subject: `${studentName} has successfully applied for ${ admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"}`,
         html: adminEmailHtml,
-      });
+      };
+      
+      // Add CC if configured
+      if (ccEmails) {
+        mailOptions.cc = ccEmails;
+      }
+      
+      const adminEmailResult = await transporter.sendMail(mailOptions);
 
       console.log('✅ SUCCESS: Admin email sent!');
       console.log('   To:', process.env.SMTP_FROM);
