@@ -152,7 +152,7 @@ export default {
               <h3>PHOTOGRAPHY</h3>
             </div>
             <div class="content">
-              <p>Hi <strong>${admission.first_name}</strong>,</p>
+              <p>Hi <strong>${admission.first_name}${admission.last_name}</strong>,</p>
               <p>Thank you for your interest in Light & Life Academy!</p>
               <p>To complete your registration, please click the button below:</p>
               <div style="text-align: center;">
@@ -363,11 +363,11 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
           View Application
         </a>
       <br><br>
-        <a href="${pdfDownloadUrl}" target="_blank" class="btn primary text-white">
+        <a href="${pdfDownloadUrl}" target="_blank" class="btn primary"  style="color: #fff;">
           Download Application
         </a>
         <br><br>
-         <a href="${portfolioUrl}" target="_blank" class="btn primary">
+         <a href="${portfolioUrl}" target="_blank" class="btn primary"  style="color: #fff;">
           Portfolio
         </a>
       </div>
