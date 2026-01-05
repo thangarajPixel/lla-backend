@@ -389,8 +389,6 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
       console.log('✅ SUCCESS: Student email sent!');
       console.log('   To:', admission.email);
       console.log('   Message ID:', studentEmailResult.messageId);
-
-      // Send email to admin with multiple recipients and CC
       console.log('📤 Sending email to admin...');
       
       // Configure multiple TO recipients (comma-separated)
