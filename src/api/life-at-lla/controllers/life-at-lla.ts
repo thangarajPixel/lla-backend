@@ -21,6 +21,14 @@ export default factories.createCoreController(
                   Image: {
                     select: ["id", "name", "url"],
                   },
+                   SeoViewCard:true,
+                  LifeViewCard: {
+                    populate: {
+                      Images: {
+                        select: ["id", "name", "url"],
+                      },
+                    },
+                  },
                 },
               },
             },

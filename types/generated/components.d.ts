@@ -143,7 +143,6 @@ export interface BlogBlogCard extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
-    ImageUrl: Schema.Attribute.Text;
     LongDescription: Schema.Attribute.RichText &
       Schema.Attribute.CustomField<
         'plugin::ckeditor5.CKEditor',
