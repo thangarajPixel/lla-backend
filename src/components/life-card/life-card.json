@@ -35,9 +35,6 @@
         "preset": "defaultHtml"
       }
     },
-    "ImageUrl": {
-      "type": "text"
-    },
     "CreatedDate": {
       "type": "date"
     },

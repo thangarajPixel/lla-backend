@@ -894,7 +894,6 @@ export interface LifeCardLifeCard extends Struct.ComponentSchema {
       'images' | 'files' | 'videos' | 'audios',
       true
     >;
-    ImageUrl: Schema.Attribute.Text;
     LifeViewCard: Schema.Attribute.Component<
       'life-view-card.life-view-card',
       true
