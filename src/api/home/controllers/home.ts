@@ -180,7 +180,7 @@ export default factories.createCoreController(
             component.Card = component.Card.map((card: any) => {
               if (card.course_list) {
                 card.Slug = card.course_list.Slug;
-                delete card.course_list;
+                
               }
               return card;
             });

@@ -172,6 +172,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
     if (ctx.request.body.data) {
       delete ctx.request.body.data.publishedAt;
     }
+    console.log('Create Data:', JSON.stringify(ctx.request.body.data, null, 2));
 
     // Call default create
     const response = await super.create(ctx);
@@ -199,8 +200,20 @@ export default factories.createCoreController('api::admission.admission', ({ str
     if (createdRecord && createdRecord.step_0 === true && createdRecord.email && createdRecord.first_name) {
       console.log('📧 step_0 is true, sending registration link email...');
       try {
+        // Fetch the admission with Course populated
+        const admissionWithCourse: any = await strapi.entityService.findOne(
+          'api::admission.admission',
+          createdRecord.id,
+          {
+            populate: ['Course'],
+          }
+        );
+        
+        console.log('course_data ID:', admissionWithCourse?.Course?.id);
+        console.log('Course:', admissionWithCourse?.Course?.Name);
+        
         const emailService = require('../services/email').default;
-        await emailService.sendRegistrationLinkEmail(createdRecord);
+        await emailService.sendRegistrationLinkEmail(admissionWithCourse, admissionWithCourse?.Course);
         console.log('✅ Registration link email sent successfully');
       } catch (emailError) {
         console.error('❌ Failed to send registration link email:', emailError);
@@ -212,8 +225,20 @@ export default factories.createCoreController('api::admission.admission', ({ str
     if (createdRecord && createdRecord.step_1 === true && createdRecord.step_0 === false && createdRecord.email && createdRecord.first_name) {
       console.log('📧 step_1 is true and step_0 is false, sending step 1 completion email...');
       try {
+        // Fetch the admission with Course populated
+        const admissionWithCourse: any = await strapi.entityService.findOne(
+          'api::admission.admission',
+          createdRecord.id,
+          {
+            populate: ['Course'],
+          }
+        );
+        
+        console.log('course_data ID:', admissionWithCourse?.Course?.id);
+        console.log('Course:', admissionWithCourse?.Course?.Name);
+        
         const emailService = require('../services/email').default;
-        await emailService.sendRegistrationLinkEmail(createdRecord);
+        await emailService.sendRegistrationLinkEmail(admissionWithCourse, admissionWithCourse?.Course);
         console.log('✅ Step 1 completion email sent successfully');
       } catch (emailError) {
         console.error('❌ Failed to send step 1 completion email:', emailError);

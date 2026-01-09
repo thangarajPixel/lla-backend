@@ -99,11 +99,13 @@ export default {
     }
   },
 
-  async sendRegistrationLinkEmail(admission: any) {
+  async sendRegistrationLinkEmail(admission: any, course_data: any) {
     console.log('========================================');
     console.log('📧 Sending registration link email...');
+    console.log('course_data ID:', course_data);
     console.log('Student Email:', admission.email);
     console.log('Student Name:', admission.first_name);
+    console.log('Course:', admission?.Course?.Name);
     console.log('========================================');
 
     try {
@@ -124,6 +126,8 @@ export default {
 
       console.log('🔐 Encrypted ID:', encryptedId);
       console.log('🔗 Registration URL:', registrationUrl);
+      const currentYear = new Date().getFullYear();
+      const nextYear = currentYear + 1;
 
       // Email HTML
       const emailHtml = `
@@ -152,7 +156,7 @@ export default {
           <div class="container">
             <div class="header">
               <h1>Light & Life Academy</h1>
-              <h3>PHOTOGRAPHY</h3>
+              <h3>${admission?.Course?.Name}</h3>
             </div>
             <div class="content">
               <p>
@@ -160,16 +164,21 @@ export default {
                     ${admission.first_name}${admission.last_name ? " " + admission.last_name : ""}
                   </strong>,
                 </p>
-              <p>Thank you for your interest in Light & Life Academy!</p>
-              <p>To complete your registration, please click the button below:</p>
+              <p>We are happy to note your interest in Light & Life Academy</p>
+              <p>
+                  You have started the application process for the 
+                  ${admission?.Course?.Name} year ${currentYear}-${nextYear}.
+                </p>
+              <p>Please note the link below is a unique application link that will give you access to your application until all steps are completed.</p>
               <div style="text-align: center;">
                 <a href="${registrationUrl}" class="button">Complete Registration</a>
               </div>
-              <p style="font-size: 12px; color: #666;">
-                Or copy and paste this link in your browser:<br>
-                <a href="${registrationUrl}">${registrationUrl}</a>
-              </p>
-              <p>We look forward to having you join our photography community!</p>
+              <p>If you have any queries or need clarifications regarding any aspect of the admission process, 
+              the course, the college, faculty, Nilgiris, alumni, or about logistics, do feel free to call us on :
+               75982 87370. Or email us at admissions@llacademy.org.</p>
+              <p>Best Wishes!</p>
+              <p>Manager, Operations</p>
+              <p>WebSite: www.llacademy.org | Contact: +91 7598287370</p>
             </div>
             <div class="footer">
               <p>Light & Life Academy - Photography</p>
@@ -183,7 +192,7 @@ export default {
       // Send email
       console.log('📤 Sending email...');
       const result = await transporter.sendMail({
-          from: {
+        from: {
           name: "Light and Life Academy",
           address: process.env.SMTP_FROM,
         },
@@ -390,7 +399,7 @@ export default {
       // Send email to student
       console.log('📤 Sending email to student...');
       const studentEmailResult = await transporter.sendMail({
-       from: {
+        from: {
           name: "Light and Life Academy",
           address: process.env.SMTP_FROM,
         },
