@@ -6,10 +6,14 @@ import { factories } from '@strapi/strapi';
 
 export default factories.createCoreController('api::state.state', ({ strapi }) => ({
   async find(ctx) {
-    // Add sort parameter to query
+    // Add sort parameter and remove pagination limit to get all states
     ctx.query = {
       ...ctx.query,
       sort: 'name:asc',
+      pagination: {
+        pageSize: 100, // Set a high limit to get all states
+        page: 1,
+      },
     };
     
     const { data } = await super.find(ctx);
