@@ -75,7 +75,10 @@ export default {
       // Send email
       console.log('📤 Sending email...');
       const result = await transporter.sendMail({
-        from: process.env.SMTP_FROM,
+        from: {
+          name: "Light and Life Academy",
+          address: process.env.SMTP_FROM,
+        },
         to: contact.Email,
         subject: 'Successfully Request for Admission - Light & Life Academy',
         html: emailHtml,
@@ -152,7 +155,11 @@ export default {
               <h3>PHOTOGRAPHY</h3>
             </div>
             <div class="content">
-              <p>Hi <strong>${admission.first_name} ${admission.last_name}</strong>,</p>
+              <p>
+                  Hi <strong>
+                    ${admission.first_name}${admission.last_name ? " " + admission.last_name : ""}
+                  </strong>,
+                </p>
               <p>Thank you for your interest in Light & Life Academy!</p>
               <p>To complete your registration, please click the button below:</p>
               <div style="text-align: center;">
@@ -176,9 +183,12 @@ export default {
       // Send email
       console.log('📤 Sending email...');
       const result = await transporter.sendMail({
-        from: process.env.SMTP_FROM,
+          from: {
+          name: "Light and Life Academy",
+          address: process.env.SMTP_FROM,
+        },
         to: admission.email,
-        subject: 'Complete Your Registration - Light & Life Academy',
+        subject: 'Complete Your Registration - Light and Life Academy',
         html: emailHtml,
       });
 
@@ -224,13 +234,13 @@ export default {
       console.log('💳 Payment Reference ID (mihpayid):', admission.mihpayid);
       console.log('🏦 PayU ID (bank_ref_num):', admission.PayUId);
       console.log('📝 Transaction ID (txnid):', admission.txnid);
-      
-const baseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
-const siteBaseUrl = process.env.FRONTEND_URL || 'https://dev.lightandlifeacademy.in';
-const pdfDownloadUrl = `${baseUrl}/api/admissions/${admission.id}/pdf`;
-const viewUrl = `${siteBaseUrl}/admission/${admission.EncryptId}`;
-const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?section=portfolio`;
-      
+
+      const baseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
+      const siteBaseUrl = process.env.FRONTEND_URL || 'https://dev.lightandlifeacademy.in';
+      const pdfDownloadUrl = `${baseUrl}/api/admissions/${admission.id}/pdf`;
+      const viewUrl = `${siteBaseUrl}/admission/${admission.EncryptId}`;
+      const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?section=portfolio`;
+
       // Email to student
       const studentEmailHtml = `
         <!DOCTYPE html>
@@ -380,7 +390,10 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
       // Send email to student
       console.log('📤 Sending email to student...');
       const studentEmailResult = await transporter.sendMail({
-        from: process.env.SMTP_FROM,
+       from: {
+          name: "Light and Life Academy",
+          address: process.env.SMTP_FROM,
+        },
         to: admission.email,
         subject: ' Light & Life Academy | Congratulations on completing your application process.',
         html: studentEmailHtml,
@@ -390,25 +403,28 @@ const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?se
       console.log('   To:', admission.email);
       console.log('   Message ID:', studentEmailResult.messageId);
       console.log('📤 Sending email to admin...');
-      
+
       // Configure multiple TO recipients (comma-separated)
       const adminEmails = process.env.ADMIN_EMAILS || "manikandan@pixel-studios.com,admissions@llacademy.org";
-      
+
       // Configure CC recipients (comma-separated) - optional
       const ccEmails = process.env.ADMIN_CC_EMAILS || "";
-      
+
       const mailOptions: any = {
-        from: process.env.SMTP_FROM,
+        from: {
+          name: "Light and Life Academy",
+          address: process.env.SMTP_FROM,
+        },
         to: adminEmails, // Multiple emails: "email1@example.com, email2@example.com"
-        subject: `${studentName} has successfully applied for ${ admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"}`,
+        subject: `${studentName} has successfully applied for ${admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"}`,
         html: adminEmailHtml,
       };
-      
+
       // Add CC if configured
       if (ccEmails) {
         mailOptions.cc = ccEmails;
       }
-      
+
       const adminEmailResult = await transporter.sendMail(mailOptions);
 
       console.log('✅ SUCCESS: Admin email sent!');
