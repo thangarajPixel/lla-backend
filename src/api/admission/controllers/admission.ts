@@ -115,8 +115,8 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
     email: admission.email,
     phone: admission.mobile_no?.toString() || '',
     txnid,
-    surl: `${payu.PAYU_URL}/admission/${admission.EncryptId ?? ''}/payment/success` || '',
-    furl: `${payu.PAYU_URL}/admission/${admission.EncryptId ?? ''}/payment/failed`|| '',
+    surl: `${payu.PAYU_URL}/admission/payment/success?id=${admission.EncryptId ?? ''}` || '',
+    furl: `${payu.PAYU_URL}/admission/payment/failed?id=${admission.EncryptId ?? ''}`|| '',
     udf1: admission.id.toString(), // Store admission ID for reference
     udf2: admission.documentId, 
     udf3: '',
