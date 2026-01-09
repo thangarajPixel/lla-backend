@@ -160,9 +160,7 @@ export default {
             </div>
             <div class="content">
               <p>
-                  Hi <strong>
-                    ${admission.first_name}${admission.last_name ? " " + admission.last_name : ""}
-                  </strong>,
+                  Hi <strong>${admission.first_name}${admission.last_name ? " " + admission.last_name : ""}</strong>,
                 </p>
               <p>We are happy to note your interest in Light & Life Academy</p>
               <p>
