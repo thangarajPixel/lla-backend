@@ -156,6 +156,79 @@ export default {
 	</body>
 </html>
       `;
+      const adminemailHtml = `<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1,  maximum-scale=1, user-scalable=0" >		
+		<title>Light and Life Academy</title>
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png"/>
+		<style type="text/css">
+			html{padding: 0px; margin: 0px;}
+			body{padding: 0px; margin: 0px;text-align: center;}
+		</style>
+	</head>	
+	<body>
+		<table border="0" width="600" cellpadding="0" cellspacing="0" style="border:1px solid #CCC; margin: 0 auto;">
+			<tr>
+				<td style="text-align: center; padding: 10px; background: #000; font-family: 'Arial', Sans-serif;">
+					<img src="https://dev-admin.lightandlifeacademy.in/uploads/thumbnail_new_logo_c40ca2c9f8.png" alt="" />
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px 20px 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 600; font-size: 20px; line-height: 30px; color: 000;">
+					An applicant ${admission.first_name} has started to fill the application of <strong>${admission?.Course?.Name}</strong> ${currentYear}-${nextYear} 
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 10px 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					Dear <strong>Admin,</strong><br/><br/>
+					Please find a Registration for the course <strong>${admission?.Course?.Name}</strong>, year ${currentYear}-${nextYear}.					
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 10px 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					<table border="0" cellpadding="0" cellspacing="0" style="border:none; width: 100%;">
+						<tr>
+							<td width="50" style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;  border-top: 1px solid #CCC;">
+								Name:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;  border-top: 1px solid #CCC;">
+								<strong>${admission.first_name}</strong>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								Mobile:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								<a href="tel:+91${admission.mobile_no}" target="_blank" style="text-decoration: none; font-weight: 600; color: #000;">+91 ${admission.mobile_no}</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								Email:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								<a href="mailto:${admission.email}" target="_blank" style="text-decoration: none; font-weight: 500;">${admission.email}</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					Course Applied for:	<strong>${admission?.Course?.Name}</strong><br/>
+					Form Link: <a href="${registrationUrl}
+" target="_blank" style="text-decoration: none; font-weight: 500;">${registrationUrl}</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+      </html>`;
       const result = await transporter.sendMail({
         from: {
           name: "Light and Life Academy",
@@ -165,7 +238,21 @@ export default {
         subject: `Light & Life Academy | Application Process for ${admission?.Course?.Name}`,
         html: useremailHtml,
       });
-
+      const adminEmails = process.env.ADMIN_EMAILS || "manikandan@pixel-studios.com,admissions@llacademy.org";
+      const ccEmails = process.env.ADMIN_CC_EMAILS || "";
+      const mailOptions: any = {
+        from: {
+          name: "Light and Life Academy",
+          address: process.env.SMTP_FROM,
+        },
+        to: adminEmails,
+        subject: `An applicant ${admission.first_name} has started to fill the application of ${admission?.Course?.Name ?? ""} ${currentYear}-${nextYear}`,
+        html: adminemailHtml,
+      };
+      if (ccEmails) {
+        mailOptions.cc = ccEmails;
+      }
+       await transporter.sendMail(mailOptions);
       console.log('✅ SUCCESS: Registration link email sent!');
       console.log('   To:', admission.email);
       console.log('   Message ID:', result.messageId);
