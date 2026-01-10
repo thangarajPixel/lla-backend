@@ -3,7 +3,7 @@ import axios from 'axios';
 import crypto from 'crypto';
 import path from 'path';
 import { encryptAdmissionId } from './id-encryption';
-
+const logo = "https://dev-admin.lightandlifeacademy.in/uploads/thumbnail_new_logo_c40ca2c9f8.png";
 export default {
   async sendRequestInformationEmail(contact: any) {
     console.log('========================================');
@@ -265,7 +265,6 @@ export default {
       throw error;
     }
   },
-
   async sendRegistrationEmail(admission: any) {
     console.log('========================================');
     console.log('📧 Starting email sending process...');
@@ -299,150 +298,161 @@ export default {
       const pdfDownloadUrl = `${baseUrl}/api/admissions/${admission.id}/pdf`;
       const viewUrl = `${siteBaseUrl}/admission/${admission.EncryptId}`;
       const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?section=portfolio`;
-
+     const currentYear = new Date().getFullYear();
+      const nextYear = currentYear + 1;
       // Email to student
       const studentEmailHtml = `
-        <!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: #4945ff; color: white; padding: 20px; text-align: center; }
-    .content { padding: 20px; background: #f8f9fa; }
-    .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-    .info-box {
-      background: white;
-      padding: 15px;
-      border-radius: 5px;
-      margin: 15px 0;
-      border-left: 4px solid #4945ff;
-    }
-    .btn {
-      display:inline-block;
-      padding:10px 22px;
-      border-radius:20px;
-      background:#ff6b6b;
-      color:#fff;
-      text-decoration:none;
-      font-size:13px;
-      font-weight:600;
-      margin-top:10px;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>Light & Life Academy</h1>
-      <h2>Application Completed Successfully</h2>
-    </div>
-
-    <div class="content">
-      <p>Hello <strong>${studentName}</strong>,</p>
-
-      <p>Greetings from <strong>Light & Life Academy!</strong></p>
-
-      <p>
-        You have completed the application process for the <strong>${admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"} Course 2026-2027</strong>.
-      </p>
-      
-      <div class="info-box">
-        <p style="margin: 5px 0;"><strong>Payment Reference ID:</strong> ${admission.mihpayid || 'N/A'}</p>
-        <p style="margin: 5px 0;"><strong>Transaction ID:</strong> ${admission.txnid || 'N/A'}</p>
-      </div>
-      
-      <p style="margin-top:20px;">
-       Please feel free to contact us in case of any further clarifications.
-      </p>
-
-      <p>
-        <strong>Best Wishes!</strong><br />
-        Team Light & Life Academy
-      </p>
-    </div>
-
-    <div class="footer">
-      <p>
-        W: <a href="https://www.llacademy.org" target="_blank">www.llacademy.org</a> |
-        M: +91 75982 87370
-      </p>
-      <p>This is an automated email. Please do not reply.</p>
-    </div>
-  </div>
-</body>
+       <!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1,  maximum-scale=1, user-scalable=0" >		
+		<title>Light and Life Academy</title>
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png"/>
+		<style type="text/css">
+			html{padding: 0px; margin: 0px;}
+			body{padding: 0px; margin: 0px;text-align: center;}
+		</style>
+	</head>	
+	<body>
+		<table border="0" width="600" cellpadding="0" cellspacing="0" style="border:1px solid #CCC; margin: 0 auto;">
+			<tr>
+				<td style="text-align: center; padding: 10px; background: #000; font-family: 'Arial', Sans-serif;">
+					<img src="${logo}" alt="" />
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px 20px 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 600; font-size: 20px; line-height: 30px; color: 000;">Congratulations on completing your application process.
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 10px 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					Hello <strong>${studentName}</strong>,<br/><br/>
+					We are happy to inform you that your application to <strong>${admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"}</strong> ${currentYear}-${nextYear} offered by Light &amp; Life Academy is now complete.<br/><br/>
+					We will review your application and get back to you within three working days on the next step.<br/><br/>
+					Please feel free to contact us in case of any further clarifications.<br/><br/>
+					Your Payment Reference ID: <strong>${admission.mihpayid || 'N/A'}</strong>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					<strong>Best Wishes!</strong><br/>
+					Manager, Operations<br/>
+					<a href="https://www.llacademy.org" target="_blank" style="text-decoration: none; font-weight: 500;">www.llacademy.org</a> &nbsp; | &nbsp; Mob: <a href="tel:+917598287370" target="_blank" style="text-decoration: none; font-weight: 600; color: #000;">+91 75982 87370</a>
+				</td>
+			</tr>
+		</table>
+	</body>
 </html>
       `;
 
       // Email to admin
       const adminEmailHtml = `
 <!DOCTYPE html>
-<html>
-<head>
-  <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-    .container { max-width: 650px; margin: 0 auto; padding: 20px; }
-    .header { background: #4945ff; color: white; padding: 20px; text-align: center; }
-    .content { padding: 20px; background: #f8f9fa; }
-    .info {
-      margin: 10px 0;
-      padding: 12px;
-      background: white;
-      border-radius: 4px;
-    }
-    .info p { margin: 6px 0; }
-    .btn {
-      display:inline-block;
-      padding:8px 18px;
-      margin-right:8px;
-      border-radius:18px;
-      background:#4945ff;
-      color:#fff;
-      text-decoration:none;
-      font-size:13px;
-      font-weight:600;
-    }
-    .btn.secondary { background:#6c757d; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>New Student Application</h1>
-    </div>
-
-    <div class="content">
-      <p>
-        <strong>${studentName}</strong> has applied for the
-        <strong>${admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"}</strong>
-        for the academic year <strong>2026–2027</strong>.
-      </p>
-
-      <div class="info">
-        <p><strong>Name:</strong> ${studentName}</p>
-        <p><strong>Email:</strong> ${admission.email}</p>
-        <p><strong>Phone Number:</strong> ${admission.mobile_no}</p>
-        <p><strong>Unique ID (PayU):</strong> ${admission.PayUId || 'N/A'}</p>
-        <p><strong>Payment Reference ID:</strong> ${admission.mihpayid || 'N/A'}</p>
-        <p><strong>Payment Transaction ID:</strong> ${admission.txnid || 'N/A'}</p>
-      </div>
-
-      <div style="margin-top:15px;">
-        <a href="${viewUrl}" target="_blank" class="btn primary" style="color: #fff;" >
-          View Application
-        </a>
-      <br><br>
-        <a href="${pdfDownloadUrl}" target="_blank" class="btn primary"  style="color: #fff;">
-          Download Application
-        </a>
-        <br><br>
-         <a href="${portfolioUrl}" target="_blank" class="btn primary"  style="color: #fff;">
-          Portfolio
-        </a>
-      </div>
-    </div>
-  </div>
-</body>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1,  maximum-scale=1, user-scalable=0" >		
+		<title>Light and Life Academy</title>
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png"/>
+		<style type="text/css">
+			html{padding: 0px; margin: 0px;}
+			body{padding: 0px; margin: 0px;text-align: center;}
+		</style>
+	</head>	
+	<body>
+		<table border="0" width="600" cellpadding="0" cellspacing="0" style="border:1px solid #CCC; margin: 0 auto;">
+			<tr>
+				<td style="text-align: center; padding: 10px; background: #000; font-family: 'Arial', Sans-serif;">
+					<img src="${logo}" alt="" />
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px 20px 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 600; font-size: 20px; line-height: 30px; color: 000;"><strong><Applicant Name></strong> has successfully applied for <strong><Course Name></strong>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px 20px 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					Dear <strong>Admin,</strong><br/><br/>
+					<strong>${studentName}</strong> has applied for the <strong>${admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"}</strong>, year ${currentYear}-${nextYear}<br/><br/>
+					<strong style="font-size: 16px; font-weight: 600;">Details:</strong><br/>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 0px 20px 20px 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					<table border="0" cellpadding="0" cellspacing="0" style="border:none; width: 100%;">
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;  border-top: 1px solid #CCC;">
+								Name:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;  border-top: 1px solid #CCC;">
+								<strong>${studentName}</strong>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								Phone Number:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								<a href="tel:+91${admission.mobile_no}" target="_blank" style="text-decoration: none; font-weight: 600; color: #000;">+91 ${admission.mobile_no}</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								Email:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								<a href="mailto:${admission.email}" target="_blank" style="text-decoration: none; font-weight: 500;">${admission.email}</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC; white-space: nowrap;">
+								Link to Application:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								<a href="${viewUrl}" target="_blank" style="text-decoration: none; font-weight: 500;">${viewUrl}</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC; white-space: nowrap;">
+								Download Application:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								<a href="${pdfDownloadUrl}" target="_blank" style="text-decoration: none; font-weight: 500;">${pdfDownloadUrl}</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC; white-space: nowrap;">
+								Unique ID PayU.in:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								${admission.PayUId || 'N/A'}
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC; white-space: nowrap;">
+								Payment Transaction ID:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								${admission.txnid || 'N/A'}
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 0px 20px 20px 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					<a href="${portfolioUrl}" target="_blank" style="text-decoration: none; font-weight: 600;">View Profile ${admission.id}</a>
+				</td>
+			</tr>
+		</table>
+	</body>
 </html>
 `;
 
