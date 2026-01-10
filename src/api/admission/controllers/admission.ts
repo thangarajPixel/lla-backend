@@ -853,11 +853,12 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
   async checkEmailUnique(ctx) {
     try {
-      const { email, id } = ctx.request.body;
+      const { email, id, courseId } = ctx.request.body;
 
       console.log('========================================');
-      console.log('📧 Checking email uniqueness');
+      console.log('📧 Checking email uniqueness per course');
       console.log('Email:', email);
+      console.log('Course ID:', courseId);
       console.log('Exclude ID:', id);
       console.log('========================================');
 
@@ -866,9 +867,15 @@ export default factories.createCoreController('api::admission.admission', ({ str
         return ctx.badRequest('Email is required');
       }
 
+      // Validate courseId
+      if (!courseId) {
+        return ctx.badRequest('Course ID is required');
+      }
+
       // Build filters
       const filters: any = {
         email: email,
+        Course: courseId,
       };
 
       // If ID is provided (for edit), get document_id and exclude all records with that document_id
@@ -894,10 +901,11 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
       console.log('🔍 Filters:', JSON.stringify(filters, null, 2));
 
-      // Check if email exists
+      // Check if email exists for this course
       const existingAdmissions = await strapi.entityService.findMany('api::admission.admission', {
         filters: filters,
         limit: 1,
+        populate: ['Course'],
       });
 
       const isUnique = !existingAdmissions || existingAdmissions.length === 0;
@@ -906,14 +914,18 @@ export default factories.createCoreController('api::admission.admission', ({ str
       if (!isUnique && existingAdmissions.length > 0) {
         console.log('   Found in record ID:', existingAdmissions[0].id);
         console.log('   Document ID:', existingAdmissions[0].documentId);
+        console.log('   Course:', (existingAdmissions[0] as any).Course?.name || 'N/A');
       }
       console.log('========================================');
 
       return {
         email: email,
+        courseId: courseId,
         isUnique: isUnique,
         exists: !isUnique,
-        message: isUnique ? 'Email is available' : 'Email already exists',
+        message: isUnique 
+          ? 'Email is available for this course' 
+          : 'Email already exists for this course',
       };
 
     } catch (error) {
