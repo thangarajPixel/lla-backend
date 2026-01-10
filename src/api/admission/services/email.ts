@@ -374,7 +374,7 @@ export default {
 				</td>
 			</tr>
 			<tr>
-				<td style="text-align: left; padding: 20px 20px 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 600; font-size: 20px; line-height: 30px; color: 000;"><strong><Applicant Name></strong> has successfully applied for <strong><Course Name></strong>
+				<td style="text-align: left; padding: 20px 20px 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 600; font-size: 20px; line-height: 30px; color: 000;"><strong>${studentName}</strong> has successfully applied for <strong>${admission?.Course?.Name ?? "PG Diploma in Professional Photography & Digital Production"}</strong>
 				</td>
 			</tr>
 			<tr>
