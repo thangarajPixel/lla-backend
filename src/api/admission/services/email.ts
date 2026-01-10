@@ -4,19 +4,6 @@ import crypto from 'crypto';
 import path from 'path';
 import { encryptAdmissionId } from './id-encryption';
 
-/**
- * Email Service for Light & Life Academy
- * 
- * Environment Variables Required:
- * - SMTP_HOST: SMTP server host
- * - SMTP_PORT: SMTP server port (default: 587)
- * - SMTP_USERNAME: SMTP authentication username
- * - SMTP_PASSWORD: SMTP authentication password
- * - SMTP_FROM: Sender email address
- * - ADMIN_EMAILS: Comma-separated list of admin email addresses (e.g., "admin1@example.com,admin2@example.com")
- * - ADMIN_CC_EMAILS: (Optional) Comma-separated list of CC email addresses
- */
-
 export default {
   async sendRequestInformationEmail(contact: any) {
     console.log('========================================');
@@ -98,7 +85,6 @@ export default {
       throw error;
     }
   },
-
   async sendRegistrationLinkEmail(admission: any, course_data: any) {
     console.log('========================================');
     console.log('📧 Sending registration link email...');
@@ -106,10 +92,7 @@ export default {
     console.log('Student Email:', admission.email);
     console.log('Student Name:', admission.first_name);
     console.log('Course:', admission?.Course?.Name);
-    console.log('========================================');
-
     try {
-      // Create transporter
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: parseInt(process.env.SMTP_PORT || '587'),
@@ -119,91 +102,73 @@ export default {
           pass: process.env.SMTP_PASSWORD,
         },
       });
-
-      // Generate encrypted ID
       const encryptedId = encryptAdmissionId(admission.id);
       const registrationUrl = `https://dev.lightandlifeacademy.in/admission/${encryptedId}`;
-
       console.log('🔐 Encrypted ID:', encryptedId);
       console.log('🔗 Registration URL:', registrationUrl);
       const currentYear = new Date().getFullYear();
       const nextYear = currentYear + 1;
-
-      // Email HTML
-      const emailHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #ff6b6b; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-            .content { padding: 30px; background: #fce4d8; border-radius: 0 0 8px 8px; }
-            .button { 
-              display: inline-block; 
-              padding: 12px 30px; 
-              background: #ff6b6b; 
-              color: white; 
-              text-decoration: none; 
-              border-radius: 25px; 
-              margin: 20px 0;
-              font-weight: bold;
-            }
-            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>Light & Life Academy</h1>
-              <h3>${admission?.Course?.Name}</h3>
-            </div>
-            <div class="content">
-              <p>
-                  Hi <strong>${admission.first_name}${admission.last_name ? " " + admission.last_name : ""}</strong>,
-                </p>
-              <p>We are happy to note your interest in Light & Life Academy</p>
-              <p>
-                  You have started the application process for the 
-                  ${admission?.Course?.Name} year ${currentYear}-${nextYear}.
-                </p>
-              <p>Please note the link below is a unique application link that will give you access to your application until all steps are completed.</p>
-              <div style="text-align: center;">
-                <a href="${registrationUrl}" class="button">Complete Registration</a>
-              </div>
-              <p>If you have any queries or need clarifications regarding any aspect of the admission process, 
-              the course, the college, faculty, Nilgiris, alumni, or about logistics, do feel free to call us on :
-               75982 87370. Or email us at admissions@llacademy.org.</p>
-              <p>Best Wishes!</p>
-              <p>Manager, Operations</p>
-              <p>WebSite: www.llacademy.org | Contact: +91 7598287370</p>
-            </div>
-            <div class="footer">
-              <p>Light & Life Academy - Photography</p>
-              <p>This is an automated email. Please do not reply.</p>
-            </div>
-          </div>
-        </body>
-        </html>
+      const useremailHtml = `
+        <html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1,  maximum-scale=1, user-scalable=0" >		
+		<title>Light and Life Academy</title>
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png"/>
+		<style type="text/css">
+			html{padding: 0px; margin: 0px;}
+			body{padding: 0px; margin: 0px;text-align: center;}
+		</style>
+	</head>	
+	<body>
+		<table border="0" width="600" cellpadding="0" cellspacing="0" style="border:1px solid #CCC; margin: 0 auto;">
+			<tr>
+				<td style="text-align: center; padding: 10px; background: #000; font-family: 'Arial', Sans-serif;">
+					<img src="https://dev-admin.lightandlifeacademy.in/uploads/thumbnail_new_logo_c40ca2c9f8.png" alt="" />
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px 20px 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 600; font-size: 20px; line-height: 30px; color: 000;">
+					Application Process for <strong>${admission?.Course?.Name}</strong>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 10px 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					Hello <strong>${admission.first_name}${admission.last_name ? " " + admission.last_name : ""},</strong><br/><br/>
+					We are happy to note your interest in Light &amp; Life Academy.<br/>
+					You have started the application process for the course - <strong>${admission?.Course?.Name}</strong> year ${currentYear}-${nextYear}.<br/><br/>
+					Please note the link below is a unique application link that will give you access to your application until all steps are completed.<br/>
+					<a href="${registrationUrl}" target="_blank" style="text-decoration: none; font-weight: 500;">${registrationUrl}</a><br/><br/>
+					If you have any queries or need clarifications regarding any aspect of the admission process, the course, the college, faculty, Nilgiris, alumni, or about logistics, do feel free to call us on : <strong>75982 87370</strong>. Or email us at <a href="mailto:admissions@llacademy.org" target="_blank" style="text-decoration: none; font-weight: 500;">admissions@llacademy.org</a>.
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					<strong>Best Wishes!</strong><br/>
+					Manager, Operations<br/>
+					<a href="https://www.llacademy.org" target="_blank" style="text-decoration: none; font-weight: 500;">www.llacademy.org</a> &nbsp; | &nbsp;Mob: <a href="tel:+917598287370" target="_blank" style="text-decoration: none; font-weight: 600; color: #000;">+91 75982 87370</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
       `;
-
-      // Send email
-      console.log('📤 Sending email...');
       const result = await transporter.sendMail({
         from: {
           name: "Light and Life Academy",
           address: process.env.SMTP_FROM,
         },
         to: admission.email,
-        subject: 'Complete Your Registration - Light and Life Academy',
-        html: emailHtml,
+        subject: `Light & Life Academy | Application Process for ${admission?.Course?.Name}`,
+        html: useremailHtml,
       });
 
       console.log('✅ SUCCESS: Registration link email sent!');
       console.log('   To:', admission.email);
       console.log('   Message ID:', result.messageId);
-      console.log('========================================');
-
       return { success: true, encryptedId };
     } catch (error) {
       console.error('========================================');
