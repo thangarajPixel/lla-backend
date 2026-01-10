@@ -109,17 +109,16 @@ export default factories.createCoreController(
         if (!entity || !entity.Blog || !entity.Blog.BlogCard) {
           return ctx.notFound("Blog content not found");
         }
-
-        // Find requested card by slug
         const card = entity.Blog.BlogCard.find((c) => c.Slug === String(slug));
         if (!card) {
           return ctx.notFound(`Blog card with slug ${slug} not found`);
         }
-
-        // Get latest 3 blog cards (excluding current card)
-        const latestCards = [...entity.Blog.BlogCard]
-          .filter((c) => c.id !== card.id)
-          .sort(() => Math.random() - 0.5)
+         const latestCards = [...entity.Blog.BlogCard]
+          .sort((a, b) => {
+            const dateA = a.CreatedDate ? new Date(a.CreatedDate).getTime() : 0;
+            const dateB = b.CreatedDate ? new Date(b.CreatedDate).getTime() : 0;
+            return dateB - dateA;
+          })
           .slice(0, 3);
 
         return {

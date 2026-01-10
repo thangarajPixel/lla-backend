@@ -108,16 +108,20 @@ export default factories.createCoreController(
           return ctx.notFound(`Card with slug ${slug} not found`);
         }
 
-        // Latest 3 Cards
-        const randomCards = [...entity.LifeCard]
-          .filter((c) => c.id !== card.id)
-          .sort(() => Math.random() - 0.5)
+        // Latest 3 Cards based on CreatedDate
+        const latestCards = [...entity.LifeCard]
+          .sort((a, b) => {
+            // Sort by CreatedDate in descending order (latest first)
+            const dateA = a.CreatedDate ? new Date(a.CreatedDate).getTime() : 0;
+            const dateB = b.CreatedDate ? new Date(b.CreatedDate).getTime() : 0;
+            return dateB - dateA;
+          })
           .slice(0, 3);
 
         return {
           data: {
             card,
-            latest: randomCards,
+            latest: latestCards,
           },
         };
       } catch (error) {
