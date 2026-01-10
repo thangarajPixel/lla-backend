@@ -484,9 +484,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
       'education-details.education-details',
       false
     >;
-    email: Schema.Attribute.Email &
-      Schema.Attribute.Required &
-      Schema.Attribute.Unique;
+    email: Schema.Attribute.Email & Schema.Attribute.Required;
     EncryptId: Schema.Attribute.String;
     first_name: Schema.Attribute.String & Schema.Attribute.Required;
     hobbies: Schema.Attribute.String;
