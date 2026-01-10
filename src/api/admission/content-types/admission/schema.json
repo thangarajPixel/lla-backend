@@ -51,7 +51,7 @@
     "email": {
       "type": "email",
       "required": true,
-      "unique": true
+      "unique": false
     },
     "Language_Proficiency": {
       "type": "component",
