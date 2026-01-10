@@ -634,4 +634,190 @@ export default {
     }
   },
 
+  async sendPaymentFailedEmail(admission: any) {
+    console.log('========================================');
+    console.log('📧 Sending payment failed email...');
+    console.log('Student Email:', admission.email);
+    console.log('Student Name:', admission.first_name);
+    console.log('========================================');
+
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port: parseInt(process.env.SMTP_PORT || '587'),
+        secure: false,
+        auth: {
+          user: process.env.SMTP_USERNAME,
+          pass: process.env.SMTP_PASSWORD,
+        },
+      });
+
+      const studentName = `${admission.name_title || ''} ${admission.first_name} ${admission.last_name || ''}`.trim();
+      const currentYear = new Date().getFullYear();
+      const nextYear = currentYear + 1;
+
+      // Email to student
+      const studentEmailHtml = `
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1,  maximum-scale=1, user-scalable=0" >		
+		<title>Light and Life Academy</title>
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png"/>
+		<style type="text/css">
+			html{padding: 0px; margin: 0px;}
+			body{padding: 0px; margin: 0px;text-align: center;}
+		</style>
+	</head>	
+	<body>
+		<table border="0" width="600" cellpadding="0" cellspacing="0" style="border:1px solid #CCC; margin: 0 auto;">
+			<tr>
+				<td style="text-align: center; padding: 10px; background: #000; font-family: 'Arial', Sans-serif;">
+					<img src="${logo}" alt="" />
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px 20px 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 600; font-size: 20px; line-height: 30px; color: 000;"><strong>${admission?.Course?.Name || 'Course'}</strong> - Registration Failed
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					Hello <strong>${studentName}</strong>,<br/><br/>
+					<strong style="color:red;">Your Payment has failed.</strong><br/><br/>
+					For further enquiries please reach out to us:<br/>
+					Email: <a href="mailto:admissions@llacademy.org" target="_blank" style="text-decoration: none; font-weight: 500;">admissions@llacademy.org</a> &nbsp; | &nbsp; Mob: <a href="tel:+917598287370" target="_blank" style="text-decoration: none; font-weight: 600; color: #000;">+91 75982 87370</a>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
+      `;
+
+      // Email to admin
+      const adminEmailHtml = `
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1,  maximum-scale=1, user-scalable=0" >		
+		<title>Light and Life Academy</title>
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png"/>
+
+
+		<style type="text/css">
+			html{padding: 0px; margin: 0px;}
+			body{padding: 0px; margin: 0px;text-align: center;}
+		</style>
+	</head>	
+	<body>
+		<table border="0" width="600" cellpadding="0" cellspacing="0" style="border:1px solid #CCC; margin: 0 auto;">
+			<tr>
+				<td style="text-align: center; padding: 10px; background: #000; font-family: 'Arial', Sans-serif;">
+					<img src="${logo}" alt="" />
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px 20px 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 600; font-size: 20px; line-height: 30px; color: #000;">Registration Failed, <strong>${studentName}</strong>, for <strong>${admission?.Course?.Name || 'Course'}</strong> 
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					Dear <strong>Admin,</strong><br/><br/>
+					<strong style="color: red;">Payment Failed</strong> for the below User:
+				</td>
+			</tr>			
+			<tr>
+				<td style="text-align: left; padding: 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+					<table border="0" cellpadding="0" cellspacing="0" style="border:none; width: 100%;">
+						<tr>
+							<td width="50" style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;  border-top: 1px solid #CCC;">
+								Name:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;  border-top: 1px solid #CCC;">
+								<strong>${studentName}</strong>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								Mobile:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000; border-bottom: 1px solid #CCC;">
+								<a href="tel:+91${admission.mobile_no}" target="_blank" style="text-decoration: none; font-weight: 600; color: #000;">+91 ${admission.mobile_no}</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+								Email:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
+								<a href="mailto:${admission.email}" target="_blank" style="text-decoration: none; font-weight: 500;">${admission.email}</a>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>	
+		</table>
+	</body>
+</html>
+      `;
+
+      // Send email to student
+      console.log('📤 Sending payment failed email to student...');
+      const studentEmailResult = await transporter.sendMail({
+        from: {
+          name: "Light and Life Academy",
+          address: process.env.SMTP_FROM,
+        },
+        to: admission.email,
+        subject: 'Light & Life Academy | Payment Failed - Action Required',
+        html: studentEmailHtml,
+      });
+
+      console.log('✅ SUCCESS: Student payment failed email sent!');
+      console.log('   To:', admission.email);
+      console.log('   Message ID:', studentEmailResult.messageId);
+
+      // Send email to admin
+      console.log('📤 Sending payment failed notification to admin...');
+      const adminEmails = process.env.ADMIN_EMAILS || "manikandan@pixel-studios.com,admissions@llacademy.org";
+      const ccEmails = process.env.ADMIN_CC_EMAILS || "";
+
+      const mailOptions: any = {
+        from: {
+          name: "Light and Life Academy",
+          address: process.env.SMTP_FROM,
+        },
+        to: adminEmails,
+        subject: `Payment Failed - ${studentName} - ${admission?.Course?.Name || 'Course'}`,
+        html: adminEmailHtml,
+      };
+
+      if (ccEmails) {
+        mailOptions.cc = ccEmails;
+      }
+
+      const adminEmailResult = await transporter.sendMail(mailOptions);
+
+      console.log('✅ SUCCESS: Admin payment failed email sent!');
+      console.log('   To:', adminEmails);
+      console.log('   Message ID:', adminEmailResult.messageId);
+      console.log('========================================');
+
+      return { success: true };
+    } catch (error) {
+      console.error('========================================');
+      console.error('❌ ERROR: Failed to send payment failed emails');
+      console.error('Error details:', error);
+      console.error('========================================');
+      throw error;
+    }
+  },
+
 };

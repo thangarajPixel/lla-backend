@@ -365,12 +365,7 @@ class PDFGenerator {
         <div class="left-column">
             <div class="logo">
                 ${logoBase64 ? `<div class="logo-icon"><img src="${logoBase64}" alt="LLA Logo" /></div>` : ''}
-              
             </div>
-            
-            <div class="review-title">Review Application</div>
-            <div class="review-subtitle">Kindly verify the status before accepting it.</div>
-            
             {{#if passport_size_image}}
             <div class="profile-photo">
                 <img src="{{passport_size_image}}" alt="Profile Photo" />
@@ -502,7 +497,7 @@ class PDFGenerator {
                         <div class="field-label">Document</div>
                         <div class="field-value">
                             {{#if Education_Details.Education_Details_10th_std}}
-                            <span class="document-link">✓ View Document</span>
+                            <span class="document-link">✓ Submitted</span>
                             {{else}}
                             Not Uploaded
                             {{/if}}
@@ -519,7 +514,7 @@ class PDFGenerator {
                         <div class="field-label">Document</div>
                         <div class="field-value">
                             {{#if Education_Details.Education_Details_12th_std}}
-                            <span class="document-link">✓ View Document</span>
+                            <span class="document-link">✓ Submitted</span>
                             {{else}}
                             Not Uploaded
                             {{/if}}
@@ -544,7 +539,7 @@ class PDFGenerator {
                         <div class="field-label">Document</div>
                         <div class="field-value">
                             {{#if Under_Graduate.marksheet}}
-                            <span class="document-link">✓ View Document</span>
+                            <span class="document-link">✓ Submitted</span>
                             {{else}}
                             Not Uploaded
                             {{/if}}
@@ -571,7 +566,7 @@ class PDFGenerator {
                         <div class="field-label">Document</div>
                         <div class="field-value">
                             {{#if marksheet}}
-                            <span class="document-link">✓ View Document</span>
+                            <span class="document-link">✓ Submitted</span>
                             {{else}}
                             Not Uploaded
                             {{/if}}

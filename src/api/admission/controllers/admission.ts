@@ -137,10 +137,11 @@ console.log(txnid+'txnid');
   if(admission?.Payment_Status && admission.Payment_Status == "Completed" || admission?.Payment_Status == "Pending"){
     await strapi.entityService.update('api::admission.admission', admission.id, {
           data: {
-            Payment_Status: 'UnPaid',
+            Payment_Status: 'Pending',
             txnid:txnid
           }
       });
+      console.log('✅ Payment status updated to UnPaid for admission:', admission.id);
   }
   return {
     success: true,
@@ -485,6 +486,16 @@ export default factories.createCoreController('api::admission.admission', ({ str
     
     if (response?.data) {
       response.data = addBaseUrlToMedia(response.data, baseUrl);
+    }
+    console.log('Payment Status after update:', ctx.request.body.data?.Payment_Status);
+    if(ctx.request.body.data?.Payment_Status === 'UnPaid' ){ 
+       const emailService = require('../services/email').default;
+       const data = await strapi.db.query('api::admission.admission').findOne({
+        where: { id: updatedData.id },
+        populate: { Course: true }
+      });
+       console.log('Sending payment failed email to admission ID:', data);
+        await emailService.sendPaymentFailedEmail(data);
     }
 
     // Add checkout link to response if available
