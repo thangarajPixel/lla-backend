@@ -312,12 +312,17 @@ export default {
 
                 // Get ID from row
                 let rowId: string | null = null;
-                allCells.forEach((c) => {
-                  const cellText = c.textContent?.trim();
-                  if (cellText && /^\d+$/.test(cellText) && cellText !== '0' && cellText !== '1') {
-                    rowId = cellText;
+                if (allCells[1]) {
+                  const idText = allCells[1].textContent?.trim();
+                  console.log('ID from column 1 (raw):', idText);
+                  if (idText) {
+                    const cleanId = idText.replace(/,/g, '');
+                    if (/^\d+$/.test(cleanId)) {
+                      rowId = cleanId;
+                      console.log('Cleaned ID:', rowId);
+                    }
                   }
-                });
+                }
 
                 if (rowId) {
                   const pdfBtn = document.createElement('button');
@@ -367,6 +372,8 @@ export default {
                     // Download PDF using anchor element
                     const adminBaseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
                     const pdfUrl = `${adminBaseUrl}/api/admissions/${rowId}/pdf`;
+                    
+                    console.log('PDF URL:', pdfUrl);
                     
                     // Create temporary anchor element for download
                     const link = document.createElement('a');
