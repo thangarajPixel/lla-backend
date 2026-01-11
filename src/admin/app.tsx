@@ -99,13 +99,40 @@ export default {
         // Add click handler and styling for first_name column
         React.useEffect(() => {
           const timer = setTimeout(() => {
-            // Add CSS for clickable first_name
+            // Add CSS for clickable first_name and remove double scrollbar
             const style = document.createElement('style');
             style.textContent = `
               table tbody tr td:nth-child(3) {
                 cursor: pointer !important;
                 color: #4945ff !important;
                 text-decoration: underline !important;
+              }
+              
+              /* Remove double scrollbar - target all possible containers */
+              body {
+                overflow: hidden !important;
+              }
+              
+              #strapi {
+                overflow: hidden !important;
+              }
+              
+              main {
+                overflow-y: auto !important;
+                overflow-x: hidden !important;
+                height: 100vh !important;
+              }
+              
+              /* Hide scrollbar on wrapper divs */
+              main > div,
+              main > div > div {
+                overflow: visible !important;
+              }
+              
+              /* Specific to content manager */
+              [data-strapi-header] ~ div,
+              [data-strapi-header] ~ div > div {
+                overflow: visible !important;
               }
             `;
             document.head.appendChild(style);
