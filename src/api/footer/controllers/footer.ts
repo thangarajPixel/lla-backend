@@ -16,13 +16,16 @@ export default factories.createCoreController(
             },
           },
         });
-        const course = await strapi.db.query("api::course-list.course-list").findMany({
-          where: {
-            publishedAt: {
-              $notNull: true,
+             const course = await strapi.db.query("api::course-list.course-list").findMany({
+            where: {
+              publishedAt: {
+                $notNull: true,
+              },
             },
-          },
-        });
+            orderBy: {
+              id: 'desc',
+            },
+          });
 
         if (!entity) {
           return ctx.notFound("About content not found");
