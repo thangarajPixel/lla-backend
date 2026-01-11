@@ -9,7 +9,7 @@ export default factories.createCoreController(
         const entity = await strapi.db.query("api::footer.footer").findOne({
           populate: {
             Logo: {
-              select: ["id", "name", "url"],
+              select: ["id", "name", "url", "caption"],
             },
             Icon: {
               select: ["id", "name", "url", "caption"],
