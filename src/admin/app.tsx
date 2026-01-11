@@ -6,6 +6,7 @@ import { Eye, Download } from '@strapi/icons';
 
 export default {
   bootstrap(app: any) {
+
     // Make first_name clickable in the table
     app.getPlugin('content-manager').injectComponent('listView', 'tableHead', {
       name: 'CustomTableHead',
@@ -20,6 +21,33 @@ export default {
         const [isOpen, setIsOpen] = useState(false);
         const [stepValue, setStepValue] = useState('');
         const [yearValue, setYearValue] = useState('');
+
+        // Format mobile_no as string in the table display
+        React.useEffect(() => {
+          const formatMobileNumbers = () => {
+            // Target all mobile_no cells in the table
+            const mobileCells = document.querySelectorAll('table tbody tr td');
+            mobileCells.forEach(cell => {
+              const text = cell.textContent?.trim();
+              // Check if it looks like a mobile number (10 digits or more)
+              if (text && /^\d{10,}$/.test(text.replace(/,/g, ''))) {
+                // Remove any commas and display as plain string
+                const cleanNumber = text.replace(/,/g, '');
+                if (cell.textContent !== cleanNumber) {
+                  cell.textContent = cleanNumber;
+                }
+              }
+            });
+          };
+
+          const timer = setTimeout(formatMobileNumbers, 500);
+          const interval = setInterval(formatMobileNumbers, 1000);
+
+          return () => {
+            clearTimeout(timer);
+            clearInterval(interval);
+          };
+        }, [location.pathname, location.search]);
 
         // Initialize dropdown values based on URL parameters
         React.useEffect(() => {
