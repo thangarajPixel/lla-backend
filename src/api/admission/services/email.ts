@@ -101,7 +101,8 @@ export default {
         },
       });
       const encryptedId = encryptAdmissionId(admission.id);
-      const registrationUrl = `https://dev.lightandlifeacademy.in/admission/${encryptedId}`;
+      const FRONTEND_URL = process.env.FRONTEND_URL || '';
+      const registrationUrl = `${FRONTEND_URL}/admission/${encryptedId}`;
       console.log('🔐 Encrypted ID:', encryptedId);
       console.log('🔗 Registration URL:', registrationUrl);
       const currentYear = new Date().getFullYear();
@@ -291,8 +292,8 @@ export default {
       console.log('🏦 PayU ID (bank_ref_num):', admission.PayUId);
       console.log('📝 Transaction ID (txnid):', admission.txnid);
 
-      const baseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
-      const siteBaseUrl = process.env.FRONTEND_URL || 'https://dev.lightandlifeacademy.in';
+      const baseUrl = process.env.ADMIN_BASE_URL || '';
+      const siteBaseUrl = process.env.FRONTEND_URL || '';
       const pdfDownloadUrl = `${baseUrl}/api/admissions/${admission.id}/pdf`;
       const viewUrl = `${siteBaseUrl}/admission/${admission.EncryptId}`;
       const portfolioUrl = `${siteBaseUrl}/admission/${admission.EncryptId}/preview?section=portfolio`;
