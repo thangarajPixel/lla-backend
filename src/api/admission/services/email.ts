@@ -3,7 +3,7 @@ import axios from 'axios';
 import crypto from 'crypto';
 import path from 'path';
 import { encryptAdmissionId } from './id-encryption';
-const logo = "https://dev-admin.lightandlifeacademy.in/uploads/thumbnail_new_logo_c40ca2c9f8.png";
+const logo = `${process.env.ADMIN_BASE_URL}/uploads/thumbnail_new_logo_c40ca2c9f8.png`;
 export default {
   async sendRequestInformationEmail(contact: any) {
     console.log('========================================');
@@ -70,12 +70,10 @@ export default {
         subject: 'Successfully Request for Admission - Light & Life Academy',
         html: emailHtml,
       });
-
       console.log('✅ SUCCESS: Request Information email sent!');
       console.log('   To:', contact.Email);
       console.log('   Message ID:', result.messageId);
       console.log('========================================');
-
       return { success: true };
     } catch (error) {
       console.error('========================================');
@@ -127,7 +125,7 @@ export default {
 		<table border="0" width="600" cellpadding="0" cellspacing="0" style="border:1px solid #CCC; margin: 0 auto;">
 			<tr>
 				<td style="text-align: center; padding: 10px; background: #000; font-family: 'Arial', Sans-serif;">
-					<img src="https://dev-admin.lightandlifeacademy.in/uploads/thumbnail_new_logo_c40ca2c9f8.png" alt="" />
+					<img src="${logo}" alt="" />
 				</td>
 			</tr>
 			<tr>
@@ -175,7 +173,7 @@ export default {
 		<table border="0" width="600" cellpadding="0" cellspacing="0" style="border:1px solid #CCC; margin: 0 auto;">
 			<tr>
 				<td style="text-align: center; padding: 10px; background: #000; font-family: 'Arial', Sans-serif;">
-					<img src="https://dev-admin.lightandlifeacademy.in/uploads/thumbnail_new_logo_c40ca2c9f8.png" alt="" />
+					<img src="${logo}" alt="" />
 				</td>
 			</tr>
 			<tr>
@@ -633,7 +631,6 @@ export default {
       throw error;
     }
   },
-
   async sendPaymentFailedEmail(admission: any) {
     console.log('========================================');
     console.log('📧 Sending payment failed email...');
@@ -819,5 +816,4 @@ export default {
       throw error;
     }
   },
-
 };
