@@ -44,6 +44,18 @@ export async function syncAdmissionWithCourse(admissionId: number): Promise<bool
   let connection: mysql.Connection | null = null;
   
   try {
+    const encryptId = (id: string): string => {
+  // Base64 encode with some obfuscation
+  const encoded = btoa(id + '_lla_' + Date.now().toString().slice(-4));
+  return encoded.replace(/[+/=]/g, (match) => {
+    switch (match) {
+      case '+': return '-';
+      case '/': return '_';
+      case '=': return '';
+      default: return match;
+    }
+  });
+};
     // Step 1: Find admission data with all populates
     const admission = await strapi.entityService.findOne('api::admission.admission', admissionId, {
       populate: {
@@ -91,7 +103,7 @@ export async function syncAdmissionWithCourse(admissionId: number): Promise<bool
       console.log(`Admission with ID ${admissionId} not found`);
       return false;
     }
-console.log(admission);
+console.log(admission,'reftetret');
     // Step 2: Connect to second MySQL database
     connection = await mysql.createConnection({
       host: process.env.SECOND_DB_HOST || 'localhost',
@@ -114,7 +126,7 @@ console.log(admission);
       txnid: admission.txnid || '',
       mobileno: admission.mobile_no?.toString() || '',
       email: admission.email,
-      reg_id: admission.EncryptId || '',
+      reg_id: admission.EncryptId || admission.id.toString(),
       course_name: (admission as any).Course?.Name || (admission as any).Course?.course_name || '',
       nationality: admission.nationality || '',
       language: (admission as any).Language_Proficiency ? JSON.stringify((admission as any).Language_Proficiency) : '',
@@ -170,7 +182,6 @@ console.log(admission);
       Work_Experience:(admission as any).Work_Experience || [],
       Upload_Your_Portfolio:(admission as any).Upload_Your_Portfolio || []
     };
-
     // Step 4: Check if record exists and update or create in llawp_lla_admission
     const [existingRows] = await connection.execute(
       'SELECT lla_id, document_id FROM llawp_lla_admission WHERE document_id = ?',
