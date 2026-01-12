@@ -160,7 +160,7 @@ console.log(admission,'reftetret');
       parentaddress: (admission as any).Parent_Guardian_Spouse_Details?.address?.[0]?.children?.[0]?.text || '',
       parentemail: (admission as any).Parent_Guardian_Spouse_Details?.email || '',
       bloodgroup: admission.blood_group || '',
-      AdmissionYear: new Date(admission.createdAt).getFullYear(),
+      AdmissionYear: "2025-2026",
       remainder: null, // Not available in current schema
       addresscity: admission.city || '',
       addresspin: admission.pincode || '',
@@ -171,7 +171,7 @@ console.log(admission,'reftetret');
       NameTitle: admission.name_title || '',
       ParentNameTitle: (admission as any).Parent_Guardian_Spouse_Details?.title || '',
       graduate: (admission as any).Under_Graduate ? 'Yes' : 'No',
-      Step: admission.step_3 ? 4 : (admission.step_2 ? 3 : (admission.step_1 ? 2 : (admission.step_0 ? 1 : 0))),
+      Step: admission.step_3 ? 4 : (admission.step_2 ? 3 : (admission.step_1 ? 2 : (admission.step_0 ? "Step1" : 0))),
       Step1Date: admission.step_1 ? formatDateForMySQL(admission.updatedAt) : null,
       Step2Date: admission.step_2 ? formatDateForMySQL(admission.updatedAt) : null,
       Step3Date: admission.step_3 ? formatDateForMySQL(admission.updatedAt) : null,
