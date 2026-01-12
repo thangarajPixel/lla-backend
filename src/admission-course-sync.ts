@@ -107,7 +107,7 @@ console.log(admission);
       name: admission.first_name,
       lastname: admission.last_name || '',
       signup: admission.createdAt,
-      gender: admission.name_title === 'Mr.' ? 'Male' : (admission.name_title === 'Ms.' || admission.name_title === 'Mrs.' ? 'Female' : ''),
+      gender: admission.name_title === 'Mr.' ? 'Male' : (admission.name_title === 'Ms.' || admission.name_title === 'Mrs.' ? 'Female' : 'default'),
       dob: admission.date_of_birth,
       payment: admission.Payment_Status=='Paid' ? 1 : 0,
       amount: admission.Paid_Amount || 0,
