@@ -4,6 +4,8 @@
 
 import { factories } from '@strapi/strapi'
 import { syncAdmissionWithCourse } from '../../../admission-course-sync'
+import archiver from 'archiver'
+import { PassThrough } from 'stream'
 
 // Helper function to add base URL to media fields
 const addBaseUrlToMedia = (data: any, baseUrl: string): any => {
@@ -612,7 +614,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
   async generatePdf(ctx) {
     const { id } = ctx.params;
-
+    const {type} = ctx.request.query;
     try {
       // Find admission by numeric id with deep population
       let admission;
@@ -672,33 +674,363 @@ export default factories.createCoreController('api::admission.admission', ({ str
       }
 
       try {
-        // Use the PDF generator service
-        const PDFGenerator = require('../services/pdf-generator').default;
-        const pdfGenerator = new PDFGenerator();
+        console.log('PDF generation started for admission:', id, 'type:', type);
+        if(type && type === 'admin'){
+          console.log('Generating ZIP for admin user');
+          
+          // Use the PDF generator service
+          const PDFGenerator = require('../services/pdf-generator').default;
+          const pdfGenerator = new PDFGenerator();
 
-        // Format admission data
-        const formattedData = pdfGenerator.formatAdmissionData(admission);
+          // Format admission data
+          const formattedData = pdfGenerator.formatAdmissionData(admission);
+          
+          // Generate PDF buffer
+          const pdfBuffer = await pdfGenerator.generateAdmissionPDF(formattedData);
+          console.log('PDF buffer generated, size:', pdfBuffer.length);
 
-        console.log('Generating PDF for admission:', admission.id);
-        console.log('Formatted data:', JSON.stringify(formattedData, null, 2));
+          // Get base URL
+          const baseUrl = process.env.ADMIN_BASE_URL || `${ctx.request.protocol}://${ctx.request.host}`;
+          console.log('Base URL:', baseUrl);
 
-        // Generate PDF buffer
-        const pdfBuffer = await pdfGenerator.generateAdmissionPDF(formattedData);
+          // Create ZIP archive
+          const archive = archiver('zip', {
+            zlib: { level: 9 }
+          });
 
-        console.log('PDF generated successfully, buffer size:', pdfBuffer.length);
+          // Collect chunks in memory
+          const chunks: Buffer[] = [];
+          
+          archive.on('data', (chunk: Buffer) => {
+            chunks.push(chunk);
+          });
 
-        // Validate PDF buffer
-        if (!pdfBuffer || pdfBuffer.length === 0) {
-          throw new Error('PDF buffer is empty');
+          archive.on('error', (err) => {
+            console.error('Archive error:', err);
+            throw err;
+          });
+
+          archive.on('warning', (err) => {
+            if (err.code === 'ENOENT') {
+              console.warn('Archive warning:', err);
+            } else {
+              throw err;
+            }
+          });
+
+          // Wait for archive to finish
+          const zipPromise = new Promise<Buffer>((resolve, reject) => {
+            archive.on('end', () => {
+              console.log('Archive ended, total chunks:', chunks.length);
+              resolve(Buffer.concat(chunks));
+            });
+            archive.on('error', reject);
+          });
+
+          // Add PDF to ZIP first
+          console.log('Adding PDF to archive...');
+          archive.append(pdfBuffer, { name: `admission-${admission.id}.pdf` });
+
+          // Add passport_size_image to ZIP root
+          if (admission.passport_size_image) {
+            const passportImage = Array.isArray(admission.passport_size_image) 
+              ? admission.passport_size_image[0] 
+              : admission.passport_size_image;
+            
+            if (passportImage && passportImage.url) {
+              try {
+                console.log('Fetching passport image:', passportImage.url);
+                const imageUrl = passportImage.url.startsWith('http') 
+                  ? passportImage.url 
+                  : `${baseUrl}${passportImage.url}`;
+                
+                console.log('Full passport image URL:', imageUrl);
+                const imageResponse = await fetch(imageUrl);
+                if (imageResponse.ok) {
+                  const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+                  console.log('Adding passport image to archive, size:', imageBuffer.length);
+                  archive.append(imageBuffer, { name: `passport_size_image${passportImage.ext || '.jpg'}` });
+                } else {
+                  console.error('Failed to fetch passport image, status:', imageResponse.status);
+                }
+              } catch (err) {
+                console.error('Error fetching passport image:', err);
+              }
+            }
+          }
+
+          // Add Upload_Your_Portfolio files to portfolio folder
+          if (admission.Upload_Your_Portfolio && admission.Upload_Your_Portfolio.images) {
+            const portfolioImages = Array.isArray(admission.Upload_Your_Portfolio.images) 
+              ? admission.Upload_Your_Portfolio.images 
+              : [admission.Upload_Your_Portfolio.images];
+
+            console.log('Adding portfolio images, count:', portfolioImages.length);
+            for (const image of portfolioImages) {
+              if (image && image.url) {
+                try {
+                  const imageUrl = image.url.startsWith('http') 
+                    ? image.url 
+                    : `${baseUrl}${image.url}`;
+                  
+                  console.log('Fetching portfolio image:', imageUrl);
+                  const imageResponse = await fetch(imageUrl);
+                  if (imageResponse.ok) {
+                    const imageBuffer = Buffer.from(await imageResponse.arrayBuffer());
+                    console.log('Adding portfolio image:', image.name, 'size:', imageBuffer.length);
+                    archive.append(imageBuffer, { name: `portfolio/${image.name || 'portfolio-image'}` });
+                  } else {
+                    console.error('Failed to fetch portfolio image, status:', imageResponse.status);
+                  }
+                } catch (err) {
+                  console.error('Error fetching portfolio image:', err);
+                }
+              }
+            }
+          }
+
+          // Add marksheets to documents folder
+          console.log('Checking for marksheets...');
+          console.log('Under_Graduate:', admission.Under_Graduate);
+          console.log('Post_Graduate:', admission.Post_Graduate);
+          console.log('Education_Details:', admission.Education_Details);
+          
+          // Under Graduate marksheet
+          if (admission.Under_Graduate) {
+            console.log('Under_Graduate exists, checking marksheet...');
+            console.log('Under_Graduate.marksheet:', admission.Under_Graduate.marksheet);
+            
+            if (admission.Under_Graduate.marksheet) {
+              const marksheet = Array.isArray(admission.Under_Graduate.marksheet) 
+                ? admission.Under_Graduate.marksheet[0] 
+                : admission.Under_Graduate.marksheet;
+              
+              console.log('UG marksheet object:', marksheet);
+              
+              if (marksheet && marksheet.url) {
+                try {
+                  const marksheetUrl = marksheet.url.startsWith('http') 
+                    ? marksheet.url 
+                    : `${baseUrl}${marksheet.url}`;
+                  
+                  console.log('Fetching UG marksheet:', marksheetUrl);
+                  const marksheetResponse = await fetch(marksheetUrl);
+                  if (marksheetResponse.ok) {
+                    const marksheetBuffer = Buffer.from(await marksheetResponse.arrayBuffer());
+                    console.log('Adding UG marksheet to archive, size:', marksheetBuffer.length);
+                    archive.append(marksheetBuffer, { name: `documents/ug_marksheet${marksheet.ext || '.pdf'}` });
+                  } else {
+                    console.error('Failed to fetch UG marksheet, status:', marksheetResponse.status);
+                  }
+                } catch (err) {
+                  console.error('Error fetching UG marksheet:', err);
+                }
+              } else {
+                console.log('UG marksheet has no URL');
+              }
+            } else {
+              console.log('No UG marksheet found');
+            }
+          }
+
+          // Post Graduate marksheet (repeatable component - array)
+          if (admission.Post_Graduate && Array.isArray(admission.Post_Graduate)) {
+            console.log('Post_Graduate exists (array), count:', admission.Post_Graduate.length);
+            
+            for (let index = 0; index < admission.Post_Graduate.length; index++) {
+              const pg = admission.Post_Graduate[index];
+              console.log(`Post_Graduate[${index}]:`, pg);
+              console.log(`Post_Graduate[${index}].marksheet:`, pg.marksheet);
+              
+              if (pg.marksheet) {
+                const marksheet = Array.isArray(pg.marksheet) 
+                  ? pg.marksheet[0] 
+                  : pg.marksheet;
+                
+                console.log(`PG[${index}] marksheet object:`, marksheet);
+                
+                if (marksheet && marksheet.url) {
+                  try {
+                    const marksheetUrl = marksheet.url.startsWith('http') 
+                      ? marksheet.url 
+                      : `${baseUrl}${marksheet.url}`;
+                    
+                    console.log(`Fetching PG[${index}] marksheet:`, marksheetUrl);
+                    const marksheetResponse = await fetch(marksheetUrl);
+                    if (marksheetResponse.ok) {
+                      const marksheetBuffer = Buffer.from(await marksheetResponse.arrayBuffer());
+                      console.log(`Adding PG[${index}] marksheet to archive, size:`, marksheetBuffer.length);
+                      const filename = admission.Post_Graduate.length > 1 
+                        ? `documents/pg_marksheet_${index + 1}${marksheet.ext || '.pdf'}`
+                        : `documents/pg_marksheet${marksheet.ext || '.pdf'}`;
+                      archive.append(marksheetBuffer, { name: filename });
+                    } else {
+                      console.error(`Failed to fetch PG[${index}] marksheet, status:`, marksheetResponse.status);
+                    }
+                  } catch (err) {
+                    console.error(`Error fetching PG[${index}] marksheet:`, err);
+                  }
+                } else {
+                  console.log(`PG[${index}] marksheet has no URL`);
+                }
+              } else {
+                console.log(`No marksheet in PG[${index}]`);
+              }
+            }
+          } else if (admission.Post_Graduate) {
+            // Single Post_Graduate (not array)
+            console.log('Post_Graduate exists (single object)');
+            console.log('Post_Graduate.marksheet:', admission.Post_Graduate.marksheet);
+            
+            if (admission.Post_Graduate.marksheet) {
+              const marksheet = Array.isArray(admission.Post_Graduate.marksheet) 
+                ? admission.Post_Graduate.marksheet[0] 
+                : admission.Post_Graduate.marksheet;
+              
+              console.log('PG marksheet object:', marksheet);
+              
+              if (marksheet && marksheet.url) {
+                try {
+                  const marksheetUrl = marksheet.url.startsWith('http') 
+                    ? marksheet.url 
+                    : `${baseUrl}${marksheet.url}`;
+                  
+                  console.log('Fetching PG marksheet:', marksheetUrl);
+                  const marksheetResponse = await fetch(marksheetUrl);
+                  if (marksheetResponse.ok) {
+                    const marksheetBuffer = Buffer.from(await marksheetResponse.arrayBuffer());
+                    console.log('Adding PG marksheet to archive, size:', marksheetBuffer.length);
+                    archive.append(marksheetBuffer, { name: `documents/pg_marksheet${marksheet.ext || '.pdf'}` });
+                  } else {
+                    console.error('Failed to fetch PG marksheet, status:', marksheetResponse.status);
+                  }
+                } catch (err) {
+                  console.error('Error fetching PG marksheet:', err);
+                }
+              } else {
+                console.log('PG marksheet has no URL');
+              }
+            } else {
+              console.log('No PG marksheet found');
+            }
+          } else {
+            console.log('No Post_Graduate found');
+          }
+
+          // 10th and 12th marksheets from Education_Details
+          if (admission.Education_Details) {
+            console.log('Education_Details exists');
+            console.log('Education_Details_10th_std:', admission.Education_Details.Education_Details_10th_std);
+            console.log('Education_Details_12th_std:', admission.Education_Details.Education_Details_12th_std);
+            
+            // 10th marksheet
+            if (admission.Education_Details.Education_Details_10th_std) {
+              const marksheet = Array.isArray(admission.Education_Details.Education_Details_10th_std) 
+                ? admission.Education_Details.Education_Details_10th_std[0] 
+                : admission.Education_Details.Education_Details_10th_std;
+              
+              console.log('10th marksheet object:', marksheet);
+              
+              if (marksheet && marksheet.url) {
+                try {
+                  const marksheetUrl = marksheet.url.startsWith('http') 
+                    ? marksheet.url 
+                    : `${baseUrl}${marksheet.url}`;
+                  
+                  console.log('Fetching 10th marksheet:', marksheetUrl);
+                  const marksheetResponse = await fetch(marksheetUrl);
+                  if (marksheetResponse.ok) {
+                    const marksheetBuffer = Buffer.from(await marksheetResponse.arrayBuffer());
+                    console.log('Adding 10th marksheet to archive, size:', marksheetBuffer.length);
+                    archive.append(marksheetBuffer, { name: `documents/tenth_marksheet${marksheet.ext || '.pdf'}` });
+                  } else {
+                    console.error('Failed to fetch 10th marksheet, status:', marksheetResponse.status);
+                  }
+                } catch (err) {
+                  console.error('Error fetching 10th marksheet:', err);
+                }
+              } else {
+                console.log('10th marksheet has no URL');
+              }
+            } else {
+              console.log('No 10th marksheet found');
+            }
+
+            // 12th marksheet
+            if (admission.Education_Details.Education_Details_12th_std) {
+              const marksheet = Array.isArray(admission.Education_Details.Education_Details_12th_std) 
+                ? admission.Education_Details.Education_Details_12th_std[0] 
+                : admission.Education_Details.Education_Details_12th_std;
+              
+              console.log('12th marksheet object:', marksheet);
+              
+              if (marksheet && marksheet.url) {
+                try {
+                  const marksheetUrl = marksheet.url.startsWith('http') 
+                    ? marksheet.url 
+                    : `${baseUrl}${marksheet.url}`;
+                  
+                  console.log('Fetching 12th marksheet:', marksheetUrl);
+                  const marksheetResponse = await fetch(marksheetUrl);
+                  if (marksheetResponse.ok) {
+                    const marksheetBuffer = Buffer.from(await marksheetResponse.arrayBuffer());
+                    console.log('Adding 12th marksheet to archive, size:', marksheetBuffer.length);
+                    archive.append(marksheetBuffer, { name: `documents/twelfth_marksheet${marksheet.ext || '.pdf'}` });
+                  } else {
+                    console.error('Failed to fetch 12th marksheet, status:', marksheetResponse.status);
+                  }
+                } catch (err) {
+                  console.error('Error fetching 12th marksheet:', err);
+                }
+              } else {
+                console.log('12th marksheet has no URL');
+              }
+            } else {
+              console.log('No 12th marksheet found');
+            }
+          } else {
+            console.log('No Education_Details found');
+          }
+          console.log('All files added, finalizing archive...');
+          await archive.finalize();
+          const zipBuffer = await zipPromise;
+          console.log('ZIP buffer created, size:', zipBuffer.length);
+          ctx.set('Content-Type', 'application/zip');
+          ctx.set('Content-Disposition', `attachment; filename="admission-${admission.id}.zip"`);
+          ctx.set('Content-Length', zipBuffer.length.toString());
+          ctx.body = zipBuffer;
+          
+          console.log('ZIP response sent');
+
+        } else {
+          // Regular PDF generation for non-admin users
+          const PDFGenerator = require('../services/pdf-generator').default;
+          const pdfGenerator = new PDFGenerator();
+
+          // Format admission data
+          const formattedData = pdfGenerator.formatAdmissionData(admission);
+
+          console.log('Generating PDF for admission:', admission.id);
+          console.log('Formatted data:', JSON.stringify(formattedData, null, 2));
+
+          // Generate PDF buffer
+          const pdfBuffer = await pdfGenerator.generateAdmissionPDF(formattedData);
+
+          console.log('PDF generated successfully, buffer size:', pdfBuffer.length);
+
+          // Validate PDF buffer
+          if (!pdfBuffer || pdfBuffer.length === 0) {
+            throw new Error('PDF buffer is empty');
+          }
+
+          // Set response headers for PDF download
+          ctx.set('Content-Type', 'application/pdf');
+          ctx.set('Content-Disposition', `attachment; filename="admission-${admission.id}.pdf"`);
+          ctx.set('Content-Length', pdfBuffer.length.toString());
+
+          // Return PDF buffer
+          ctx.body = pdfBuffer;
         }
-
-        // Set response headers for PDF download
-        ctx.set('Content-Type', 'application/pdf');
-        ctx.set('Content-Disposition', `attachment; filename="admission-${admission.id}.pdf"`);
-        ctx.set('Content-Length', pdfBuffer.length.toString());
-
-        // Return PDF buffer
-        ctx.body = pdfBuffer;
 
       } catch (pdfError) {
         console.error('PDF generation failed:', pdfError);
