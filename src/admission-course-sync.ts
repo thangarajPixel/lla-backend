@@ -8,6 +8,32 @@ function sanitizeValue(value: any): any {
 }
 
 /**
+ * Helper function to format date for MySQL DATETIME
+ * Converts ISO 8601 format to MySQL DATETIME format (YYYY-MM-DD HH:MM:SS)
+ */
+function formatDateForMySQL(date: string | Date | null | undefined): string | null {
+  if (!date) return null;
+  
+  try {
+    const d = new Date(date);
+    if (isNaN(d.getTime())) return null;
+    
+    // Format: YYYY-MM-DD HH:MM:SS
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    const seconds = String(d.getSeconds()).padStart(2, '0');
+    
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return null;
+  }
+}
+
+/**
  * Single function to find admission with course data and sync to second database with linked tables
  * @param admissionId - The admission ID to sync
  * @returns Promise<boolean> - Success status
@@ -108,9 +134,9 @@ console.log(admission);
       lla: '', // Not available in current schema
       others: '', // Not available in current schema
       social: '', // Not available in current schema
-      registereddate: admission.createdAt,
+      registereddate: formatDateForMySQL(admission.createdAt),
       ip_address: '', // Not available in current schema
-      update_date: admission.updatedAt,
+      update_date: formatDateForMySQL(admission.updatedAt),
       ref_url: '', // Not available in current schema
       description: admission.Message || '',
       profileimage: (admission as any).passport_size_image?.url || '',
@@ -132,10 +158,10 @@ console.log(admission);
       ParentNameTitle: (admission as any).Parent_Guardian_Spouse_Details?.title || '',
       graduate: (admission as any).Under_Graduate ? 'Yes' : 'No',
       Step: admission.step_3 ? 4 : (admission.step_2 ? 3 : (admission.step_1 ? 2 : (admission.step_0 ? 1 : 0))),
-      Step1Date: admission.step_1 ? admission.updatedAt : null,
-      Step2Date: admission.step_2 ? admission.updatedAt : null,
-      Step3Date: admission.step_3 ? admission.updatedAt : null,
-      Step4Date: admission.Payment_Status === 'Completed' || admission.Payment_Status === 'Paid' ? admission.updatedAt : null,
+      Step1Date: admission.step_1 ? formatDateForMySQL(admission.updatedAt) : null,
+      Step2Date: admission.step_2 ? formatDateForMySQL(admission.updatedAt) : null,
+      Step3Date: admission.step_3 ? formatDateForMySQL(admission.updatedAt) : null,
+      Step4Date: admission.Payment_Status === 'Completed' || admission.Payment_Status === 'Paid' ? formatDateForMySQL(admission.updatedAt) : null,
       document_id: admission.documentId,
       synced_at: new Date(),
       payment_response:admission?.payment_response ? JSON.stringify(admission?.payment_response) : null,
