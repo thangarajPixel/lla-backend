@@ -4,6 +4,20 @@ import { Button, Dialog } from '@strapi/design-system';
 import { SingleSelect, SingleSelectOption } from '@strapi/design-system';
 import { Eye, Download } from '@strapi/icons';
 
+// Simple encryption function for security
+const encryptId = (id: string): string => {
+  // Base64 encode with some obfuscation
+  const encoded = btoa(id + '_lla_' + Date.now().toString().slice(-4));
+  return encoded.replace(/[+/=]/g, (match) => {
+    switch (match) {
+      case '+': return '-';
+      case '/': return '_';
+      case '=': return '';
+      default: return match;
+    }
+  });
+};
+
 export default {
   bootstrap(app: any) {
 
@@ -22,8 +36,12 @@ export default {
         const [stepValue, setStepValue] = useState('');
         const [yearValue, setYearValue] = useState('');
 
+        const isAdmissionPage = location.pathname.includes('api::admission.admission');
+
         // Format mobile_no as string in the table display
         React.useEffect(() => {
+          if (!isAdmissionPage) return;
+          
           const formatMobileNumbers = () => {
             // Target all mobile_no cells in the table
             const mobileCells = document.querySelectorAll('table tbody tr td');
@@ -47,10 +65,12 @@ export default {
             clearTimeout(timer);
             clearInterval(interval);
           };
-        }, [location.pathname, location.search]);
+        }, [location.pathname, location.search, isAdmissionPage]);
 
         // Initialize dropdown values based on URL parameters
         React.useEffect(() => {
+          if (!isAdmissionPage) return;
+          
           const urlParams = new URLSearchParams(window.location.search);
           
           // Check for step filters in URL (handle URL encoding)
@@ -76,28 +96,11 @@ export default {
           } else {
             setYearValue('');
           }
-        }, [location.search]);
-
-        if (!location.pathname.includes('api::admission.admission')) {
-          return null;
-        }
-
-        // Simple encryption function for security
-        const encryptId = (id: string): string => {
-          // Base64 encode with some obfuscation
-          const encoded = btoa(id + '_lla_' + Date.now().toString().slice(-4));
-          return encoded.replace(/[+/=]/g, (match) => {
-            switch (match) {
-              case '+': return '-';
-              case '/': return '_';
-              case '=': return '';
-              default: return match;
-            }
-          });
-        };
+        }, [location.search, isAdmissionPage]);
 
         // Add click handler and styling for first_name column
         React.useEffect(() => {
+          if (!isAdmissionPage) return;
           const timer = setTimeout(() => {
             // Add CSS for clickable first_name and remove double scrollbar
             const style = document.createElement('style');
@@ -322,6 +325,8 @@ export default {
 
         // Add PDF download buttons to status column
         React.useEffect(() => {
+          if (!isAdmissionPage) return;
+          
           const timer = setTimeout(() => {
             const addPdfButtons = () => {
               // Remove any existing PDF buttons first
@@ -398,14 +403,14 @@ export default {
 
                     // Download PDF using anchor element
                     const adminBaseUrl = process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in';
-                    const pdfUrl = `${adminBaseUrl}/api/admissions/${rowId}/pdf`;
+                    const pdfUrl = `${adminBaseUrl}/api/admissions/${rowId}/pdf?type=admin`;
                     
                     console.log('PDF URL:', pdfUrl);
                     
                     // Create temporary anchor element for download
                     const link = document.createElement('a');
                     link.href = pdfUrl;
-                    link.download = `admission-${rowId}.pdf`;
+                    link.download = `admission-${rowId}.zip`;
                     link.target = '_blank';
                     document.body.appendChild(link);
                     link.click();
@@ -423,7 +428,7 @@ export default {
           }, 1000);
 
           return () => clearTimeout(timer);
-        }, []);
+        }, [isAdmissionPage]);
 
         const handleView = () => window.open(process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in/', '_blank');
         const handleDownload = () => window.open(`${process.env.ADMIN_BASE_URL || 'https://dev-admin.lightandlifeacademy.in'}/uploads/sample.pdf`, '_blank');
@@ -441,6 +446,11 @@ export default {
         const years = [];
         for (let start = 2017; start <= 2027; start++) {
           years.push(`${start}-${start + 1}`);
+        }
+
+        // Early return if not admission page
+        if (!isAdmissionPage) {
+          return null;
         }
 
         return (
