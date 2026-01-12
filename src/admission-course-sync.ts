@@ -2,9 +2,11 @@ import mysql from 'mysql2/promise';
 
 /**
  * Helper function to convert undefined values to null for MySQL
+ * Also converts empty strings to null for numeric fields
  */
 function sanitizeValue(value: any): any {
-  return value === undefined ? null : value;
+  if (value === undefined || value === '') return null;
+  return value;
 }
 
 /**
