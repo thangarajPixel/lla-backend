@@ -147,7 +147,7 @@ console.log(admission);
       parentemail: (admission as any).Parent_Guardian_Spouse_Details?.email || '',
       bloodgroup: admission.blood_group || '',
       AdmissionYear: new Date(admission.createdAt).getFullYear(),
-      remainder: '', // Not available in current schema
+      remainder: null, // Not available in current schema
       addresscity: admission.city || '',
       addresspin: admission.pincode || '',
       addressstate: (admission as any).state?.name || '',
