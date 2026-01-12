@@ -1,0 +1,21 @@
+{
+  "collectionName": "components_media_medias",
+  "info": {
+    "displayName": "Media"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Description": {
+      "type": "text"
+    },
+    "MediaCard": {
+      "type": "component",
+      "component": "media.media-card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

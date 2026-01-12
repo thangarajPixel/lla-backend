@@ -934,6 +934,73 @@ export interface LifeViewCardLifeViewCard extends Struct.ComponentSchema {
   };
 }
 
+export interface MediaMedia extends Struct.ComponentSchema {
+  collectionName: 'components_media_medias';
+  info: {
+    displayName: 'Media';
+  };
+  attributes: {
+    Description: Schema.Attribute.Text;
+    MediaCard: Schema.Attribute.Component<'media.media-card', true>;
+    Title: Schema.Attribute.String;
+  };
+}
+
+export interface MediaMediaCard extends Struct.ComponentSchema {
+  collectionName: 'components_media_media_cards';
+  info: {
+    displayName: 'MediaCard';
+  };
+  attributes: {
+    Btn_txt: Schema.Attribute.String;
+    CreatedDate: Schema.Attribute.Date;
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    LongDescription: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Slug: Schema.Attribute.String & Schema.Attribute.Unique;
+    Title: Schema.Attribute.String;
+    ViewCard: Schema.Attribute.Component<'media.view-card', true>;
+  };
+}
+
+export interface MediaViewCard extends Struct.ComponentSchema {
+  collectionName: 'components_media_view_cards';
+  info: {
+    displayName: 'ViewCard';
+  };
+  attributes: {
+    Description: Schema.Attribute.RichText &
+      Schema.Attribute.CustomField<
+        'plugin::ckeditor5.CKEditor',
+        {
+          preset: 'defaultHtml';
+        }
+      >;
+    Image: Schema.Attribute.Media<
+      'images' | 'files' | 'videos' | 'audios',
+      true
+    >;
+    Title: Schema.Attribute.String;
+    Type: Schema.Attribute.Enumeration<['Normal', 'Slide', 'Video']>;
+    Url: Schema.Attribute.Text;
+  };
+}
+
 export interface NilgirisImageCard extends Struct.ComponentSchema {
   collectionName: 'components_nilgiris_image_cards';
   info: {
@@ -1165,6 +1232,9 @@ declare module '@strapi/strapi' {
       'language.language-and-proficiency': LanguageLanguageAndProficiency;
       'life-card.life-card': LifeCardLifeCard;
       'life-view-card.life-view-card': LifeViewCardLifeViewCard;
+      'media.media': MediaMedia;
+      'media.media-card': MediaMediaCard;
+      'media.view-card': MediaViewCard;
       'nilgiris.image-card': NilgirisImageCard;
       'parent-guardian-spouse-details.parent-guardian-spouse-details': ParentGuardianSpouseDetailsParentGuardianSpouseDetails;
       'parent-guardian-spouse.parent-guardian-spouse-details': ParentGuardianSpouseParentGuardianSpouseDetails;

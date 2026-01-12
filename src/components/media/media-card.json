@@ -1,0 +1,52 @@
+{
+  "collectionName": "components_media_media_cards",
+  "info": {
+    "displayName": "MediaCard"
+  },
+  "options": {},
+  "attributes": {
+    "Title": {
+      "type": "string"
+    },
+    "Slug": {
+      "type": "string",
+      "unique": true
+    },
+    "Btn_txt": {
+      "type": "string"
+    },
+    "Image": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "Description": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    },
+    "LongDescription": {
+      "type": "customField",
+      "customField": "plugin::ckeditor5.CKEditor",
+      "options": {
+        "preset": "defaultHtml"
+      }
+    },
+    "CreatedDate": {
+      "type": "date"
+    },
+    "ViewCard": {
+      "type": "component",
+      "component": "media.view-card",
+      "repeatable": true
+    }
+  },
+  "config": {}
+}

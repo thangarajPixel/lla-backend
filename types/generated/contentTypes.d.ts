@@ -1012,6 +1012,31 @@ export interface ApiLifeAtLlaLifeAtLla extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiMediaMedia extends Struct.SingleTypeSchema {
+  collectionName: 'medias';
+  info: {
+    displayName: 'Media';
+    pluralName: 'medias';
+    singularName: 'media';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::media.media'> &
+      Schema.Attribute.Private;
+    Media: Schema.Attribute.Component<'media.media', false>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiNilgirisNilgiris extends Struct.SingleTypeSchema {
   collectionName: 'nilgirises';
   info: {
@@ -1746,6 +1771,7 @@ declare module '@strapi/strapi' {
       'api::gallery.gallery': ApiGalleryGallery;
       'api::home.home': ApiHomeHome;
       'api::life-at-lla.life-at-lla': ApiLifeAtLlaLifeAtLla;
+      'api::media.media': ApiMediaMedia;
       'api::nilgiris.nilgiris': ApiNilgirisNilgiris;
       'api::privacy-policy.privacy-policy': ApiPrivacyPolicyPrivacyPolicy;
       'api::seo.seo': ApiSeoSeo;
