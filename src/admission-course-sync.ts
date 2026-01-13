@@ -246,7 +246,8 @@ console.log(admission,'reftetret');
           bloodgroup = ?, AdmissionYear = ?, remainder = ?, addresscity = ?, addresspin = ?,
           addressstate = ?, parentaddresscity = ?, parentaddresspin = ?, parentaddressstate = ?,
           NameTitle = ?, ParentNameTitle = ?, graduate = ?, Step = ?, Step1Date = ?, Step2Date = ?,
-          Step3Date = ?, Step4Date = ?, document_id = ?
+          Step3Date = ?, Step4Date = ?, document_id = ? , postgradstatus1 = ?, postgrad1 = ?, postgradtitle1 = ?,
+          postgradstatus2 = ?, postgrad2 = ?, postgradtitle2 = ?
         WHERE document_id = ?
       `;
       
@@ -290,8 +291,9 @@ console.log(admission,'reftetret');
           description, profileimage, parentname, parentcontact, parentoccupation, parentaddress,
           parentemail, bloodgroup, AdmissionYear, remainder, addresscity, addresspin, addressstate,
           parentaddresscity, parentaddresspin, parentaddressstate, NameTitle, ParentNameTitle,
-          graduate, Step, Step1Date, Step2Date, Step3Date, Step4Date, document_id
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          graduate, Step, Step1Date, Step2Date, Step3Date, Step4Date, document_id , postgradstatus1, postgrad1, postgradtitle1,
+          postgradstatus2, postgrad2, postgradtitle2
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
       
       const insertValues = [ sanitizeValue(admissionData.name), sanitizeValue(admissionData.lastname), sanitizeValue(admissionData.signup),
