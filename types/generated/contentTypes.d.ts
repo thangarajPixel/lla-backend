@@ -518,6 +518,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     EncryptId: Schema.Attribute.String;
     first_name: Schema.Attribute.String & Schema.Attribute.Required;
     hobbies: Schema.Attribute.String;
+    IpAddress: Schema.Attribute.String;
     Language_Proficiency: Schema.Attribute.Component<
       'language-and-proficiency.language-proficiency',
       true

@@ -175,6 +175,9 @@
     },
     "AdmissionYear": {
       "type": "string"
+    },
+    "IpAddress": {
+      "type": "string"
     }
   }
 }

@@ -165,7 +165,7 @@ console.log(admission,'reftetret');
       others: '', // Not available in current schema
       social: '', // Not available in current schema
       registereddate: formatDateForMySQL(admission.createdAt),
-      ip_address: '', // Not available in current schema
+      ip_address: admission.IpAddress ?? "", // Not available in current schema
       update_date: formatDateForMySQL(admission.updatedAt),
       ref_url: '', // Not available in current schema
       description: admission.Message || '',
