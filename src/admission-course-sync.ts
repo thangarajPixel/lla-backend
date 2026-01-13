@@ -117,6 +117,11 @@ console.log(admission,'reftetret');
       password: process.env.SECOND_DB_PASSWORD || '',
       database: process.env.SECOND_DB_NAME || 'admission_sync'
     });
+    const reg_id =
+  admission.EncryptId && admission.EncryptId.trim() !== ""
+    ? admission.EncryptId
+    : encryptId(admissionId);
+
 
     // Step 3: Prepare admission data mapping to your fields
     const admissionData = {
@@ -131,7 +136,7 @@ console.log(admission,'reftetret');
       txnid: admission.txnid || '',
       mobileno: admission.mobile_no?.toString() || '',
       email: admission.email,
-      reg_id: encryptId(admissionId),
+      reg_id: reg_id,
       course_name: (admission as any).Course?.Name || (admission as any).Course?.course_name || '',
       nationality: admission.nationality || '',
       language: (admission as any).Language_Proficiency ? JSON.stringify((admission as any).Language_Proficiency) : '',
