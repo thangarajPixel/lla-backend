@@ -172,7 +172,7 @@ console.log(admission,'reftetret');
       parentaddress: (admission as any).Parent_Guardian_Spouse_Details?.address?.[0]?.children?.[0]?.text || '',
       parentemail: (admission as any).Parent_Guardian_Spouse_Details?.email || '',
       bloodgroup: admission.blood_group || '',
-      AdmissionYear: "2025-2026",
+      AdmissionYear: admission.AdmissionYear || '2025-2026',
       remainder: null, // Not available in current schema
       addresscity: admission.city || '',
       addresspin: admission.pincode || '',

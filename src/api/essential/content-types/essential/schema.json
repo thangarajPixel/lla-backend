@@ -4,7 +4,7 @@
   "info": {
     "singularName": "essential",
     "pluralName": "essentials",
-    "displayName": "Essential"
+    "displayName": "Admission Setting"
   },
   "options": {
     "draftAndPublish": true
@@ -15,6 +15,11 @@
       "type": "boolean",
       "required": true,
       "default": true
+    },
+    "admission_year": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::admission-year.admission-year"
     }
   }
 }

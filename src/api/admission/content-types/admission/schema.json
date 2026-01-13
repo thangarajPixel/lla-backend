@@ -172,6 +172,9 @@
     },
     "mihpayid": {
       "type": "string"
+    },
+    "AdmissionYear": {
+      "type": "string"
     }
   }
 }

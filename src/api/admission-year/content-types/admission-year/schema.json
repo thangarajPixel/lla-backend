@@ -1,0 +1,18 @@
+{
+  "kind": "collectionType",
+  "collectionName": "admission_years",
+  "info": {
+    "singularName": "admission-year",
+    "pluralName": "admission-years",
+    "displayName": "Admission Year"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "AcademicYear": {
+      "type": "string"
+    }
+  }
+}

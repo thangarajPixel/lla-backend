@@ -457,6 +457,35 @@ export interface ApiAboutAbout extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiAdmissionYearAdmissionYear
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'admission_years';
+  info: {
+    displayName: 'Admission Year';
+    pluralName: 'admission-years';
+    singularName: 'admission-year';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    AcademicYear: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::admission-year.admission-year'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
   collectionName: 'admissions';
   info: {
@@ -469,6 +498,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
   };
   attributes: {
     address: Schema.Attribute.Blocks;
+    AdmissionYear: Schema.Attribute.String;
     blood_group: Schema.Attribute.String;
     city: Schema.Attribute.String;
     Course: Schema.Attribute.Relation<
@@ -772,7 +802,7 @@ export interface ApiCourseCourse extends Struct.SingleTypeSchema {
 export interface ApiEssentialEssential extends Struct.SingleTypeSchema {
   collectionName: 'essentials';
   info: {
-    displayName: 'Essential';
+    displayName: 'Admission Setting';
     pluralName: 'essentials';
     singularName: 'essential';
   };
@@ -780,6 +810,10 @@ export interface ApiEssentialEssential extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    admission_year: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::admission-year.admission-year'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1757,6 +1791,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::about.about': ApiAboutAbout;
+      'api::admission-year.admission-year': ApiAdmissionYearAdmissionYear;
       'api::admission.admission': ApiAdmissionAdmission;
       'api::blog.blog': ApiBlogBlog;
       'api::campus.campus': ApiCampusCampus;
