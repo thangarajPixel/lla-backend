@@ -43,7 +43,7 @@ const shouldProcessPaymentHelper = (currentAdmission: any, updatedData: any, req
   // Check if step_3 is being set to true and payment is not already completed
   const step3Changed = requestData.step_3 === true && currentAdmission.step_3 !== true;
   const paymentNotCompleted = updatedData.Payment_Status !== 'Completed';
-  
+
   // Check if Payment_Status is being set to 'Completed'
   const paymentStatusChanged = requestData.Payment_Status === 'Completed' && currentAdmission.Payment_Status !== 'Completed';
 
@@ -62,7 +62,7 @@ const shouldProcessPaymentForCreate = (createdData: any, requestData: any): bool
 
   // Check if step_3 is set to true in the create request
   const step3IsTrue = requestData.step_3 === true;
-  
+
   // Check if Payment_Status is set to 'Completed' in the create request
   const paymentStatusCompleted = requestData.Payment_Status === 'Completed';
 
@@ -77,7 +77,7 @@ const shouldProcessPaymentForCreate = (createdData: any, requestData: any): bool
 // Helper function to process automatic payment
 const processAutomaticPaymentHelper = async (admission: any): Promise<void> => {
   console.log('💳 Processing automatic payment for admission:', admission.id);
-  
+
   // Update admission to mark payment as completed and step_3 as true
   await strapi.entityService.update('api::admission.admission', admission.id, {
     data: {
@@ -93,7 +93,7 @@ const processAutomaticPaymentHelper = async (admission: any): Promise<void> => {
 // Helper function to generate checkout link
 const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
   console.log('🔗 Generating checkout link for admission:', admission.id);
-  
+
   const crypto = require("crypto");
   const { v4: uuidv4 } = require("uuid");
   const path = require("path");
@@ -104,12 +104,12 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
 
   // Generate unique transaction ID
   const txnid = uuidv4().replace(/-/g, "").substring(0, 20);
-  
+
   // Prepare payment data
-   const totalAmount = admission?.Course?.Amount + (admission?.Course?.Amount * admission?.Course?.Percentage) / 100;
-    console.log(totalAmount+'amount');
-    console.log(admission?.Course?.Percentage);
-   const paymentData = {
+  const totalAmount = admission?.Course?.Amount + (admission?.Course?.Amount * admission?.Course?.Percentage) / 100;
+  console.log(totalAmount + 'amount');
+  console.log(admission?.Course?.Percentage);
+  const paymentData = {
     amount: totalAmount || 1,
     productinfo: `Admission Fee - ${admission.Course?.Name || 'Course'}`,
     firstname: admission.first_name,
@@ -118,32 +118,32 @@ const generateCheckoutLinkHelper = async (admission: any): Promise<any> => {
     phone: admission.mobile_no?.toString() || '',
     txnid,
     surl: `${payu.PAYU_URL}/admission/payment/success?id=${admission.EncryptId ?? ''}` || '',
-    furl: `${payu.PAYU_URL}/admission/payment/failed?id=${admission.EncryptId ?? ''}`|| '',
+    furl: `${payu.PAYU_URL}/admission/payment/failed?id=${admission.EncryptId ?? ''}` || '',
     udf1: admission.id.toString(), // Store admission ID for reference
-    udf2: admission.documentId, 
+    udf2: admission.documentId,
     udf3: '',
     udf4: '',
     udf5: ''
   };
 
   // Create hash for PayU
-  const hashString = 
+  const hashString =
     `${payu.KEY}|${paymentData.txnid}|${paymentData.amount}|${paymentData.productinfo}|${paymentData.firstname}|${paymentData.email}|${paymentData.udf1}|${paymentData.udf2}|${paymentData.udf3}|${paymentData.udf4}|${paymentData.udf5}||||||${payu.SALT}`;
 
   const hash = crypto
     .createHash("sha512")
     .update(hashString)
     .digest("hex");
-console.log('🔄 Updating payment status to Pending...'+ admission.Payment_Status);
-console.log(txnid+'txnid');
-  if(admission?.Payment_Status && admission.Payment_Status == "Completed" || admission?.Payment_Status == "Pending"){
+  console.log('🔄 Updating payment status to Pending...' + admission.Payment_Status);
+  console.log(txnid + 'txnid');
+  if (admission?.Payment_Status && admission.Payment_Status == "Completed" || admission?.Payment_Status == "Pending") {
     await strapi.entityService.update('api::admission.admission', admission.id, {
-          data: {
-            Payment_Status: 'Pending',
-            txnid:txnid
-          }
-      });
-      console.log('✅ Payment status updated to UnPaid for admission:', admission.id);
+      data: {
+        Payment_Status: 'Pending',
+        txnid: txnid
+      }
+    });
+    console.log('✅ Payment status updated to UnPaid for admission:', admission.id);
   }
   return {
     success: true,
@@ -211,10 +211,10 @@ export default factories.createCoreController('api::admission.admission', ({ str
             populate: ['Course'],
           }
         );
-        
+
         console.log('course_data ID:', admissionWithCourse?.Course?.id);
         console.log('Course:', admissionWithCourse?.Course?.Name);
-        
+
         const emailService = require('../services/email').default;
         await emailService.sendRegistrationLinkEmail(admissionWithCourse, admissionWithCourse?.Course);
         console.log('✅ Registration link email sent successfully');
@@ -236,10 +236,10 @@ export default factories.createCoreController('api::admission.admission', ({ str
             populate: ['Course'],
           }
         );
-        
+
         console.log('course_data ID:', admissionWithCourse?.Course?.id);
         console.log('Course:', admissionWithCourse?.Course?.Name);
-        
+
         const emailService = require('../services/email').default;
         await emailService.sendRegistrationLinkEmail(admissionWithCourse, admissionWithCourse?.Course);
         console.log('✅ Step 1 completion email sent successfully');
@@ -253,17 +253,17 @@ export default factories.createCoreController('api::admission.admission', ({ str
     if (createdRecord) {
       console.log('📊 Created Payment Status:', createdRecord.Payment_Status);
       console.log('📊 Created Step 3:', createdRecord.step_3);
-      
+
       const shouldProcessPayment = shouldProcessPaymentForCreate(createdRecord, ctx.request.body.data);
-      
+
       if (shouldProcessPayment) {
         console.log('💳 Payment processing triggered on CREATE!');
-        
+
         try {
           // Auto-process payment
           await processAutomaticPaymentHelper(createdRecord);
           console.log('✅ Automatic payment processed successfully on CREATE');
-          
+
           // Fetch updated admission data after payment processing
           let finalAdmission;
           if (createdRecord.id) {
@@ -273,11 +273,11 @@ export default factories.createCoreController('api::admission.admission', ({ str
             });
             finalAdmission = entities[0];
           }
-          
+
           if (finalAdmission) {
             createdRecord = finalAdmission;
           }
-          
+
         } catch (paymentError) {
           console.error('❌ Automatic payment processing failed on CREATE:', paymentError);
           // Don't fail the create if payment fails
@@ -303,10 +303,10 @@ export default factories.createCoreController('api::admission.admission', ({ str
     let checkoutLink = null;
     const finalCreatedRecord = createdRecord || response.data;
     const shouldGenerateCheckoutForCreate = ctx.request.body.data?.step_3 === true;
-    
+
     if (shouldGenerateCheckoutForCreate && finalCreatedRecord) {
       console.log('🔗 Generating checkout link for new admission with step_3:', finalCreatedRecord.id);
-      
+
       try {
         // Temporarily set payment status to Pending for checkout link generation
         const tempAdmissionData = {
@@ -322,10 +322,10 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
     console.log('========================================');
     const baseUrl = process.env.ADMIN_BASE_URL || `${ctx.request.protocol}://${ctx.request.host}`;
-    
+
     if (createdRecord) {
       const responseData = { data: addBaseUrlToMedia(createdRecord, baseUrl) };
-      
+
       // Add checkout link to response if available
       if (checkoutLink) {
         return {
@@ -333,13 +333,13 @@ export default factories.createCoreController('api::admission.admission', ({ str
           checkoutLink: checkoutLink
         };
       }
-      
+
       return responseData;
     }
-    
+
     if (response?.data) {
       response.data = addBaseUrlToMedia(response.data, baseUrl);
-      
+
       // Add checkout link to response if available
       if (checkoutLink) {
         return {
@@ -348,7 +348,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
         };
       }
     }
-    
+
     return response;
   },
 
@@ -362,7 +362,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
     // Get current admission data before update
     const { id } = ctx.params;
     let currentAdmission;
-    
+
     try {
       if (/^\d+$/.test(id)) {
         const entities = await strapi.entityService.findMany('api::admission.admission', {
@@ -402,28 +402,28 @@ export default factories.createCoreController('api::admission.admission', ({ str
     // Generate checkout link BEFORE processing payment if step_3 is being set to true
     let checkoutLink = null;
     const shouldGenerateCheckout = ctx.request.body.data?.step_3 === true && currentAdmission?.step_3 !== true;
-    
+
     if (shouldGenerateCheckout && updatedData) {
       console.log('🔗 Generating checkout link for step_3 activation:', updatedData.id);
-      
+
       try {
         let admissionData;
         const populateConfig = {
-        populate: {
-          Course:true,
-        },
-      };
+          populate: {
+            Course: true,
+          },
+        };
 
-      if (/^\d+$/.test(id)) {
-        const entities = await strapi.entityService.findMany('api::admission.admission', {
-          filters: { id: parseInt(updatedData.id) },
-          ...populateConfig,
-        });
-        admissionData = entities[0];
-      } else {
-        // Find by documentId
-        admissionData = await strapi.entityService.findOne('api::admission.admission', updatedData.id, populateConfig);
-      }
+        if (/^\d+$/.test(id)) {
+          const entities = await strapi.entityService.findMany('api::admission.admission', {
+            filters: { id: parseInt(updatedData.id) },
+            ...populateConfig,
+          });
+          admissionData = entities[0];
+        } else {
+          // Find by documentId
+          admissionData = await strapi.entityService.findOne('api::admission.admission', updatedData.id, populateConfig);
+        }
         const tempAdmissionData = {
           ...admissionData,
           //Payment_Status: 'Pending'
@@ -438,15 +438,15 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
     // Check if payment processing is needed
     const shouldProcessPayment = shouldProcessPaymentHelper(currentAdmission, updatedData, ctx.request.body.data);
-    
+
     if (shouldProcessPayment) {
       console.log('💳 Payment processing triggered!');
-      
+
       try {
         // Auto-process payment
         await processAutomaticPaymentHelper(updatedData);
         console.log('✅ Automatic payment processed successfully');
-        
+
         // Fetch updated admission data after payment processing
         let finalAdmission;
         if (/^\d+$/.test(id)) {
@@ -458,11 +458,11 @@ export default factories.createCoreController('api::admission.admission', ({ str
         } else {
           finalAdmission = await strapi.entityService.findOne('api::admission.admission', id);
         }
-        
+
         if (finalAdmission) {
           response.data = finalAdmission;
         }
-        
+
       } catch (paymentError) {
         console.error('❌ Automatic payment processing failed:', paymentError);
         // Don't fail the update if payment fails
@@ -472,6 +472,59 @@ export default factories.createCoreController('api::admission.admission', ({ str
     // Sync admission with course data to second database
     try {
       console.log('🔄 Syncing updated admission with course data to second database...');
+      if (ctx.request.body.data?.Payment_Status === 'UnPaid') {
+      const emailService = require('../services/email').default;
+      const data = await strapi.db.query('api::admission.admission').findOne({
+        where: { id: updatedData.id },
+        populate: { Course: true }
+      });
+      console.log('Sending payment failed email to admission ID:', data);
+      await emailService.sendPaymentFailedEmail(data);
+      const admission = await strapi.db.query('api::admission.admission').findOne({
+        where: { id: updatedData.id },
+        populate: {
+          passport_size_image: true,
+          state: true,
+          Course: {
+            fields: ['id', 'Name']
+          },
+          Language_Proficiency: true,
+          Parent_Guardian_Spouse_Details: {
+            populate: {
+              state: true,
+            },
+          },
+          Education_Details: {
+            populate: {
+              Education_Details_12th_std: true,
+              Education_Details_10th_std: true,
+            },
+          },
+          Under_Graduate: {
+            populate: {
+              marksheet: true,
+            },
+          },
+          Post_Graduate: {
+            populate: {
+              marksheet: true,
+            },
+          },
+          Work_Experience: {
+            populate: {
+              reference_letter: true,
+            },
+          },
+          Upload_Your_Portfolio: {
+            populate: {
+              images: true,
+            },
+          },
+        }
+      });
+      await emailService.getPaymentIDStatus(admission);
+      console.log('Payment status checked for unpaid admission:', admission.id);
+    }
       const syncSuccess = await syncAdmissionWithCourse(updatedData.id);
       if (syncSuccess) {
         console.log('✅ Updated admission synced to second database successfully');
@@ -485,20 +538,12 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
     console.log('========================================');
     const baseUrl = process.env.ADMIN_BASE_URL || `${ctx.request.protocol}://${ctx.request.host}`;
-    
+
     if (response?.data) {
       response.data = addBaseUrlToMedia(response.data, baseUrl);
     }
     console.log('Payment Status after update:', ctx.request.body.data?.Payment_Status);
-    if(ctx.request.body.data?.Payment_Status === 'UnPaid' ){ 
-       const emailService = require('../services/email').default;
-       const data = await strapi.db.query('api::admission.admission').findOne({
-        where: { id: updatedData.id },
-        populate: { Course: true }
-      });
-       console.log('Sending payment failed email to admission ID:', data);
-        await emailService.sendPaymentFailedEmail(data);
-    }
+    
 
     // Add checkout link to response if available
     if (checkoutLink) {
@@ -507,7 +552,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
         checkoutLink: checkoutLink
       };
     }
-    
+
     return response;
   },
   async findOne(ctx) {
@@ -516,7 +561,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
     const populateConfig = {
       passport_size_image: true,
       state: true,
-      Course:true,
+      Course: true,
       Language_Proficiency: true,
       Parent_Guardian_Spouse_Details: {
         populate: {
@@ -557,8 +602,8 @@ export default factories.createCoreController('api::admission.admission', ({ str
     if (/^\d+$/.test(id)) {
       // First, find the record by ID to get its documentId
       const entities = await strapi.entityService.findMany('api::admission.admission', {
-         filters: { id: parseInt(id) },
-         populate: populateConfig, 
+        filters: { id: parseInt(id) },
+        populate: populateConfig,
       });
 
       // if (!initialRecord || initialRecord.length === 0) {
@@ -589,7 +634,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
       //   return ctx.notFound('Admission not found');
       // }
 
-       if (!entities || entities.length === 0) {
+      if (!entities || entities.length === 0) {
         return ctx.notFound('Admission not found');
       }
       admission = entities[0];
@@ -614,7 +659,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
   async generatePdf(ctx) {
     const { id } = ctx.params;
-    const {type} = ctx.request.query;
+    const { type } = ctx.request.query;
     try {
       // Find admission by numeric id with deep population
       let admission;
@@ -622,7 +667,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
         populate: {
           passport_size_image: true,
           state: true,
-          Course:true,
+          Course: true,
           Language_Proficiency: true,
           Parent_Guardian_Spouse_Details: {
             populate: {
@@ -675,16 +720,16 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
       try {
         console.log('PDF generation started for admission:', id, 'type:', type);
-        if(type && type === 'admin'){
+        if (type && type === 'admin') {
           console.log('Generating ZIP for admin user');
-          
+
           // Use the PDF generator service
           const PDFGenerator = require('../services/pdf-generator').default;
           const pdfGenerator = new PDFGenerator();
 
           // Format admission data
           const formattedData = pdfGenerator.formatAdmissionData(admission);
-          
+
           // Generate PDF buffer
           const pdfBuffer = await pdfGenerator.generateAdmissionPDF(formattedData);
           console.log('PDF buffer generated, size:', pdfBuffer.length);
@@ -700,7 +745,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
           // Collect chunks in memory
           const chunks: Buffer[] = [];
-          
+
           archive.on('data', (chunk: Buffer) => {
             chunks.push(chunk);
           });
@@ -733,17 +778,17 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
           // Add passport_size_image to ZIP root
           if (admission.passport_size_image) {
-            const passportImage = Array.isArray(admission.passport_size_image) 
-              ? admission.passport_size_image[0] 
+            const passportImage = Array.isArray(admission.passport_size_image)
+              ? admission.passport_size_image[0]
               : admission.passport_size_image;
-            
+
             if (passportImage && passportImage.url) {
               try {
                 console.log('Fetching passport image:', passportImage.url);
-                const imageUrl = passportImage.url.startsWith('http') 
-                  ? passportImage.url 
+                const imageUrl = passportImage.url.startsWith('http')
+                  ? passportImage.url
                   : `${baseUrl}${passportImage.url}`;
-                
+
                 console.log('Full passport image URL:', imageUrl);
                 const imageResponse = await fetch(imageUrl);
                 if (imageResponse.ok) {
@@ -761,18 +806,18 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
           // Add Upload_Your_Portfolio files to portfolio folder
           if (admission.Upload_Your_Portfolio && admission.Upload_Your_Portfolio.images) {
-            const portfolioImages = Array.isArray(admission.Upload_Your_Portfolio.images) 
-              ? admission.Upload_Your_Portfolio.images 
+            const portfolioImages = Array.isArray(admission.Upload_Your_Portfolio.images)
+              ? admission.Upload_Your_Portfolio.images
               : [admission.Upload_Your_Portfolio.images];
 
             console.log('Adding portfolio images, count:', portfolioImages.length);
             for (const image of portfolioImages) {
               if (image && image.url) {
                 try {
-                  const imageUrl = image.url.startsWith('http') 
-                    ? image.url 
+                  const imageUrl = image.url.startsWith('http')
+                    ? image.url
                     : `${baseUrl}${image.url}`;
-                  
+
                   console.log('Fetching portfolio image:', imageUrl);
                   const imageResponse = await fetch(imageUrl);
                   if (imageResponse.ok) {
@@ -794,25 +839,25 @@ export default factories.createCoreController('api::admission.admission', ({ str
           console.log('Under_Graduate:', admission.Under_Graduate);
           console.log('Post_Graduate:', admission.Post_Graduate);
           console.log('Education_Details:', admission.Education_Details);
-          
+
           // Under Graduate marksheet
           if (admission.Under_Graduate) {
             console.log('Under_Graduate exists, checking marksheet...');
             console.log('Under_Graduate.marksheet:', admission.Under_Graduate.marksheet);
-            
+
             if (admission.Under_Graduate.marksheet) {
-              const marksheet = Array.isArray(admission.Under_Graduate.marksheet) 
-                ? admission.Under_Graduate.marksheet[0] 
+              const marksheet = Array.isArray(admission.Under_Graduate.marksheet)
+                ? admission.Under_Graduate.marksheet[0]
                 : admission.Under_Graduate.marksheet;
-              
+
               console.log('UG marksheet object:', marksheet);
-              
+
               if (marksheet && marksheet.url) {
                 try {
-                  const marksheetUrl = marksheet.url.startsWith('http') 
-                    ? marksheet.url 
+                  const marksheetUrl = marksheet.url.startsWith('http')
+                    ? marksheet.url
                     : `${baseUrl}${marksheet.url}`;
-                  
+
                   console.log('Fetching UG marksheet:', marksheetUrl);
                   const marksheetResponse = await fetch(marksheetUrl);
                   if (marksheetResponse.ok) {
@@ -836,31 +881,31 @@ export default factories.createCoreController('api::admission.admission', ({ str
           // Post Graduate marksheet (repeatable component - array)
           if (admission.Post_Graduate && Array.isArray(admission.Post_Graduate)) {
             console.log('Post_Graduate exists (array), count:', admission.Post_Graduate.length);
-            
+
             for (let index = 0; index < admission.Post_Graduate.length; index++) {
               const pg = admission.Post_Graduate[index];
               console.log(`Post_Graduate[${index}]:`, pg);
               console.log(`Post_Graduate[${index}].marksheet:`, pg.marksheet);
-              
+
               if (pg.marksheet) {
-                const marksheet = Array.isArray(pg.marksheet) 
-                  ? pg.marksheet[0] 
+                const marksheet = Array.isArray(pg.marksheet)
+                  ? pg.marksheet[0]
                   : pg.marksheet;
-                
+
                 console.log(`PG[${index}] marksheet object:`, marksheet);
-                
+
                 if (marksheet && marksheet.url) {
                   try {
-                    const marksheetUrl = marksheet.url.startsWith('http') 
-                      ? marksheet.url 
+                    const marksheetUrl = marksheet.url.startsWith('http')
+                      ? marksheet.url
                       : `${baseUrl}${marksheet.url}`;
-                    
+
                     console.log(`Fetching PG[${index}] marksheet:`, marksheetUrl);
                     const marksheetResponse = await fetch(marksheetUrl);
                     if (marksheetResponse.ok) {
                       const marksheetBuffer = Buffer.from(await marksheetResponse.arrayBuffer());
                       console.log(`Adding PG[${index}] marksheet to archive, size:`, marksheetBuffer.length);
-                      const filename = admission.Post_Graduate.length > 1 
+                      const filename = admission.Post_Graduate.length > 1
                         ? `documents/pg_marksheet_${index + 1}${marksheet.ext || '.pdf'}`
                         : `documents/pg_marksheet${marksheet.ext || '.pdf'}`;
                       archive.append(marksheetBuffer, { name: filename });
@@ -881,20 +926,20 @@ export default factories.createCoreController('api::admission.admission', ({ str
             // Single Post_Graduate (not array)
             console.log('Post_Graduate exists (single object)');
             console.log('Post_Graduate.marksheet:', admission.Post_Graduate.marksheet);
-            
+
             if (admission.Post_Graduate.marksheet) {
-              const marksheet = Array.isArray(admission.Post_Graduate.marksheet) 
-                ? admission.Post_Graduate.marksheet[0] 
+              const marksheet = Array.isArray(admission.Post_Graduate.marksheet)
+                ? admission.Post_Graduate.marksheet[0]
                 : admission.Post_Graduate.marksheet;
-              
+
               console.log('PG marksheet object:', marksheet);
-              
+
               if (marksheet && marksheet.url) {
                 try {
-                  const marksheetUrl = marksheet.url.startsWith('http') 
-                    ? marksheet.url 
+                  const marksheetUrl = marksheet.url.startsWith('http')
+                    ? marksheet.url
                     : `${baseUrl}${marksheet.url}`;
-                  
+
                   console.log('Fetching PG marksheet:', marksheetUrl);
                   const marksheetResponse = await fetch(marksheetUrl);
                   if (marksheetResponse.ok) {
@@ -922,21 +967,21 @@ export default factories.createCoreController('api::admission.admission', ({ str
             console.log('Education_Details exists');
             console.log('Education_Details_10th_std:', admission.Education_Details.Education_Details_10th_std);
             console.log('Education_Details_12th_std:', admission.Education_Details.Education_Details_12th_std);
-            
+
             // 10th marksheet
             if (admission.Education_Details.Education_Details_10th_std) {
-              const marksheet = Array.isArray(admission.Education_Details.Education_Details_10th_std) 
-                ? admission.Education_Details.Education_Details_10th_std[0] 
+              const marksheet = Array.isArray(admission.Education_Details.Education_Details_10th_std)
+                ? admission.Education_Details.Education_Details_10th_std[0]
                 : admission.Education_Details.Education_Details_10th_std;
-              
+
               console.log('10th marksheet object:', marksheet);
-              
+
               if (marksheet && marksheet.url) {
                 try {
-                  const marksheetUrl = marksheet.url.startsWith('http') 
-                    ? marksheet.url 
+                  const marksheetUrl = marksheet.url.startsWith('http')
+                    ? marksheet.url
                     : `${baseUrl}${marksheet.url}`;
-                  
+
                   console.log('Fetching 10th marksheet:', marksheetUrl);
                   const marksheetResponse = await fetch(marksheetUrl);
                   if (marksheetResponse.ok) {
@@ -958,18 +1003,18 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
             // 12th marksheet
             if (admission.Education_Details.Education_Details_12th_std) {
-              const marksheet = Array.isArray(admission.Education_Details.Education_Details_12th_std) 
-                ? admission.Education_Details.Education_Details_12th_std[0] 
+              const marksheet = Array.isArray(admission.Education_Details.Education_Details_12th_std)
+                ? admission.Education_Details.Education_Details_12th_std[0]
                 : admission.Education_Details.Education_Details_12th_std;
-              
+
               console.log('12th marksheet object:', marksheet);
-              
+
               if (marksheet && marksheet.url) {
                 try {
-                  const marksheetUrl = marksheet.url.startsWith('http') 
-                    ? marksheet.url 
+                  const marksheetUrl = marksheet.url.startsWith('http')
+                    ? marksheet.url
                     : `${baseUrl}${marksheet.url}`;
-                  
+
                   console.log('Fetching 12th marksheet:', marksheetUrl);
                   const marksheetResponse = await fetch(marksheetUrl);
                   if (marksheetResponse.ok) {
@@ -999,7 +1044,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
           ctx.set('Content-Disposition', `attachment; filename="admission-${admission.id}.zip"`);
           ctx.set('Content-Length', zipBuffer.length.toString());
           ctx.body = zipBuffer;
-          
+
           console.log('ZIP response sent');
 
         } else {
@@ -1222,7 +1267,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
           const documentId = currentRecord[0].documentId;
           console.log('📄 Found document_id:', documentId);
           console.log('   Excluding all records with this document_id');
-          
+
           // Exclude all records with the same document_id
           filters.documentId = { $ne: documentId };
         } else {
@@ -1255,8 +1300,8 @@ export default factories.createCoreController('api::admission.admission', ({ str
         courseId: courseId,
         isUnique: isUnique,
         exists: !isUnique,
-        message: isUnique 
-          ? 'Email is available for this course' 
+        message: isUnique
+          ? 'Email is available for this course'
           : 'Email already exists for this course',
       };
 
@@ -1327,29 +1372,29 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
       // Generate unique transaction ID
       const txnid = uuidv4().replace(/-/g, "").substring(0, 20);
-      
+
       // Prepare payment data
-       const totalAmount = admission?.Course?.Amount  + (admission?.Course?.Amount * admission?.Course?.Percentage) / 100;
-      console.log(totalAmount+'amount1');
-       const paymentData = {
-            amount:totalAmount || 1,
-            productinfo: `Admission Fee - ${admission.Course?.Name || 'Course'}`,
-            firstname: admission.first_name,
-            lastname: admission.last_name || '',
-            email: admission.email,
-            phone: admission.mobile_no?.toString() || '',
-            txnid,
-            surl: `${payu.PAYU_URL}/${admission.EncryptId ?? ''}/payment/success` || '',
-            furl: `${payu.PAYU_URL}/${admission.EncryptId ??''}/payment/failed`|| '',
-            udf1: admission.id.toString(), // Store admission ID for reference
-            udf2: admission.documentId, 
-            udf3: '',
-            udf4: '',
-            udf5: ''
-          };
+      const totalAmount = admission?.Course?.Amount + (admission?.Course?.Amount * admission?.Course?.Percentage) / 100;
+      console.log(totalAmount + 'amount1');
+      const paymentData = {
+        amount: totalAmount || 1,
+        productinfo: `Admission Fee - ${admission.Course?.Name || 'Course'}`,
+        firstname: admission.first_name,
+        lastname: admission.last_name || '',
+        email: admission.email,
+        phone: admission.mobile_no?.toString() || '',
+        txnid,
+        surl: `${payu.PAYU_URL}/${admission.EncryptId ?? ''}/payment/success` || '',
+        furl: `${payu.PAYU_URL}/${admission.EncryptId ?? ''}/payment/failed` || '',
+        udf1: admission.id.toString(), // Store admission ID for reference
+        udf2: admission.documentId,
+        udf3: '',
+        udf4: '',
+        udf5: ''
+      };
 
       // Create hash for PayU
-      const hashString = 
+      const hashString =
         `${payu.KEY}|${paymentData.txnid}|${paymentData.amount}|${paymentData.productinfo}|${paymentData.firstname}|${paymentData.email}|${paymentData.udf1}|${paymentData.udf2}|${paymentData.udf3}|${paymentData.udf4}|${paymentData.udf5}||||||${payu.SALT}`;
 
       const hash = crypto
@@ -1358,13 +1403,13 @@ export default factories.createCoreController('api::admission.admission', ({ str
         .digest("hex");
 
       // Update payment status to Pending
-    if(admission?.Payment_Status && admission.Payment_Status == "Completed" || admission?.Payment_Status == "Pending"){
+      if (admission?.Payment_Status && admission.Payment_Status == "Completed" || admission?.Payment_Status == "Pending") {
         await strapi.entityService.update('api::admission.admission', admission.id, {
-              data: {
-                Payment_Status: 'UnPaid',
-                txnid:txnid
-              }
-          });
+          data: {
+            Payment_Status: 'UnPaid',
+            txnid: txnid
+          }
+        });
       }
 
       const paymentResponse = {
@@ -1410,31 +1455,31 @@ export default factories.createCoreController('api::admission.admission', ({ str
     }
   },
   async getPaymentIDStatus(txnid) {
-  try {
-    if (!txnid) throw new Error('Transaction ID is required');
+    try {
+      if (!txnid) throw new Error('Transaction ID is required');
       const crypto = require("crypto");
-    const { v4: uuidv4 } = require("uuid");
-    const payu = require("../../../../config/payu");
-    const command = 'verify_payment';
-    const axios = require('axios');
-    const hashString = `${payu.KEY}|${command}|${txnid}|${payu.SALT}`;
-       // Generate payment link directly
+      const { v4: uuidv4 } = require("uuid");
+      const payu = require("../../../../config/payu");
+      const command = 'verify_payment';
+      const axios = require('axios');
+      const hashString = `${payu.KEY}|${command}|${txnid}|${payu.SALT}`;
+      // Generate payment link directly
 
-    const hash = crypto.createHash('sha512').update(hashString).digest('hex');
-    const postData = new URLSearchParams({
+      const hash = crypto.createHash('sha512').update(hashString).digest('hex');
+      const postData = new URLSearchParams({
         key: String(payu.KEY),
         command,
         var1: String(txnid),   // ✅ MUST be string
         hash: String(hash),
       });
-    const response = await axios.post(payu.STATUS_URL, postData.toString(), {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching payment status:', error.message);
-    throw error;
-  }
+      const response = await axios.post(payu.STATUS_URL, postData.toString(), {
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching payment status:', error.message);
+      throw error;
+    }
   },
 
   async getPaymentStatus(ctx) {
@@ -1545,7 +1590,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
       // Create payment using payment controller
       const paymentController = require('../../payment/controllers/payment');
-      
+
       // Create a mock context for payment creation
       const paymentCtx = {
         request: {

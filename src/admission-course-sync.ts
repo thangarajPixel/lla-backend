@@ -1,4 +1,5 @@
 import mysql from 'mysql2/promise';
+import { encryptAdmissionId } from './api/admission/services/id-encryption';
 
 /**
  * Helper function to convert undefined values to null for MySQL
@@ -41,18 +42,22 @@ function formatDateForMySQL(date: string | Date | null | undefined): string | nu
  * @returns Promise<boolean> - Success status
  */
 export async function syncAdmissionWithCourse(admissionId: number): Promise<boolean> {
+  console.log(`🔄 Starting sync for admission ID: ${admissionId}`);
   let connection: mysql.Connection | null = null;
   
   try {
-    const encryptId = (id: string): string => {
-  // Base64 encode with some obfuscation
-  const encoded = btoa(id + '_lla_' + Date.now().toString().slice(-4));
+   const encryptId = (id: number): string => {
+  const encoded = btoa(`${id}_lla_${Date.now().toString().slice(-4)}`);
   return encoded.replace(/[+/=]/g, (match) => {
     switch (match) {
-      case '+': return '-';
-      case '/': return '_';
-      case '=': return '';
-      default: return match;
+      case "+":
+        return "-";
+      case "/":
+        return "_";
+      case "=":
+        return "";
+      default:
+        return match;
     }
   });
 };
@@ -126,7 +131,7 @@ console.log(admission,'reftetret');
       txnid: admission.txnid || '',
       mobileno: admission.mobile_no?.toString() || '',
       email: admission.email,
-      reg_id: admission.EncryptId || admission.id.toString(),
+      reg_id: encryptId(admissionId),
       course_name: (admission as any).Course?.Name || (admission as any).Course?.course_name || '',
       nationality: admission.nationality || '',
       language: (admission as any).Language_Proficiency ? JSON.stringify((admission as any).Language_Proficiency) : '',
@@ -135,12 +140,18 @@ console.log(admission,'reftetret');
       address: admission.address?.[0]?.children?.[0] && 'text' in admission.address[0].children[0] ? admission.address[0].children[0].text : '',
       hobbies: admission.hobbies || '',
       club: admission.photography_club || '',
-      gradstatus: 1,
-      grad: (admission as any).Under_Graduate?.university || '',
-      gradtitle: (admission as any).Under_Graduate?.ug_status || '',
-      postgradstatus: 1,
-      postgrad: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 0 ? (admission as any).Post_Graduate[0]?.university : '',
-      postgradtitle: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 0 ? (admission as any).Post_Graduate[0]?.pg_status : '',
+      gradstatus:(admission as any).Under_Graduate?.ug_status === 'Finished' ? 1 : 2,
+      grad: (admission as any).Under_Graduate?.marksheet?.url || '',
+      gradtitle: (admission as any).Under_Graduate?.degree || '',
+      postgradstatus:
+        (admission as any).Post_Graduate &&
+        (admission as any).Post_Graduate.length > 0
+          ? (admission as any).Post_Graduate[0]?.pg_status === 'Finished'
+            ? 1
+            : 2
+          : 0,
+      postgrad: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 0 ? (admission as any).Post_Graduate[0]?.marksheet?.url || '' : '',
+      postgradtitle: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 0 ? (admission as any).Post_Graduate[0]?.degree : '',
       gradYear: (admission as any).Under_Graduate?.year_of_passing || '',
       postGradYear: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 0 ? (admission as any).Post_Graduate[0]?.year_of_passing : '',
       hsc: (admission as any).Education_Details?.Education_Details_12th_std?.url || '',
@@ -153,6 +164,7 @@ console.log(admission,'reftetret');
       update_date: formatDateForMySQL(admission.updatedAt),
       ref_url: '', // Not available in current schema
       description: admission.Message || '',
+      Payment_Status: admission.Payment_Status || '',
       profileimage: (admission as any).passport_size_image?.url || '',
       parentname: `${(admission as any).Parent_Guardian_Spouse_Details?.first_name || ''} ${(admission as any).Parent_Guardian_Spouse_Details?.last_name || ''}`.trim(),
       parentcontact: (admission as any).Parent_Guardian_Spouse_Details?.mobile_no || '',
@@ -171,7 +183,7 @@ console.log(admission,'reftetret');
       NameTitle: admission.name_title || '',
       ParentNameTitle: (admission as any).Parent_Guardian_Spouse_Details?.title || '',
       graduate: (admission as any).Under_Graduate ? 'Yes' : 'No',
-      Step: admission.step_3 ? 4 : (admission.step_2 ? 3 : (admission.step_1 ? 2 : (admission.step_0 ? "Step1" : 0))),
+      Step: admission.step_3 ? "Step4" : (admission.step_2 ? "Step3" : (admission.step_1 ? "Step2" : (admission.step_0 ? "Step1" : 0))),
       Step1Date: admission.step_1 ? formatDateForMySQL(admission.updatedAt) : null,
       Step2Date: admission.step_2 ? formatDateForMySQL(admission.updatedAt) : null,
       Step3Date: admission.step_3 ? formatDateForMySQL(admission.updatedAt) : null,
@@ -182,6 +194,7 @@ console.log(admission,'reftetret');
       Work_Experience:(admission as any).Work_Experience || [],
       Upload_Your_Portfolio:(admission as any).Upload_Your_Portfolio || []
     };
+    console.log('🔍 Prepared admission data for sync:', admissionData.reg_id);
     // Step 4: Check if record exists and update or create in llawp_lla_admission
     const [existingRows] = await connection.execute(
       'SELECT lla_id, document_id FROM llawp_lla_admission WHERE document_id = ?',
@@ -298,7 +311,26 @@ console.log(admission,'reftetret');
     if (admissionData.Work_Experience && admissionData.Work_Experience.length > 0) {
       // Delete existing experience records for this admission
       await connection.execute('DELETE FROM llawp_lla_experience WHERE personsid = ?', [admissionDbId]);
-      
+                const formatDuration = (start?: string, end?: string) => {
+            if (!start || !end) return "";
+
+            const startDate = new Date(start);
+            const endDate = new Date(end);
+
+            let years = endDate.getFullYear() - startDate.getFullYear();
+            let months = endDate.getMonth() - startDate.getMonth();
+
+            if (months < 0) {
+              years--;
+              months += 12;
+            }
+
+            const yearText = years > 0 ? `${years} year${years > 1 ? "s" : ""}` : "";
+            const monthText = months > 0 ? `${months} month${months > 1 ? "s" : ""}` : "";
+
+            return [yearText, monthText].filter(Boolean).join(" ");
+          };
+
       // Insert new experience records
       for (let i = 0; i < admissionData.Work_Experience.length; i++) {
         const exp = admissionData.Work_Experience[i];
@@ -311,7 +343,7 @@ console.log(admission,'reftetret');
           i + 1,
           exp.designation || '',
           exp.employer || '',
-          `${exp.duration_start || ''} to ${exp.duration_end || ''}`.trim(),
+          formatDuration(exp.duration_start, exp.duration_end),
           exp.reference_letter?.url || '',
           exp.createdAt || new Date()
         ]);
@@ -340,6 +372,8 @@ console.log(admission,'reftetret');
       }
       console.log(`Synced portfolio records`);
     }
+    console.log('🔍 admissionData.payment_response:', admissionData.payment_response);
+    console.log('🔍 admissionData.txnid:', admissionData.txnid);
     if (admissionData.payment_response && admissionData.txnid) {
       // Delete existing portfolio records for this admission
       await connection.execute('DELETE FROM llawp_lla_pay WHERE userid = ?', [admissionDbId]);
@@ -352,7 +386,7 @@ console.log(admission,'reftetret');
           admissionDbId,
           admissionData.txnid,
           admissionData.payment_response,
-          'success'
+          admissionData.Payment_Status === 'Paid' ? 'Success' : 'failure'
         ]);
       console.log(`Synced payment records`);
     }

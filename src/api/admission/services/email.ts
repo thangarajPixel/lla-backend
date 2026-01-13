@@ -567,16 +567,18 @@ export default {
       );
 
       const paymentStatus = response?.data;
+      console.log('PayU Response:', paymentStatus);
 
       if (!paymentStatus || paymentStatus.status !== 1) {
         console.log('PayU verification failed or transaction not found');
-
+        const txnData = paymentStatus.transaction_details?.[txnid];
         await strapi.entityService.update(
           'api::admission.admission',
           admission.id,
           {
             data: {
               Payment_Status: 'UnPaid',
+              payment_response: txnData ?? {},
             },
           }
         );
