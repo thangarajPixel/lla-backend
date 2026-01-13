@@ -594,6 +594,17 @@ class PDFGenerator {
                         <div class="field-label">Duration</div>
                         <div class="field-value">{{duration}}</div>
                     </div>
+                    <div class="field-row">
+                        <div class="field-label">Document</div>
+                        <div class="field-value">
+                            {{#if reference_letter}}
+                            <span class="document-link">✓ Submitted</span>
+                            {{else}}
+                            Not Uploaded
+                            {{/if}}
+                        </div>
+                    </div>
+
                 </div>
                 {{/each}}
             </div>
@@ -782,6 +793,7 @@ class PDFGenerator {
                 designation: work.designation || 'Not Specified',
                 employer: work.employer || 'Not Specified',
                 duration: duration,
+                reference_letter: work.reference_letter || null
             };
         }) || [];
 
