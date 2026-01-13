@@ -268,7 +268,10 @@ console.log(admission,'reftetret');
         sanitizeValue(admissionData.addresspin), sanitizeValue(admissionData.addressstate), sanitizeValue(admissionData.parentaddresscity),
         sanitizeValue(admissionData.parentaddresspin), sanitizeValue(admissionData.parentaddressstate), sanitizeValue(admissionData.NameTitle),
         sanitizeValue(admissionData.ParentNameTitle), sanitizeValue(admissionData.graduate), sanitizeValue(admissionData.Step),
-        sanitizeValue(admissionData.Step1Date), sanitizeValue(admissionData.Step2Date), sanitizeValue(admissionData.Step3Date), sanitizeValue(admissionData.Step4Date), sanitizeValue(admissionData.document_id),
+        sanitizeValue(admissionData.Step1Date), sanitizeValue(admissionData.Step2Date), sanitizeValue(admissionData.Step3Date), sanitizeValue(admissionData.Step4Date), 
+        sanitizeValue(admissionData.document_id),
+        sanitizeValue(admissionData.postgradstatus1), sanitizeValue(admissionData.postgrad1), sanitizeValue(admissionData.postgradtitle1),
+        sanitizeValue(admissionData.postgradstatus2), sanitizeValue(admissionData.postgrad2), sanitizeValue(admissionData.postgradtitle2),
         sanitizeValue(admissionData.document_id)
       ];
 
@@ -311,7 +314,9 @@ console.log(admission,'reftetret');
         sanitizeValue(admissionData.addresspin), sanitizeValue(admissionData.addressstate), sanitizeValue(admissionData.parentaddresscity),
         sanitizeValue(admissionData.parentaddresspin), sanitizeValue(admissionData.parentaddressstate), sanitizeValue(admissionData.NameTitle),
         sanitizeValue(admissionData.ParentNameTitle), sanitizeValue(admissionData.graduate), sanitizeValue(admissionData.Step), sanitizeValue(admissionData.Step1Date),
-        sanitizeValue(admissionData.Step2Date), sanitizeValue(admissionData.Step3Date), sanitizeValue(admissionData.Step4Date), sanitizeValue(admissionData.document_id)
+        sanitizeValue(admissionData.Step2Date), sanitizeValue(admissionData.Step3Date), sanitizeValue(admissionData.Step4Date), sanitizeValue(admissionData.document_id),
+        sanitizeValue(admissionData.postgradstatus1), sanitizeValue(admissionData.postgrad1), sanitizeValue(admissionData.postgradtitle1),
+        sanitizeValue(admissionData.postgradstatus2), sanitizeValue(admissionData.postgrad2), sanitizeValue(admissionData.postgradtitle2)
       ];
 
       // Debug logging
