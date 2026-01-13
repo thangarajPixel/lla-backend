@@ -261,7 +261,7 @@ export default {
                 console.log('Final ID to use:', finalId);
 
                 if (finalId) {
-                  const baseUrl = process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in/';
+                  const baseUrl = process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in';
                   const encryptedId = encryptId(finalId);
                   const url = `${baseUrl}/admission/${encryptedId}`;
                   console.log('Opening URL with encrypted ID:', url);
@@ -298,7 +298,7 @@ export default {
 
                   if (checkbox && checkbox.value) {
                     const documentId = checkbox.value;
-                    const baseUrl = process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in/';
+                    const baseUrl = process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in';
                     const encryptedId = encryptId(documentId);
                     const url = `${baseUrl}/admission/${encryptedId}`;
                     console.log('Direct click handler - Opening URL:', url);
@@ -430,7 +430,7 @@ export default {
           return () => clearTimeout(timer);
         }, [isAdmissionPage]);
 
-        const handleView = () => window.open(process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in/', '_blank');
+        const handleView = () => window.open(process.env.ADMISSION_VIEW_URL || 'https://dev.lightandlifeacademy.in', '_blank');
         const handleDownload = () => window.open(`${process.env.ADMIN_BASE_URL || ''}/uploads/sample.pdf`, '_blank');
         const handleExportAll = () => {
           const adminBaseUrl = process.env.ADMIN_BASE_URL || '';

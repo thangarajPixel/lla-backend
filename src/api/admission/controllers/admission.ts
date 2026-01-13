@@ -480,8 +480,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
       });
       console.log('Sending payment failed email to admission ID:', data);
       await emailService.sendPaymentFailedEmail(data);
-      const admission = await strapi.db.query('api::admission.admission').findOne({
-        where: { id: updatedData.id },
+      const admission = await strapi.entityService.findOne('api::admission.admission', updatedData.id, {
         populate: {
           passport_size_image: true,
           state: true,
