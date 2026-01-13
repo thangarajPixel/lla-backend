@@ -155,8 +155,26 @@ console.log(admission,'reftetret');
             ? 1
             : 2
           : 0,
+          postgradstatus1:
+        (admission as any).Post_Graduate &&
+        (admission as any).Post_Graduate.length > 1
+          ? (admission as any).Post_Graduate[1]?.pg_status === 'Finished'
+            ? 1
+            : 2
+          : 0,
+        postgradstatus2:
+        (admission as any).Post_Graduate &&
+        (admission as any).Post_Graduate.length > 2
+          ? (admission as any).Post_Graduate[2]?.pg_status === 'Finished'
+            ? 1
+            : 2
+          : 0,
       postgrad: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 0 ? (admission as any).Post_Graduate[0]?.marksheet?.url || '' : '',
+      postgrad1: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 1 ? (admission as any).Post_Graduate[1]?.marksheet?.url || '' : '',
+      postgrad2: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 2 ? (admission as any).Post_Graduate[2]?.marksheet?.url || '' : '',
       postgradtitle: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 0 ? (admission as any).Post_Graduate[0]?.degree : '',
+      postgradtitle1: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 1 ? (admission as any).Post_Graduate[1]?.degree : '',
+      postgradtitle2: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 2 ? (admission as any).Post_Graduate[2]?.degree : '',
       gradYear: (admission as any).Under_Graduate?.year_of_passing || '',
       postGradYear: (admission as any).Post_Graduate && (admission as any).Post_Graduate.length > 0 ? (admission as any).Post_Graduate[0]?.year_of_passing : '',
       hsc: (admission as any).Education_Details?.Education_Details_12th_std?.url || '',
@@ -165,7 +183,7 @@ console.log(admission,'reftetret');
       others: '', // Not available in current schema
       social: '', // Not available in current schema
       registereddate: formatDateForMySQL(admission.createdAt),
-      ip_address: admission.IpAddress ?? "", // Not available in current schema
+      ip_address: admission.IpAddress ?? "",
       update_date: formatDateForMySQL(admission.updatedAt),
       ref_url: '', // Not available in current schema
       description: admission.Message || '',
