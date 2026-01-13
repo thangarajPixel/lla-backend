@@ -140,7 +140,12 @@ console.log(admission,'reftetret');
       address: admission.address?.[0]?.children?.[0] && 'text' in admission.address[0].children[0] ? admission.address[0].children[0].text : '',
       hobbies: admission.hobbies || '',
       club: admission.photography_club || '',
-      gradstatus:(admission as any).Under_Graduate?.ug_status === 'Finished' ? 1 : 2,
+      gradstatus:
+      (admission as any).Under_Graduate
+        ? (admission as any).Under_Graduate.ug_status === 'Finished'
+          ? 1
+          : 2
+        : 0,
       grad: (admission as any).Under_Graduate?.marksheet?.url || '',
       gradtitle: (admission as any).Under_Graduate?.degree || '',
       postgradstatus:
