@@ -150,7 +150,7 @@ export interface BlogBlogCard extends Struct.ComponentSchema {
           preset: 'defaultHtml';
         }
       >;
-    SeoViewCard: Schema.Attribute.Component<'seo.seo-card', true>;
+    SeoViewCard: Schema.Attribute.Component<'seo.seo-card', false>;
     Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Title: Schema.Attribute.String;
     ViewCard: Schema.Attribute.Component<'blog.view-card', true>;
@@ -973,6 +973,7 @@ export interface MediaMediaCard extends Struct.ComponentSchema {
           preset: 'defaultHtml';
         }
       >;
+    SeoViewCard: Schema.Attribute.Component<'seo.seo-card', false>;
     Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Title: Schema.Attribute.String;
     ViewCard: Schema.Attribute.Component<'media.view-card', true>;

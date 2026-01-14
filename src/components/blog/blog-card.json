@@ -50,7 +50,7 @@
     "SeoViewCard": {
       "type": "component",
       "component": "seo.seo-card",
-      "repeatable": true
+      "repeatable": false
     }
   },
   "config": {}
