@@ -91,8 +91,7 @@ export default factories.createCoreController(
     async findOne(ctx) {
       try {
         const { slug, key } = ctx.params;
-        const page = parseInt(String(ctx.query.page)) || 1;
-        const pageSize = parseInt(String(ctx.query.per_page)) || 1;
+        const pageSize = 10; // Fixed page size
 
         const entity = await strapi.db.query("api::faculty.faculty").findOne({
           populate: {
@@ -124,23 +123,24 @@ export default factories.createCoreController(
 
         const allCards = component.Card || [];
 
-        // 🔑 Slug card
-        const slugCard = allCards.find(card => card.Slug === slug);
+        // Find the slug card and its position
+        const slugCardIndex = allCards.findIndex(card => card.Slug === slug);
 
-        // 🔑 Remaining cards (slug removed)
-        const remainingCards = allCards.filter(card => card.Slug !== slug);
+        if (slugCardIndex === -1) return ctx.notFound("Faculty member with this slug not found");
 
-        let paginatedCards = [];
+        const slugCard = allCards[slugCardIndex];
 
-        if (page === 1 && slugCard) {
-          paginatedCards = [
-            slugCard,
-            ...remainingCards.slice(0, pageSize - 1),
-          ];
-        } else {
-          const start = (page - 1) * pageSize - 1;
-          paginatedCards = remainingCards.slice(start, start + pageSize);
-        }
+        // Calculate which page this slug belongs to
+        const page = Math.floor(slugCardIndex / pageSize) + 1;
+
+        // Get cards for this page
+        const startIndex = (page - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+        const paginatedCards = allCards.slice(startIndex, endIndex);
+
+        // Find next and previous slugs
+        const nextSlug = allCards[slugCardIndex + 1]?.Slug || null;
+        const previousSlug = allCards[slugCardIndex - 1]?.Slug || null;
 
         component.Card = paginatedCards;
 
@@ -154,6 +154,11 @@ export default factories.createCoreController(
           pageSize,
           totalCards,
           totalPages,
+          currentPosition: slugCardIndex + 1,
+          hasNextPage: page < totalPages,
+          hasPrevPage: page > 1,
+          nextSlug,
+          previousSlug,
         };
 
         return { data: sanitizedEntity };
