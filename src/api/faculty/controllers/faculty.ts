@@ -91,8 +91,6 @@ export default factories.createCoreController(
     async findOne(ctx) {
       try {
         const { slug, key } = ctx.params;
-        const pageSize = 10; // Fixed page size
-
         const entity = await strapi.db.query("api::faculty.faculty").findOne({
           populate: {
             Faculty: {
@@ -130,14 +128,6 @@ export default factories.createCoreController(
 
         const slugCard = allCards[slugCardIndex];
 
-        // Calculate which page this slug belongs to
-        const page = Math.floor(slugCardIndex / pageSize) + 1;
-
-        // Get cards for this page
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = startIndex + pageSize;
-        const paginatedCards = allCards.slice(startIndex, endIndex);
-
         // Find next and previous slugs (circular navigation)
         let nextSlug = null;
         let previousSlug = null;
@@ -158,21 +148,17 @@ export default factories.createCoreController(
           previousSlug = allCards[allCards.length - 1]?.Slug || null;
         }
 
-        component.Card = paginatedCards;
+        // Return only the current card
+        component.Card = [slugCard];
 
         const totalCards = allCards.length;
-        const totalPages = Math.ceil(totalCards / pageSize);
+        const currentPosition = slugCardIndex + 1;
 
         const sanitizedEntity = await super.sanitizeOutput(component);
 
         sanitizedEntity.pagination = {
-          page,
-          pageSize,
           totalCards,
-          totalPages,
-          currentPosition: slugCardIndex + 1,
-          hasNextPage: page < totalPages,
-          hasPrevPage: page > 1,
+          currentPosition,
           nextSlug,
           previousSlug,
         };
