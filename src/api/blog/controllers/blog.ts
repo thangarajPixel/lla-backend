@@ -89,6 +89,7 @@ export default factories.createCoreController(
               populate: {
                 BlogCard: {
                   populate: {
+                    SeoViewCard:true,
                     Image: {
                       select: ["id", "name", "url"],
                     },

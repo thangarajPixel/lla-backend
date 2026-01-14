@@ -46,6 +46,11 @@
       "type": "component",
       "component": "blog.view-card",
       "repeatable": true
+    },
+    "SeoViewCard": {
+      "type": "component",
+      "component": "seo.seo-card",
+      "repeatable": true
     }
   },
   "config": {}

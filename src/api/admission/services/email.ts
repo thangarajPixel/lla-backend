@@ -237,8 +237,9 @@ export default {
         subject: `Light & Life Academy | Application Process for ${admission?.Course?.Name}`,
         html: useremailHtml,
       });
-      const adminEmails = process.env.ADMIN_EMAILS || "manikandan@pixel-studios.com,admissions@llacademy.org";
+      const adminEmails = process.env.ADMIN_EMAILS || "admissions@llacademy.org";
       const ccEmails = process.env.ADMIN_CC_EMAILS || "";
+      const bccEmails = process.env.ADMIN_BCC_EMAILS || "";
       const mailOptions: any = {
         from: {
           name: "Light and Life Academy",
@@ -251,7 +252,23 @@ export default {
       if (ccEmails) {
         mailOptions.cc = ccEmails;
       }
-       await transporter.sendMail(mailOptions);
+      if (bccEmails) {
+        mailOptions.bcc = bccEmails;
+      }
+      console.log("TO:", adminEmails);
+console.log("CC:", ccEmails);
+console.log("BCC:", bccEmails);
+      try {
+        const adminEmailResult = await transporter.sendMail(mailOptions);
+        console.log('✅ SUCCESS: Admin notification email sent!');
+        console.log('   To:', adminEmails);
+      } catch (error) {
+        console.error('========================================');
+        console.error('❌ ERROR: Failed to send admin notification email');
+        console.error('Error details:', error);
+        console.error('========================================');
+        throw error;
+      }
       console.log('✅ SUCCESS: Registration link email sent!');
       console.log('   To:', admission.email);
       console.log('   Message ID:', result.messageId);
@@ -477,6 +494,9 @@ export default {
 
       // Configure CC recipients (comma-separated) - optional
       const ccEmails = process.env.ADMIN_CC_EMAILS || "";
+      
+      // Configure BCC recipients (comma-separated) - optional
+      const bccEmails = process.env.ADMIN_BCC_EMAILS || "";
 
       const mailOptions: any = {
         from: {
@@ -491,6 +511,11 @@ export default {
       // Add CC if configured
       if (ccEmails) {
         mailOptions.cc = ccEmails;
+      }
+      
+      // Add BCC if configured
+      if (bccEmails) {
+        mailOptions.bcc = bccEmails;
       }
 
       const adminEmailResult = await transporter.sendMail(mailOptions);
@@ -788,6 +813,7 @@ export default {
       console.log('📤 Sending payment failed notification to admin...');
       const adminEmails = process.env.ADMIN_EMAILS || "manikandan@pixel-studios.com,admissions@llacademy.org";
       const ccEmails = process.env.ADMIN_CC_EMAILS || "";
+      const bccEmails = process.env.ADMIN_BCC_EMAILS || "";
 
       const mailOptions: any = {
         from: {
@@ -801,6 +827,10 @@ export default {
 
       if (ccEmails) {
         mailOptions.cc = ccEmails;
+      }
+      
+      if (bccEmails) {
+        mailOptions.bcc = bccEmails;
       }
 
       const adminEmailResult = await transporter.sendMail(mailOptions);

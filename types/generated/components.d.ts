@@ -150,6 +150,7 @@ export interface BlogBlogCard extends Struct.ComponentSchema {
           preset: 'defaultHtml';
         }
       >;
+    SeoViewCard: Schema.Attribute.Component<'seo.seo-card', true>;
     Slug: Schema.Attribute.String & Schema.Attribute.Unique;
     Title: Schema.Attribute.String;
     ViewCard: Schema.Attribute.Component<'blog.view-card', true>;
