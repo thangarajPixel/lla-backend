@@ -138,9 +138,25 @@ export default factories.createCoreController(
         const endIndex = startIndex + pageSize;
         const paginatedCards = allCards.slice(startIndex, endIndex);
 
-        // Find next and previous slugs
-        const nextSlug = allCards[slugCardIndex + 1]?.Slug || null;
-        const previousSlug = allCards[slugCardIndex - 1]?.Slug || null;
+        // Find next and previous slugs (circular navigation)
+        let nextSlug = null;
+        let previousSlug = null;
+
+        if (slugCardIndex < allCards.length - 1) {
+          // Not the last card, get next card
+          nextSlug = allCards[slugCardIndex + 1]?.Slug || null;
+        } else {
+          // Last card, loop to first card
+          nextSlug = allCards[0]?.Slug || null;
+        }
+
+        if (slugCardIndex > 0) {
+          // Not the first card, get previous card
+          previousSlug = allCards[slugCardIndex - 1]?.Slug || null;
+        } else {
+          // First card, loop to last card
+          previousSlug = allCards[allCards.length - 1]?.Slug || null;
+        }
 
         component.Card = paginatedCards;
 
