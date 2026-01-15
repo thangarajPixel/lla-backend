@@ -108,8 +108,10 @@ export default {
           const timer = setTimeout(() => {
             // Add CSS for clickable first_name and remove double scrollbar
             const style = document.createElement('style');
+            style.id = 'admission-custom-styles';
             style.textContent = `
-              table tbody tr td:nth-child(3) {
+              /* Only apply to admission page - check if URL contains admission */
+              body[data-admission-page="true"] table tbody tr td:nth-child(3) {
                 cursor: pointer !important;
                 color: #4945ff !important;
                 text-decoration: underline !important;
@@ -142,9 +144,18 @@ export default {
                 overflow: visible !important;
               }
             `;
+            
+            // Mark body as admission page for CSS targeting
+            document.body.setAttribute('data-admission-page', 'true');
+            
             document.head.appendChild(style);
 
             const handleTableClick = (event: MouseEvent) => {
+              // Double-check we're still on admission page
+              if (!window.location.pathname.includes('api::admission.admission')) {
+                return;
+              }
+
               console.log('Click detected on:', event.target);
 
               const target = event.target as HTMLElement;
@@ -324,8 +335,16 @@ export default {
             };
           }, 1000); // Wait 1 second for table to load
 
-          return () => clearTimeout(timer);
-        }, []);
+          return () => {
+            clearTimeout(timer);
+            // Clean up the data attribute when leaving admission page
+            document.body.removeAttribute('data-admission-page');
+            const style = document.getElementById('admission-custom-styles');
+            if (style) {
+              document.head.removeChild(style);
+            }
+          };
+        }, [isAdmissionPage]);
 
         // Add PDF download buttons to status column
         React.useEffect(() => {
