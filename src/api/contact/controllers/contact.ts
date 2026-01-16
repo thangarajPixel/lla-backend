@@ -14,22 +14,23 @@ export default factories.createCoreController('api::contact.contact', ({ strapi 
     const response = await super.create(ctx);
 
     console.log('✅ Contact record created - ID:', response.data?.id);
-
-    // Check if Type is "Request Information" and send email
     const contactData = response.data;
-    if (contactData && contactData.Type === 'Request Information' && contactData.Email && contactData.FirstName) {
-      console.log('📧 Type is "Request Information", sending email...');
-      try {
-        const emailService = require('../../admission/services/email').default;
-        await emailService.sendRequestInformationEmail(contactData);
-        console.log('✅ Request Information email sent successfully');
-      } catch (emailError) {
-        console.error('❌ Failed to send Request Information email:', emailError);
-        // Don't fail the request if email fails
+    if (contactData && contactData.Email && contactData.FirstName) {
+      const emailService = require('../../admission/services/email').default;
+      if (contactData.Type === 'Request Information') {
+        console.log('📧 Type is "Request Information", sending user email...');
+        try {
+          await emailService.sendRequestInformationEmail(contactData);
+          console.log('✅ Request Information email sent successfully to user');
+        } catch (emailError) {
+          console.error('❌ Failed to send Request Information email:', emailError);
+          // Don't fail the request if email fails
+        }
+      }else{
+        console.log('📧 Sending contact form email...');
+         await emailService.sendContactFormEmail(contactData);
       }
-    }
-
-    console.log('========================================');
+    } 
     return response;
   },
 
