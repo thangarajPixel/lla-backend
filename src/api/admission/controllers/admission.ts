@@ -1196,10 +1196,11 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
       console.log('Applied filters:', JSON.stringify(filters, null, 2));
 
-      // Get admissions with filters
+      // Get admissions with filters and sort by ID descending
       const admissions = await strapi.entityService.findMany('api::admission.admission', {
         filters: Object.keys(filters).length > 0 ? filters : undefined,
         populate: '*',
+        sort: { id: 'desc' }, // Sort by ID in descending order
         pagination: {
           start: 0,
           limit: -1, // Get all records
@@ -1207,11 +1208,37 @@ export default factories.createCoreController('api::admission.admission', ({ str
       });
 
       if (!admissions || admissions.length === 0) {
-        console.log('⚠️ No admissions found with current filters');
-        return ctx.notFound('No admissions found');
+        console.log('⚠️ No admissions found with current filters - generating empty CSV');
+        
+        // Generate empty CSV with headers only
+        const csvHeaders = [
+          'ID',
+          'Name Title',
+          'First Name',
+          'Last Name',
+          'Email',
+          'Date of Birth',
+          'Nationality',
+          'Mobile No',
+          'City',
+          'District',
+          'Pincode',
+        ];
+
+        const csvContent = csvHeaders.join(',');
+
+        // Set response headers for CSV download
+        ctx.set('Content-Type', 'text/csv; charset=utf-8');
+        ctx.set('Content-Disposition', `attachment; filename="admissions-export-${new Date().toISOString().split('T')[0]}.csv"`);
+
+        console.log('✅ Empty CSV export generated successfully');
+
+        // Return CSV content with BOM for Excel compatibility
+        ctx.body = '\uFEFF' + csvContent;
+        return;
       }
 
-      console.log(`✅ Found ${admissions.length} admissions to export`);
+      console.log(`✅ Found ${admissions.length} admissions to export (sorted by ID desc)`);
 
       // Convert to CSV format
       const csvHeaders = [
@@ -1226,11 +1253,6 @@ export default factories.createCoreController('api::admission.admission', ({ str
         'City',
         'District',
         'Pincode',
-        'Step 1',
-        'Step 2',
-        'Step 3',
-        'Created At',
-        'Updated At'
       ];
 
       const csvRows = admissions.map(admission => [
@@ -1245,11 +1267,6 @@ export default factories.createCoreController('api::admission.admission', ({ str
         admission.city || '',
         admission.district || '',
         admission.pincode || '',
-        admission.step_1 ? 'Yes' : 'No',
-        admission.step_2 ? 'Yes' : 'No',
-        admission.step_3 ? 'Yes' : 'No',
-        admission.createdAt || '',
-        admission.updatedAt || ''
       ]);
 
       // Create CSV content
@@ -1257,14 +1274,9 @@ export default factories.createCoreController('api::admission.admission', ({ str
         csvHeaders.join(','),
         ...csvRows.map(row => row.map(field => `"${String(field).replace(/"/g, '""')}"`).join(','))
       ].join('\n');
-
-      // Set response headers for CSV download
       ctx.set('Content-Type', 'text/csv; charset=utf-8');
       ctx.set('Content-Disposition', `attachment; filename="admissions-export-${new Date().toISOString().split('T')[0]}.csv"`);
-
       console.log('✅ CSV export generated successfully');
-
-      // Return CSV content with BOM for Excel compatibility
       ctx.body = '\uFEFF' + csvContent;
 
     } catch (error) {

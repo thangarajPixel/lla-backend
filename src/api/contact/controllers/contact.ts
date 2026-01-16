@@ -40,6 +40,7 @@ export default factories.createCoreController('api::contact.contact', ({ strapi 
       // Get all contacts without any filters
       const contacts = await strapi.entityService.findMany('api::contact.contact', {
         populate: '*',
+        sort: { id: 'desc' },
         pagination: {
           start: 0,
           limit: -1, // Get all records
@@ -60,10 +61,6 @@ export default factories.createCoreController('api::contact.contact', ({ strapi 
         'Email',
         'Mobile',
         'Type',
-        'Course',
-        'Message',
-        'Created At',
-        'Updated At'
       ];
 
       const csvRows = contacts.map(contact => [
@@ -73,10 +70,6 @@ export default factories.createCoreController('api::contact.contact', ({ strapi 
         contact.Email || '',
         contact.Mobile || '',
         contact.Type || '',
-        contact.Course || '',
-        contact.Message || '',
-        contact.createdAt || '',
-        contact.updatedAt || ''
       ]);
 
       // Create CSV content
