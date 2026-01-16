@@ -1184,6 +1184,11 @@ export default factories.createCoreController('api::admission.admission', ({ str
         }
       }
 
+      // Handle payment status filter
+      if (ctx.query.paymentStatus) {
+        filters.Payment_Status = ctx.query.paymentStatus;
+      }
+
       // Handle search filter (search by name, email, mobile)
       if (ctx.query.search) {
         filters.$or = [

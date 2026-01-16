@@ -35,6 +35,7 @@ export default {
         const [isOpen, setIsOpen] = useState(false);
         const [stepValue, setStepValue] = useState('');
         const [yearValue, setYearValue] = useState('');
+        const [paymentStatusValue, setPaymentStatusValue] = useState('');
 
         const isAdmissionPage = location.pathname.includes('api::admission.admission');
         const isContactPage = location.pathname.includes('api::contact.contact');
@@ -96,6 +97,14 @@ export default {
             setYearValue(academicYear);
           } else {
             setYearValue('');
+          }
+
+          // Check for payment status filter in URL (handle URL encoding)
+          const paymentStatus = urlParams.get('filters[Payment_Status][$eq]') || urlParams.get('filters[Payment_Status][%24eq]');
+          if (paymentStatus) {
+            setPaymentStatusValue(paymentStatus);
+          } else {
+            setPaymentStatusValue('');
           }
         }, [location.search, isAdmissionPage]);
 
@@ -478,6 +487,11 @@ export default {
             params.append('endDate', endDate);
           }
 
+          // Add payment status filter if selected
+          if (paymentStatusValue) {
+            params.append('paymentStatus', paymentStatusValue);
+          }
+
           // Capture search value from multiple sources
           const currentUrl = new URL(window.location.href);
           let searchValue = null;
@@ -516,6 +530,7 @@ export default {
           console.log('Applied filters:', {
             step: stepValue,
             year: yearValue,
+            paymentStatus: paymentStatusValue,
             search: searchValue
           });
           window.open(exportUrl, '_blank');
@@ -570,7 +585,7 @@ export default {
               </Button> */}
 
               {/* Step Dropdown */}
-              <div style={{ width: 150 }}>
+              {/* <div style={{ width: 150 }}>
                 <SingleSelect
                   placeholder="Choose Option"
                   value={stepValue}
@@ -610,7 +625,7 @@ export default {
                   <SingleSelectOption value="Step2">Step2(Portfolio)</SingleSelectOption>
                   <SingleSelectOption value="Step3">Step3(Paid)</SingleSelectOption>
                 </SingleSelect>
-              </div>
+              </div> */}
 
               {/* Academic Year Dropdown */}
               <div style={{ width: 150 }}>
@@ -656,12 +671,47 @@ export default {
                 </SingleSelect>
               </div>
 
+              {/* Payment Status Dropdown */}
+              <div style={{ width: 150 }}>
+                <SingleSelect
+                  placeholder="Addmission Status"
+                  value={paymentStatusValue}
+                  onChange={(value: string | number) => {
+                    const status = String(value);
+                    setPaymentStatusValue(status);
+
+                    if (status) {
+                      const currentUrl = new URL(window.location.href);
+
+                      // Remove existing Payment_Status filters
+                      const keysToDelete: string[] = [];
+                      currentUrl.searchParams.forEach((value, key) => {
+                        if (key.includes('Payment_Status')) {
+                          keysToDelete.push(key);
+                        }
+                      });
+                      keysToDelete.forEach(key => currentUrl.searchParams.delete(key));
+
+                      // Add payment status filter
+                      currentUrl.searchParams.set('page', '1');
+                      currentUrl.searchParams.set('filters[Payment_Status][$eq]', status);
+                      window.location.href = currentUrl.toString();
+                    }
+                  }}
+                >
+                  <SingleSelectOption value="Completed">Paid</SingleSelectOption>
+                  <SingleSelectOption value="UnPaid">UnPaid</SingleSelectOption>
+                  <SingleSelectOption value="Pending">Pending</SingleSelectOption>
+                </SingleSelect>
+              </div>
+
               {/* Clear Filters Button */}
               <Button
                 variant="tertiary"
                 onClick={() => {
                   setStepValue('');
                   setYearValue('');
+                  setPaymentStatusValue('');
                   
                   // Clear search input field
                   const searchInput = document.querySelector('input[placeholder*="Search"]') as HTMLInputElement ||
@@ -677,9 +727,10 @@ export default {
                   const currentUrl = new URL(window.location.href);
                   const keysToDelete: string[] = [];
                   currentUrl.searchParams.forEach((value, key) => {
-                    // Remove step, date, and search filters
+                    // Remove step, date, payment status, and search filters
                     if (key.includes('step_') || 
                         key.includes('createdAt') || 
+                        key.includes('Payment_Status') ||
                         key.includes('search') || 
                         key.includes('containsi') ||
                         key.includes('_q') ||
