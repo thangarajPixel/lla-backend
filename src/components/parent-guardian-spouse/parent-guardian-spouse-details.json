@@ -47,6 +47,9 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::state.state"
+    },
+    "isSameAddress": {
+      "type": "boolean"
     }
   },
   "config": {}

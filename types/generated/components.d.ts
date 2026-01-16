@@ -1039,6 +1039,7 @@ export interface ParentGuardianSpouseParentGuardianSpouseDetails
     district: Schema.Attribute.String;
     email: Schema.Attribute.Email;
     first_name: Schema.Attribute.String;
+    isSameAddress: Schema.Attribute.Boolean;
     last_name: Schema.Attribute.String;
     mobile_no: Schema.Attribute.BigInteger;
     nationality: Schema.Attribute.String;
