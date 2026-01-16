@@ -20,12 +20,8 @@ const encryptId = (id: string): string => {
 const admissionViewUrl =
   process.env.STRAPI_ADMIN_ADMISSION_VIEW_URL;
 
-console.log("Admission View URL:", admissionViewUrl)
-
 export default {
   bootstrap(app: any) {
-
-    // Make first_name clickable in the table
     app.getPlugin('content-manager').injectComponent('listView', 'tableHead', {
       name: 'CustomTableHead',
       Component: () => null, // We'll handle this via CSS and event delegation
@@ -458,7 +454,70 @@ export default {
         const handleDownload = () => window.open(`${process.env.ADMIN_BASE_URL || ''}/uploads/sample.pdf`, '_blank');
         const handleExportAll = () => {
           const adminBaseUrl = process.env.ADMIN_BASE_URL || '';
-          const exportUrl = `${adminBaseUrl}/api/admissions/export`;
+          const params = new URLSearchParams();
+
+          // Add step filter if selected
+          if (stepValue) {
+            const fieldMap: Record<string, string> = {
+              'Step1': 'step_1',
+              'Step2': 'step_2',
+              'Step3': 'step_3'
+            };
+            const field = fieldMap[stepValue];
+            if (field) {
+              params.append(field, '1');
+            }
+          }
+
+          // Add year filter if selected
+          if (yearValue) {
+            const [startYear, endYear] = yearValue.split('-');
+            const startDate = `${startYear}-04-01`;
+            const endDate = `${endYear}-03-31`;
+            params.append('startDate', startDate);
+            params.append('endDate', endDate);
+          }
+
+          // Capture search value from multiple sources
+          const currentUrl = new URL(window.location.href);
+          let searchValue = null;
+
+          // Method 1: Check URL parameters (various Strapi filter formats)
+          currentUrl.searchParams.forEach((value, key) => {
+            if (key.includes('containsi') || key.includes('search')) {
+              searchValue = value;
+            }
+          });
+
+          // Method 2: Try to get value from search input field
+          if (!searchValue) {
+            const searchInput = document.querySelector('input[placeholder*="Search"]') as HTMLInputElement ||
+                               document.querySelector('input[type="search"]') as HTMLInputElement ||
+                               document.querySelector('input[name="search"]') as HTMLInputElement;
+            if (searchInput && searchInput.value) {
+              searchValue = searchInput.value;
+            }
+          }
+
+          // Method 3: Check for _q parameter (Strapi's default search param)
+          if (!searchValue) {
+            searchValue = currentUrl.searchParams.get('_q') || 
+                         currentUrl.searchParams.get('filters[_q]') ||
+                         currentUrl.searchParams.get('search');
+          }
+
+          if (searchValue) {
+            params.append('search', searchValue);
+            console.log('Search value captured:', searchValue);
+          }
+
+          const exportUrl = `${adminBaseUrl}/api/admissions/export${params.toString() ? '?' + params.toString() : ''}`;
+          console.log('Export URL with filters:', exportUrl);
+          console.log('Applied filters:', {
+            step: stepValue,
+            year: yearValue,
+            search: searchValue
+          });
           window.open(exportUrl, '_blank');
         };
         const handleContactExportAll = () => {
@@ -500,9 +559,9 @@ export default {
               <Button startIcon={<Eye />} variant="secondary" onClick={handleView}>
                 View
               </Button>
-              {/* <Button startIcon={<Download />} variant="secondary" onClick={handleExportAll}>
+              <Button startIcon={<Download />} variant="secondary" onClick={handleExportAll}>
                 Export All
-              </Button> */}
+              </Button>
               {/* <Button startIcon={<Duplicate />} variant="secondary" onClick={() => setIsOpen(true)}>
                 Popup
               </Button>
@@ -603,15 +662,35 @@ export default {
                 onClick={() => {
                   setStepValue('');
                   setYearValue('');
+                  
+                  // Clear search input field
+                  const searchInput = document.querySelector('input[placeholder*="Search"]') as HTMLInputElement ||
+                                     document.querySelector('input[type="search"]') as HTMLInputElement ||
+                                     document.querySelector('input[name="search"]') as HTMLInputElement;
+                  if (searchInput) {
+                    searchInput.value = '';
+                    // Trigger input event to update Strapi's internal state
+                    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    searchInput.dispatchEvent(new Event('change', { bubbles: true }));
+                  }
+                  
                   const currentUrl = new URL(window.location.href);
                   const keysToDelete: string[] = [];
                   currentUrl.searchParams.forEach((value, key) => {
-                    if (key.includes('step_') || key.includes('createdAt')) {
+                    // Remove step, date, and search filters
+                    if (key.includes('step_') || 
+                        key.includes('createdAt') || 
+                        key.includes('search') || 
+                        key.includes('containsi') ||
+                        key.includes('_q') ||
+                        key.includes('filters')) {
                       keysToDelete.push(key);
                     }
                   });
                   keysToDelete.forEach(key => currentUrl.searchParams.delete(key));
                   currentUrl.searchParams.set('page', '1');
+                  
+                  console.log('Filters cleared, redirecting to:', currentUrl.toString());
                   window.location.href = currentUrl.toString();
                 }}
               >

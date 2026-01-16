@@ -1156,8 +1156,49 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
   async exportAll(ctx) {
     try {
-      // Get all admissions without any date filters
+      console.log('📊 Exporting admissions with filters...');
+      console.log('Query params:', ctx.query);
+
+      // Build filters from query parameters
+      const filters: any = {};
+
+      // Handle step filters (step_1, step_2, step_3)
+      if (ctx.query.step_1) {
+        filters.step_1 = ctx.query.step_1 === 'true' || ctx.query.step_1 === '1';
+      }
+      if (ctx.query.step_2) {
+        filters.step_2 = ctx.query.step_2 === 'true' || ctx.query.step_2 === '1';
+      }
+      if (ctx.query.step_3) {
+        filters.step_3 = ctx.query.step_3 === 'true' || ctx.query.step_3 === '1';
+      }
+
+      // Handle date range filters (createdAt)
+      if (ctx.query.startDate || ctx.query.endDate) {
+        filters.createdAt = {};
+        if (ctx.query.startDate) {
+          filters.createdAt.$gte = ctx.query.startDate;
+        }
+        if (ctx.query.endDate) {
+          filters.createdAt.$lte = ctx.query.endDate;
+        }
+      }
+
+      // Handle search filter (search by name, email, mobile)
+      if (ctx.query.search) {
+        filters.$or = [
+          { first_name: { $containsi: ctx.query.search } },
+          { last_name: { $containsi: ctx.query.search } },
+          { email: { $containsi: ctx.query.search } },
+          { mobile_no: { $containsi: ctx.query.search } },
+        ];
+      }
+
+      console.log('Applied filters:', JSON.stringify(filters, null, 2));
+
+      // Get admissions with filters
       const admissions = await strapi.entityService.findMany('api::admission.admission', {
+        filters: Object.keys(filters).length > 0 ? filters : undefined,
         populate: '*',
         pagination: {
           start: 0,
@@ -1166,8 +1207,11 @@ export default factories.createCoreController('api::admission.admission', ({ str
       });
 
       if (!admissions || admissions.length === 0) {
+        console.log('⚠️ No admissions found with current filters');
         return ctx.notFound('No admissions found');
       }
+
+      console.log(`✅ Found ${admissions.length} admissions to export`);
 
       // Convert to CSV format
       const csvHeaders = [
@@ -1215,14 +1259,16 @@ export default factories.createCoreController('api::admission.admission', ({ str
       ].join('\n');
 
       // Set response headers for CSV download
-      ctx.set('Content-Type', 'text/csv');
+      ctx.set('Content-Type', 'text/csv; charset=utf-8');
       ctx.set('Content-Disposition', `attachment; filename="admissions-export-${new Date().toISOString().split('T')[0]}.csv"`);
 
-      // Return CSV content
-      ctx.body = csvContent;
+      console.log('✅ CSV export generated successfully');
+
+      // Return CSV content with BOM for Excel compatibility
+      ctx.body = '\uFEFF' + csvContent;
 
     } catch (error) {
-      console.error('Error exporting admissions:', error);
+      console.error('❌ Error exporting admissions:', error);
       ctx.throw(500, 'Error exporting admissions: ' + error.message);
     }
   },
