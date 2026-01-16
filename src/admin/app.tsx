@@ -41,6 +41,7 @@ export default {
         const [yearValue, setYearValue] = useState('');
 
         const isAdmissionPage = location.pathname.includes('api::admission.admission');
+        const isContactPage = location.pathname.includes('api::contact.contact');
 
         // Format mobile_no as string in the table display
         React.useEffect(() => {
@@ -460,6 +461,11 @@ export default {
           const exportUrl = `${adminBaseUrl}/api/admissions/export`;
           window.open(exportUrl, '_blank');
         };
+        const handleContactExportAll = () => {
+          const adminBaseUrl = process.env.ADMIN_BASE_URL || '';
+          const exportUrl = `${adminBaseUrl}/api/contacts/export`;
+          window.open(exportUrl, '_blank');
+        };
         const handleSubmit = () => {
           alert(`Form Submitted!\nStep: ${stepValue}\nYear: ${yearValue}`);
           setIsOpen(false);
@@ -469,6 +475,17 @@ export default {
         const years = [];
         for (let start = 2017; start <= 2027; start++) {
           years.push(`${start}-${start + 1}`);
+        }
+
+        // Render Contact page buttons
+        if (isContactPage) {
+          return (
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <Button startIcon={<Download />} variant="secondary" onClick={handleContactExportAll}>
+                Export All
+              </Button>
+            </div>
+          );
         }
 
         // Early return if not admission page
