@@ -129,5 +129,79 @@ export default factories.createCoreController(
         return ctx.internalServerError("Failed to load card data");
       }
     },
+    async updateCards(ctx) {
+      try {
+        const { cards } = ctx.request.body;
+        if (!cards || !Array.isArray(cards)) {
+          return ctx.badRequest("Cards array is required");
+        }
+        const entity = await strapi.db
+          .query("api::life-at-lla.life-at-lla")
+          .findOne({
+            populate: {
+              LifeCard: {
+                populate: {
+                  SeoViewCard: true,
+                  LifeViewCard: true,
+                },
+              },
+            },
+          });
+
+        if (!entity || !entity.LifeCard) {
+          return ctx.notFound("Life content not found");
+        }
+
+        // Track updated slugs
+        const updatedSlugs = [];
+        const notFoundSlugs = [];
+
+        const updatedCards = entity.LifeCard.map((lifeCard) => {
+          const updateData = cards.find((card) => card.slug === lifeCard.Slug);
+          if (updateData) {
+            updatedSlugs.push(updateData.slug);
+            return {
+              ...lifeCard,
+              SeoViewCard: {
+                Title: updateData.title,
+                Description: updateData.description,
+                KeyWords: lifeCard.SeoViewCard?.KeyWords || null,
+              },
+              LifeViewCard: lifeCard.LifeViewCard,
+            };
+          }
+          return lifeCard;
+        });
+
+        // Find slugs that were not found in existing cards
+        cards.forEach((card) => {
+          const found = entity.LifeCard.some((lifeCard) => lifeCard.Slug === card.slug);
+          if (!found) {
+            notFoundSlugs.push(card.slug);
+          }
+        });
+
+        await strapi.entityService.update("api::life-at-lla.life-at-lla", entity.id, {
+          data: {
+            LifeCard: updatedCards,
+            publishedAt: new Date(),
+          },
+        });
+
+        return {
+          data: {
+            message: "Cards updated and published successfully",
+            updatedCount: updatedSlugs.length,
+            totalRequestedCount: cards.length,
+            updatedSlugs: updatedSlugs,
+            notFoundSlugs: notFoundSlugs,
+            published: true,
+          },
+        };
+      } catch (error) {
+        console.error("Life updateCards error:", error);
+        return ctx.internalServerError("Failed to update cards");
+      }
+    },
   })
 );
