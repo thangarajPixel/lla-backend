@@ -5,15 +5,15 @@ import path from 'path';
 import { encryptAdmissionId } from './id-encryption';
 const logo = `${process.env.ADMIN_BASE_URL}/uploads/thumbnail_new_logo_c40ca2c9f8.png`;
 export default {
-  async sendRequestInformationEmail(contact: any) {
+   async sendRequestInformationEmail(contact: any) {
     console.log('========================================');
-    console.log('📧 Sending Request Information email...');
+    console.log('📧 Sending Admission Request Enquiry email...');
     console.log('Contact Email:', contact.Email);
-    console.log('Contact Name:', contact.FirstName);
+    console.log('Contact Name:', contact.FirstName, contact.LastName);
+    console.log('Contact Type:', contact.Type);
     console.log('========================================');
 
     try {
-      // Create transporter
       const transporter = nodemailer.createTransport({
         host: process.env.SMTP_HOST,
         port: parseInt(process.env.SMTP_PORT || '587'),
@@ -24,60 +24,136 @@ export default {
         },
       });
 
-      // Email HTML
-      const emailHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: #ff6b6b; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0; }
-            .content { padding: 30px; background: #fce4d8; border-radius: 0 0 8px 8px; }
-            .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>Light & Life Academy</h1>
-              <h3>PHOTOGRAPHY</h3>
-            </div>
-            <div class="content">
-              <h2 style="color: #ff6b6b;">Successfully Request for Admission</h2>
-              <p>Hi <strong>${contact.FirstName}</strong>,</p>
-              <p>Thank you for your registration and interest in Light & Life Academy!</p>
-              <p>We have received your request for information. Our team will review your inquiry and get back to you shortly.</p>
-              <p>We look forward to helping you begin your photography journey with us!</p>
-            </div>
-            <div class="footer">
-              <p>Light & Life Academy - Photography</p>
-              <p>This is an automated email. Please do not reply.</p>
-            </div>
-          </div>
-        </body>
-        </html>
+      const contactName = `${contact.FirstName || ''} ${contact.LastName || ''}`.trim();
+
+      // Email to admin
+      const adminEmailHtml = `
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1,  maximum-scale=1, user-scalable=0" >		
+		<title>Light and Life Academy</title>
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<link rel="shortcut icon" type="image/x-icon" href="images/favicon.png"/>
+		<style type="text/css">
+			html{padding: 0px; margin: 0px;}
+			body{padding: 0px; margin: 0px;text-align: center;}
+		</style>
+	</head>	
+	<body>
+		<table border="0" width="600" cellpadding="0" cellspacing="0" style="border:1px solid #CCC; margin: 0 auto;">
+			<tr>
+				<td style="text-align: center; padding: 10px; background: #000; font-family: 'Arial', Sans-serif;">
+					<img src="${logo}" alt="" />
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 20px 20px 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 600; font-size: 20px; line-height: 30px; color: #000;">
+					New Admission Request Enquiry – Light & Life Academy
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 10px 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000;">
+					Dear <strong>Admin Team,</strong><br/><br/>
+					You have received a new admission enquiry through the <strong>${contact.Type || 'Request Information'}</strong> form on the Light & Life Academy website.
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 10px 20px 0px 20px; font-family: 'Arial', Sans-serif; font-weight: 600; font-size: 16px; line-height: 24px; color: #000;">
+					Enquiry Details:
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: left; padding: 10px 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000;">
+					<table border="0" cellpadding="0" cellspacing="0" style="border:none; width: 100%;">
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000; border-bottom: 1px solid #CCC; border-top: 1px solid #CCC;">
+								Name:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 600; font-size: 14px; line-height: 24px; color: #000; border-bottom: 1px solid #CCC; border-top: 1px solid #CCC;">
+								${contactName}
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000; border-bottom: 1px solid #CCC;">
+								Email Address:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000; border-bottom: 1px solid #CCC;">
+								<a href="mailto:${contact.Email}" target="_blank" style="text-decoration: none; font-weight: 500; color: #0066cc;">${contact.Email}</a>
+							</td>
+						</tr>
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000; border-bottom: 1px solid #CCC;">
+								Phone Number:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000; border-bottom: 1px solid #CCC;">
+								<a href="tel:+91${contact.Mobile}" target="_blank" style="text-decoration: none; font-weight: 600; color: #000;">${contact.Mobile ? '+91 ' + contact.Mobile : 'N/A'}</a>
+							</td>
+						</tr>
+						${contact.Course ? `
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000; border-bottom: 1px solid #CCC;">
+								Course:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000; border-bottom: 1px solid #CCC;">
+								${contact.Course}
+							</td>
+						</tr>
+						` : ''}
+						<tr>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000; border-bottom: 1px solid #CCC; vertical-align: top;">
+								Message:
+							</td>
+							<td style="text-align: left; padding: 10px 20px 10px 0px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000; border-bottom: 1px solid #CCC;">
+								${contact.Message || 'No message provided'}
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
       `;
 
-      // Send email
-      console.log('📤 Sending email...');
-      const result = await transporter.sendMail({
+      // Send email to admin
+      console.log('📤 Sending admission request enquiry to admin...');
+      const adminEmails = process.env.ADMIN_EMAILS || "admissions@llacademy.org";
+      const ccEmails = process.env.ADMIN_CC_EMAILS || "";
+      const bccEmails = process.env.ADMIN_BCC_EMAILS || "";
+
+      const mailOptions: any = {
         from: {
           name: "Light and Life Academy",
           address: process.env.SMTP_FROM,
         },
-        to: contact.Email,
-        subject: 'Successfully Request for Admission - Light & Life Academy',
-        html: emailHtml,
-      });
-      console.log('✅ SUCCESS: Request Information email sent!');
-      console.log('   To:', contact.Email);
-      console.log('   Message ID:', result.messageId);
+        to: adminEmails,
+        subject: `New Admission Request Enquiry – Light & Life Academy`,
+        html: adminEmailHtml,
+      };
+
+      if (ccEmails) {
+        mailOptions.cc = ccEmails;
+      }
+      
+      if (bccEmails) {
+        mailOptions.bcc = bccEmails;
+      }
+
+      const adminEmailResult = await transporter.sendMail(mailOptions);
+
+      console.log('✅ SUCCESS: Admission request enquiry email sent!');
+      console.log('   To:', adminEmails);
+      console.log('   Message ID:', adminEmailResult.messageId);
       console.log('========================================');
+
       return { success: true };
     } catch (error) {
       console.error('========================================');
-      console.error('❌ ERROR: Failed to send Request Information email');
+      console.error('❌ ERROR: Failed to send admission request enquiry email');
       console.error('Error details:', error);
       console.error('========================================');
       throw error;
@@ -957,16 +1033,6 @@ console.log("BCC:", bccEmails);
 							</td>
 						</tr>
 					</table>
-				</td>
-			</tr>
-			<tr>
-				<td style="text-align: left; padding: 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: #000;">
-					Please review the enquiry and respond to the sender at your earliest convenience.
-				</td>
-			</tr>
-			<tr>
-				<td style="text-align: left; padding: 0px 20px 20px 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 12px; line-height: 20px; color: #666;">
-					<strong>Note:</strong> This is an automated notification from the Light & Life Academy website contact form.
 				</td>
 			</tr>
 		</table>
