@@ -135,5 +135,89 @@ export default factories.createCoreController(
       }
     },
 
+    async updateCards(ctx) {
+      try {
+        const { cards } = ctx.request.body;
+        if (!cards || !Array.isArray(cards)) {
+          return ctx.badRequest("Cards array is required");
+        }
+
+        const entity = await strapi.db
+          .query("api::media.media")
+          .findOne({
+            populate: {
+              Media: {
+                populate: {
+                  MediaCard: {
+                    populate: {
+                      SeoViewCard: true,
+                      ViewCard: true,
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+        if (!entity || !entity.Media || !entity.Media.MediaCard) {
+          return ctx.notFound("Media content not found");
+        }
+
+        // Track updated slugs
+        const updatedSlugs = [];
+        const notFoundSlugs = [];
+
+        const updatedMediaCards = entity.Media.MediaCard.map((mediaCard) => {
+          const updateData = cards.find((card) => card.slug === mediaCard.Slug);
+          if (updateData) {
+            updatedSlugs.push(updateData.slug);
+            return {
+              ...mediaCard,
+              SeoViewCard: {
+                Title: updateData.title,
+                Description: updateData.description,
+                Slug: updateData.slug,
+                KeyWords: mediaCard.SeoViewCard?.KeyWords || null,
+              },
+              ViewCard: mediaCard.ViewCard,
+            };
+          }
+          return mediaCard;
+        });
+
+        // Find slugs that were not found in existing cards
+        cards.forEach((card) => {
+          const found = entity.Media.MediaCard.some((mediaCard) => mediaCard.Slug === card.slug);
+          if (!found) {
+            notFoundSlugs.push(card.slug);
+          }
+        });
+
+        await strapi.entityService.update("api::media.media", entity.id, {
+          data: {
+            Media: {
+              ...entity.Media,
+              MediaCard: updatedMediaCards,
+            },
+            publishedAt: new Date(),
+          },
+        });
+
+        return {
+          data: {
+            message: "Media cards updated and published successfully",
+            updatedCount: updatedSlugs.length,
+            totalRequestedCount: cards.length,
+            updatedSlugs: updatedSlugs,
+            notFoundSlugs: notFoundSlugs,
+            published: true,
+          },
+        };
+      } catch (error) {
+        console.error("Media updateCards error:", error);
+        return ctx.internalServerError("Failed to update media cards");
+      }
+    },
+
   })
 );
