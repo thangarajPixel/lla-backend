@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-01-16T04:37:32.252Z"
+    "x-generation-date": "2026-01-19T08:44:44.860Z"
   },
   "servers": [
     {
@@ -11450,6 +11450,9 @@
                 "type": "string"
               }
             }
+          },
+          "isSameAddress": {
+            "type": "boolean"
           }
         }
       },
@@ -12477,6 +12480,9 @@
               },
               "IpAddress": {
                 "type": "string"
+              },
+              "step_4": {
+                "type": "boolean"
               },
               "locale": {
                 "type": "string"
@@ -13569,6 +13575,9 @@
                     "IpAddress": {
                       "type": "string"
                     },
+                    "step_4": {
+                      "type": "boolean"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -13770,6 +13779,9 @@
           },
           "IpAddress": {
             "type": "string"
+          },
+          "step_4": {
+            "type": "boolean"
           },
           "createdAt": {
             "type": "string",
@@ -19256,6 +19268,9 @@
                 },
                 "IpAddress": {
                   "type": "string"
+                },
+                "step_4": {
+                  "type": "boolean"
                 },
                 "createdAt": {
                   "type": "string",
@@ -27258,6 +27273,9 @@
                 },
                 "IpAddress": {
                   "type": "string"
+                },
+                "step_4": {
+                  "type": "boolean"
                 },
                 "createdAt": {
                   "type": "string",

@@ -565,6 +565,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     step_1: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     step_2: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     step_3: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    step_4: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     txnid: Schema.Attribute.String;
     Under_Graduate: Schema.Attribute.Component<
       'under-graduate.under-graduate',

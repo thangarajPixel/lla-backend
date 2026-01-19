@@ -178,6 +178,10 @@
     },
     "IpAddress": {
       "type": "string"
+    },
+    "step_4": {
+      "type": "boolean",
+      "default": false
     }
   }
 }

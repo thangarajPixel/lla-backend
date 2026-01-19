@@ -718,6 +718,7 @@ console.log("BCC:", bccEmails);
         {
           data: {
             Payment_Status: 'Paid',
+            step_4: true,
             mihpayid: txnData.mihpayid ?? '',
             PayUId: txnData.bank_ref_num ?? '',
             payment_response: txnData,
