@@ -1275,7 +1275,9 @@ export interface ApiThankYouPageThankYouPage
       >;
     publishedAt: Schema.Attribute.DateTime;
     Title: Schema.Attribute.Text;
-    Type: Schema.Attribute.Enumeration<['Success', 'Error']>;
+    Type: Schema.Attribute.Enumeration<
+      ['Success', 'Error', 'Contact', 'RequestInfo', 'AdmissionClosed']
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

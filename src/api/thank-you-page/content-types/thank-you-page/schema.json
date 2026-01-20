@@ -15,7 +15,10 @@
       "type": "enumeration",
       "enum": [
         "Success",
-        "Error"
+        "Error",
+        "Contact",
+        "RequestInfo",
+        "AdmissionClosed"
       ]
     },
     "Title": {
