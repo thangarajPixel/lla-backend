@@ -12,6 +12,16 @@ export default {
     },
     {
       method: 'GET',
+      path: '/admissions/:id/pdf-download',
+      handler: 'admission.adminGeneratePdf',
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
+      method: 'GET',
       path: '/admissions/export',
       handler: 'admission.exportAll',
       config: {
