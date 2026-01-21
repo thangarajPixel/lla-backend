@@ -211,7 +211,7 @@ console.log(admission,'reftetret');
       NameTitle: admission.name_title || '',
       ParentNameTitle: (admission as any).Parent_Guardian_Spouse_Details?.title || '',
       graduate: (admission as any).Under_Graduate ? 'Yes' : 'No',
-      Step: admission.step_4 ? "Step4" : admission.step_3 ? "Step3" : (admission.step_2 ? "Step3" : (admission.step_1 ? "Step1" : (admission.step_0 ? "Step1" : 0))),
+      Step: admission.step_4 ? "Step4" : admission.step_3 ? "Step3" : (admission.step_2 ? "Step2" : (admission.step_1 ? "Step1" : (admission.step_0 ? "Step1" : 0))),
       Step1Date: admission.step_1 ? formatDateForMySQL(admission.updatedAt) : null,
       Step2Date: admission.step_2 ? formatDateForMySQL(admission.updatedAt) : null,
       Step3Date: admission.step_3 ? formatDateForMySQL(admission.updatedAt) : null,
