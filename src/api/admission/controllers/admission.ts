@@ -2187,5 +2187,43 @@ export default factories.createCoreController('api::admission.admission', ({ str
       console.error('❌ Error creating payment:', error);
       ctx.throw(500, 'Error creating payment: ' + error.message);
     }
+  },
+  async admissionUpdate(ctx) {
+    try {
+      console.log('========================================');
+      console.log('📝 ADMISSION UPDATE API called');
+      console.log('Document ID:', ctx.params.id);
+      console.log('Update Data:', JSON.stringify(ctx.request.body, null, 2));
+      console.log('========================================');
+
+      const { id } = ctx.params;
+      const padded = id + "=".repeat((4 - (id.length % 4)) % 4);
+      const decoded = Buffer.from(padded, "base64").toString();
+      const finaldata = decoded.split("_")[0];
+      console.log("Decoded String:", finaldata);
+      const { first_name } = ctx.request.body;
+      if (!first_name) {
+        return ctx.badRequest('first_name is required');
+      }
+      const data = await strapi.entityService.update(
+        'api::admission.admission',
+        finaldata,
+        {
+          data: {
+            first_name: first_name,
+          },
+        }
+      );
+
+      return {
+        data: data,
+        message: 'Admission updated successfully'
+      };
+
+    } catch (error) {
+      console.error('❌ Error in admissionUpdate:', error);
+      console.log('Error stack:', error.stack);
+      console.log('========================================');
+    }
   }
 }));

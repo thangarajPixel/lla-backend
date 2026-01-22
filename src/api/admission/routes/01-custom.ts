@@ -20,6 +20,16 @@ export default {
         middlewares: [],
       },
     },
+     {
+      method: 'PUT',
+      path: '/admission-update/:id',
+      handler: 'admission.admissionUpdate',
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+      },
+    },
     {
       method: 'GET',
       path: '/admissions/export',
