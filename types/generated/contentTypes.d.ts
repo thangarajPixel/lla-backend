@@ -508,6 +508,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    Currentstep: Schema.Attribute.String;
     date_of_birth: Schema.Attribute.Date;
     district: Schema.Attribute.String;
     Education_Details: Schema.Attribute.Component<
