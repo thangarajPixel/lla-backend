@@ -286,9 +286,8 @@ export default {
                 if (finalId) {
                   const baseUrl = admissionViewUrl;
                   const encryptedId = encryptId(finalId);
-                  const url = `${baseUrl}/admission/${encryptedId}`;
+                  const url = `${baseUrl}/admission/${encryptedId}/preview?type=admin`;
                   console.log('Opening URL with encrypted ID:', url);
-
                   setTimeout(() => {
                     window.open(url, '_blank');
                   }, 0);
