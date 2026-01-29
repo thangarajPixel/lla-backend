@@ -88,15 +88,11 @@ export default {
             setStepValue('');
           }
 
-          // Check for year filters in URL (handle URL encoding)
-          const startDate = urlParams.get('filters[createdAt][$gte]') || urlParams.get('filters[createdAt][%24gte]');
-          const endDate = urlParams.get('filters[createdAt][$lte]') || urlParams.get('filters[createdAt][%24lte]');
+          // Check for AdmissionYear filter in URL (handle URL encoding)
+          const admissionYear = urlParams.get('filters[AdmissionYear][$eq]') || urlParams.get('filters[AdmissionYear][%24eq]');
           
-          if (startDate && endDate) {
-            const startYear = startDate.split('-')[0];
-            const endYear = endDate.split('-')[0];
-            const academicYear = `${startYear}-${endYear}`;
-            setYearValue(academicYear);
+          if (admissionYear) {
+            setYearValue(admissionYear);
           } else {
             setYearValue('');
           }
@@ -521,13 +517,9 @@ export default {
             }
           }
 
-          // Add year filter if selected
+          // Add AdmissionYear filter if selected
           if (yearValue) {
-            const [startYear, endYear] = yearValue.split('-');
-            const startDate = `${startYear}-04-01`;
-            const endDate = `${endYear}-03-31`;
-            params.append('startDate', startDate);
-            params.append('endDate', endDate);
+            params.append('admissionYear', yearValue);
           }
 
           // Add payment status filter if selected
@@ -680,28 +672,20 @@ export default {
                     setYearValue(year);
 
                     if (year) {
-                      // Parse academic year (e.g., "2024-2025")
-                      const [startYear, endYear] = year.split('-');
-
-                      // Academic year: April 1st of start year to March 31st of end year
-                      const startDate = `${startYear}-04-01`;
-                      const endDate = `${endYear}-03-31`;
-
                       const currentUrl = new URL(window.location.href);
 
-                      // Remove existing createdAt filters
+                      // Remove existing AdmissionYear filters
                       const keysToDelete: string[] = [];
                       currentUrl.searchParams.forEach((value, key) => {
-                        if (key.includes('createdAt')) {
+                        if (key.includes('AdmissionYear')) {
                           keysToDelete.push(key);
                         }
                       });
                       keysToDelete.forEach(key => currentUrl.searchParams.delete(key));
 
-                      // Add date range filter
+                      // Add AdmissionYear filter
                       currentUrl.searchParams.set('page', '1');
-                      currentUrl.searchParams.set('filters[createdAt][$gte]', startDate);
-                      currentUrl.searchParams.set('filters[createdAt][$lte]', endDate);
+                      currentUrl.searchParams.set('filters[AdmissionYear][$eq]', year);
                       window.location.href = currentUrl.toString();
                     }
                   }}
@@ -770,9 +754,9 @@ export default {
                   const currentUrl = new URL(window.location.href);
                   const keysToDelete: string[] = [];
                   currentUrl.searchParams.forEach((value, key) => {
-                    // Remove step, date, payment status, and search filters
+                    // Remove step, AdmissionYear, payment status, and search filters
                     if (key.includes('step_') || 
-                        key.includes('createdAt') || 
+                        key.includes('AdmissionYear') || 
                         key.includes('Payment_Status') ||
                         key.includes('search') || 
                         key.includes('containsi') ||

@@ -1672,15 +1672,9 @@ export default factories.createCoreController('api::admission.admission', ({ str
         filters.step_3 = ctx.query.step_3 === 'true' || ctx.query.step_3 === '1';
       }
 
-      // Handle date range filters (createdAt)
-      if (ctx.query.startDate || ctx.query.endDate) {
-        filters.createdAt = {};
-        if (ctx.query.startDate) {
-          filters.createdAt.$gte = ctx.query.startDate;
-        }
-        if (ctx.query.endDate) {
-          filters.createdAt.$lte = ctx.query.endDate;
-        }
+      // Handle AdmissionYear filter
+      if (ctx.query.admissionYear) {
+        filters.AdmissionYear = ctx.query.admissionYear;
       }
 
       // Handle payment status filter
