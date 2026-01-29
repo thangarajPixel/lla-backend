@@ -352,6 +352,49 @@ export default {
           };
         }, [isAdmissionPage]);
 
+        // Add  Admission Status name change in the table display
+        React.useEffect(() => {
+          if (!isAdmissionPage) return;
+          const formatAdmissionStatus = () => {
+            // First, find the header to determine which column is ADMISSION STATUS
+            const headers = document.querySelectorAll('table thead tr th');
+            let admissionStatusColumnIndex = -1;
+            
+            headers.forEach((header, index) => {
+              const headerText = header.textContent?.trim().toUpperCase();
+              if (headerText === 'ADMISSION STATUS' || headerText === 'PAYMENT_STATUS') {
+                admissionStatusColumnIndex = index;
+              }
+            });
+
+            // If we found the admission status column, target only that column
+            if (admissionStatusColumnIndex >= 0) {
+              const statusCells = document.querySelectorAll(`table tbody tr td:nth-child(${admissionStatusColumnIndex + 1})`);
+              statusCells.forEach(cell => {
+                const text = cell.textContent?.trim();
+                // Check for specific status values and rename
+                if (text === 'Completed') {
+                  cell.textContent = 'Payment Initiated';
+                } else if (text === 'UnPaid') {
+                  cell.textContent = 'UnPaid';
+                } else if (text === 'Paid') {
+                  cell.textContent = 'Paid';
+                } else if (text && text !== 'Payment Initiated' && text !== 'UnPaid' && text !== 'Paid') {
+                  // Only change if it's not already one of our target values
+                  cell.textContent = 'Pending';
+                }
+              });
+            }
+          };
+
+          const timer = setTimeout(formatAdmissionStatus, 500);
+          const interval = setInterval(formatAdmissionStatus, 1000);
+          return () => {
+            clearTimeout(timer);
+            clearInterval(interval);
+          }
+        }, [location.pathname, location.search, isAdmissionPage]);
+
         // Add PDF download buttons to status column
         React.useEffect(() => {
           if (!isAdmissionPage) return;
