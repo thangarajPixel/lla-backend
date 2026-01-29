@@ -424,6 +424,36 @@ export default {
                   }
                 }
 
+                // Check Step4 status by looking for step_4 column or checking step status
+                let isStep4Completed = false;
+                
+                // Method 1: Look for step_4 column (boolean true/false)
+                allCells.forEach((cell, index) => {
+                  const cellText = cell.textContent?.trim().toLowerCase();
+                  // Check if this cell contains step_4 status (true/false)
+                  if (cellText === 'true' || cellText === '1') {
+                    // Check if this might be the step_4 column by looking at header
+                    const headers = document.querySelectorAll('table thead tr th');
+                    if (headers[index]) {
+                      const headerText = headers[index].textContent?.trim().toLowerCase();
+                      if (headerText?.includes('step_4') || headerText?.includes('step 4')) {
+                        isStep4Completed = true;
+                      }
+                    }
+                  }
+                });
+
+                // Method 2: If no step_4 column found, check for general step completion indicators
+                if (!isStep4Completed) {
+                  allCells.forEach((cell) => {
+                    const cellText = cell.textContent?.trim().toLowerCase();
+                    // Look for indicators that step 4 is completed
+                    if (cellText === 'step4' || cellText === 'step 4' || cellText === 'completed' || cellText === 'paid') {
+                      isStep4Completed = true;
+                    }
+                  });
+                }
+
                 if (rowId) {
                   const pdfBtn = document.createElement('button');
                   pdfBtn.className = 'pdf-download-btn';
@@ -433,14 +463,13 @@ export default {
                     </svg>
                     
                   `; // SVG download icon with text
-                  pdfBtn.style.cssText = `
+                  
+                  // Set button style based on Step4 status
+                  const baseStyle = `
                     margin-top:7px;
-                    background: #4945ff !important;
-                    color: white !important;
                     border: none !important;
                     padding: 6px 12px !important;
                     border-radius: 6px !important;
-                    cursor: pointer !important;
                     font-size: 12px !important;
                     margin-left: 12px !important;
                     display: inline-flex !important;
@@ -450,40 +479,65 @@ export default {
                     transition: all 0.2s ease !important;
                   `;
                   
-                  // Add hover effect
-                  pdfBtn.onmouseenter = () => {
-                    pdfBtn.style.background = '#3730a3 !important';
-                    pdfBtn.style.transform = 'translateY(-1px) !important';
-                    pdfBtn.style.boxShadow = '0 2px 8px rgba(73, 69, 255, 0.3) !important';
-                  };
-                  
-                  pdfBtn.onmouseleave = () => {
-                    pdfBtn.style.background = '#4945ff !important';
-                    pdfBtn.style.transform = 'translateY(0) !important';
-                    pdfBtn.style.boxShadow = 'none !important';
-                  };
-
-                  pdfBtn.onclick = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    console.log('Downloading PDF for ID:', rowId);
-
-                    // Download PDF using anchor element
-                    const adminBaseUrl = process.env.ADMIN_BASE_URL || '';
-                    const pdfUrl = `${adminBaseUrl}/api/admissions/${rowId}/pdf?type=admin`;
+                  if (isStep4Completed) {
+                    // Enabled state
+                    pdfBtn.style.cssText = baseStyle + `
+                      background: #4945ff !important;
+                      color: white !important;
+                      cursor: pointer !important;
+                    `;
                     
-                    console.log('PDF URL:', pdfUrl);
+                    // Add hover effect for enabled button
+                    pdfBtn.onmouseenter = () => {
+                      pdfBtn.style.background = '#3730a3 !important';
+                      pdfBtn.style.transform = 'translateY(-1px) !important';
+                      pdfBtn.style.boxShadow = '0 2px 8px rgba(73, 69, 255, 0.3) !important';
+                    };
                     
-                    // Create temporary anchor element for download
-                    const link = document.createElement('a');
-                    link.href = pdfUrl;
-                    link.download = `admission-${rowId}.zip`;
-                    link.target = '_blank';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                  };
+                    pdfBtn.onmouseleave = () => {
+                      pdfBtn.style.background = '#4945ff !important';
+                      pdfBtn.style.transform = 'translateY(0) !important';
+                      pdfBtn.style.boxShadow = 'none !important';
+                    };
+
+                    pdfBtn.onclick = (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+
+                      console.log('Downloading PDF for ID:', rowId);
+
+                      // Download PDF using anchor element
+                      const adminBaseUrl = process.env.ADMIN_BASE_URL || '';
+                      const pdfUrl = `${adminBaseUrl}/api/admissions/${rowId}/pdf?type=admin`;
+                      
+                      console.log('PDF URL:', pdfUrl);
+                      
+                      // Create temporary anchor element for download
+                      const link = document.createElement('a');
+                      link.href = pdfUrl;
+                      link.download = `admission-${rowId}.zip`;
+                      link.target = '_blank';
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    };
+                  } else {
+                    // Disabled state
+                    pdfBtn.style.cssText = baseStyle + `
+                      background: #ddd !important;
+                      color: #999 !important;
+                      cursor: not-allowed !important;
+                      opacity: 0.6 !important;
+                    `;
+                    
+                    pdfBtn.title = 'Download available only after Step 4 completion';
+                    
+                    pdfBtn.onclick = (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      alert('Download is only available after Step 4 completion');
+                    };
+                  }
 
                   cell.appendChild(pdfBtn);
                 }
