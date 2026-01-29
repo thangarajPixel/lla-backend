@@ -297,8 +297,8 @@ export default {
 			<tr>
 				<td style="text-align: left; padding: 20px; font-family: 'Arial', Sans-serif; font-weight: 400; font-size: 14px; line-height: 24px; color: 000;">
 					Course Applied for:	<strong>${admission?.Course?.Name}</strong><br/>
-					Form Link: <a href="${registrationUrl}
-" target="_blank" style="text-decoration: none; font-weight: 500;">${registrationUrl}</a>
+					Form Link: <a href="${registrationUrl}/preview?type=admin"
+" target="_blank" style="text-decoration: none; font-weight: 500;">${registrationUrl}/preview?type=admin</a>
 				</td>
 			</tr>
 		</table>
