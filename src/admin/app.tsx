@@ -48,13 +48,15 @@ export default {
             // Target all mobile_no cells in the table
             const mobileCells = document.querySelectorAll('table tbody tr td');
             mobileCells.forEach(cell => {
-              const text = cell.textContent?.trim();
+               const el = cell as HTMLElement;
+                 el.style.fontSize = "15px"; 
+              const text = el.textContent?.trim();
               // Check if it looks like a mobile number (10 digits or more)
               if (text && /^\d{10,}$/.test(text.replace(/,/g, ''))) {
                 // Remove any commas and display as plain string
                 const cleanNumber = text.replace(/,/g, '');
-                if (cell.textContent !== cleanNumber) {
-                  cell.textContent = cleanNumber;
+                if (el.textContent !== cleanNumber) {
+                  el.textContent = cleanNumber;
                 }
               }
             });
@@ -359,29 +361,28 @@ export default {
             // First, find the header to determine which column is ADMISSION STATUS
             const headers = document.querySelectorAll('table thead tr th');
             let admissionStatusColumnIndex = -1;
-            
             headers.forEach((header, index) => {
               const headerText = header.textContent?.trim().toUpperCase();
               if (headerText === 'ADMISSION STATUS' || headerText === 'PAYMENT_STATUS') {
                 admissionStatusColumnIndex = index;
               }
             });
-
-            // If we found the admission status column, target only that column
             if (admissionStatusColumnIndex >= 0) {
               const statusCells = document.querySelectorAll(`table tbody tr td:nth-child(${admissionStatusColumnIndex + 1})`);
               statusCells.forEach(cell => {
-                const text = cell.textContent?.trim();
+                 const el = cell as HTMLElement;
+                 el.style.fontSize = "15px";   // change to 18px / 20px if needed
+                const text = el.textContent?.trim();
                 // Check for specific status values and rename
                 if (text === 'Completed') {
-                  cell.textContent = 'Payment Initiated';
+                  el.textContent = 'Payment Initiated';
                 } else if (text === 'UnPaid') {
-                  cell.textContent = 'UnPaid';
+                  el.textContent = 'UnPaid';
                 } else if (text === 'Paid') {
-                  cell.textContent = 'Paid';
+                  el.textContent = 'Paid';
                 } else if (text && text !== 'Payment Initiated' && text !== 'UnPaid' && text !== 'Paid') {
                   // Only change if it's not already one of our target values
-                  cell.textContent = 'Pending';
+                  el.textContent = 'Pending';
                 }
               });
             }
