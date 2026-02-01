@@ -185,6 +185,9 @@
     },
     "Currentstep": {
       "type": "string"
+    },
+    "captchaToken": {
+      "type": "text"
     }
   }
 }

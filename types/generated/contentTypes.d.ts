@@ -500,6 +500,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     address: Schema.Attribute.Blocks;
     AdmissionYear: Schema.Attribute.String;
     blood_group: Schema.Attribute.String;
+    captchaToken: Schema.Attribute.Text;
     city: Schema.Attribute.String;
     Course: Schema.Attribute.Relation<
       'manyToOne',
@@ -700,6 +701,7 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    captchaToken: Schema.Attribute.Text;
     Course: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

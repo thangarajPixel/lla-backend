@@ -37,6 +37,9 @@
     },
     "Course": {
       "type": "string"
+    },
+    "captchaToken": {
+      "type": "text"
     }
   }
 }

@@ -5,6 +5,7 @@
 import { factories } from '@strapi/strapi'
 import { syncAdmissionWithCourse } from '../../../admission-course-sync'
 import archiver from 'archiver'
+import { googleRecaptchaVerify } from '../../../helper';
 import { PassThrough } from 'stream'
 
 // Helper function to add base URL to media fields
@@ -170,6 +171,39 @@ export default factories.createCoreController('api::admission.admission', ({ str
     console.log('========================================');
     console.log('📝 CREATE API called');
     console.log('========================================');
+        const token = ctx.request.body.data.captchaToken;
+        console.log('🔐 reCAPTCHA Token received:', token ? 'Yes' : 'No');
+        console.log('🔐 Token length:', token ? token.length : 0);
+        if (token) {
+          console.log('🔍 Starting reCAPTCHA verification...');
+          
+          try {
+            const result = await googleRecaptchaVerify(token);
+            
+            console.log('📊 reCAPTCHA Verification Result:', JSON.stringify(result, null, 2));
+            
+            if (!result.success) {
+              console.error('❌ reCAPTCHA verification failed:', result.error);
+              return ctx.badRequest(`reCAPTCHA verification failed: ${result.error}`);
+            }
+            
+            if (result.score !== undefined) {
+              console.log('📈 reCAPTCHA Score:', result.score);
+              if (result.score < 0.5) {
+                console.error('❌ reCAPTCHA score too low:', result.score);
+                return ctx.badRequest('reCAPTCHA score too low. Please try again.');
+              }
+            }
+            
+            console.log('✅ reCAPTCHA verification succeeded');
+            
+          } catch (error) {
+            console.error('❌ reCAPTCHA verification error:', error);
+            return ctx.internalServerError(`reCAPTCHA verification error: ${error.message}`);
+          }
+        } else {
+          console.log('⚠️ No reCAPTCHA token provided - proceeding without verification');
+        }
 
     // Remove publishedAt from request body
     if (ctx.request.body.data) {

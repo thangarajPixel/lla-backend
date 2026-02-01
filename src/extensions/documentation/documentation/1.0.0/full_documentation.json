@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-01-29T12:25:53.924Z"
+    "x-generation-date": "2026-02-01T06:00:39.275Z"
   },
   "servers": [
     {
@@ -12487,6 +12487,9 @@
               "Currentstep": {
                 "type": "string"
               },
+              "captchaToken": {
+                "type": "string"
+              },
               "locale": {
                 "type": "string"
               },
@@ -13584,6 +13587,9 @@
                     "Currentstep": {
                       "type": "string"
                     },
+                    "captchaToken": {
+                      "type": "string"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -13790,6 +13796,9 @@
             "type": "boolean"
           },
           "Currentstep": {
+            "type": "string"
+          },
+          "captchaToken": {
             "type": "string"
           },
           "createdAt": {
@@ -16310,6 +16319,9 @@
               "Course": {
                 "type": "string"
               },
+              "captchaToken": {
+                "type": "string"
+              },
               "locale": {
                 "type": "string"
               },
@@ -16402,6 +16414,9 @@
             ]
           },
           "Course": {
+            "type": "string"
+          },
+          "captchaToken": {
             "type": "string"
           },
           "createdAt": {
@@ -16728,6 +16743,9 @@
                   ]
                 },
                 "Course": {
+                  "type": "string"
+                },
+                "captchaToken": {
                   "type": "string"
                 },
                 "createdAt": {
@@ -19282,6 +19300,9 @@
                   "type": "boolean"
                 },
                 "Currentstep": {
+                  "type": "string"
+                },
+                "captchaToken": {
                   "type": "string"
                 },
                 "createdAt": {
@@ -27290,6 +27311,9 @@
                   "type": "boolean"
                 },
                 "Currentstep": {
+                  "type": "string"
+                },
+                "captchaToken": {
                   "type": "string"
                 },
                 "createdAt": {
