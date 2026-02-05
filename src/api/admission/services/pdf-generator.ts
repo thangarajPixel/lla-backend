@@ -4,6 +4,66 @@ import * as fs from 'fs';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
 
+// Helper to convert image URL to base64
+async function getImageBase64(imageUrl: string): Promise<string> {
+    try {
+        if (!imageUrl) return '';
+
+        // If it's already a base64 string, return it
+        if (imageUrl.startsWith('data:image')) return imageUrl;
+
+        const response = await fetch(imageUrl);
+        if (!response.ok) {
+            console.error(`Failed to fetch image: ${imageUrl}`);
+            return '';
+        }
+
+        const buffer = await response.arrayBuffer();
+        const base64 = Buffer.from(buffer).toString('base64');
+
+        // Determine MIME type from URL extension
+        const extension = imageUrl.split('.').pop()?.toLowerCase();
+        let mimeType = 'image/jpeg'; // default
+
+        if (extension === 'png') mimeType = 'image/png';
+        else if (extension === 'gif') mimeType = 'image/gif';
+        else if (extension === 'webp') mimeType = 'image/webp';
+        else if (extension === 'pdf') mimeType = 'application/pdf';
+
+        return `data:${mimeType};base64,${base64}`;
+    } catch (error) {
+        console.error('Error converting image to base64:', error);
+        return '';
+    }
+}
+
+async function getFileDataUri(fileUrl: string): Promise<{ dataUri: string; isPdf: boolean }> {
+    try {
+        if (!fileUrl) return { dataUri: '', isPdf: false };
+        if (fileUrl.startsWith('data:')) {
+            const isPdf = fileUrl.startsWith('data:application/pdf');
+            return { dataUri: fileUrl, isPdf };
+        }
+        const res = await fetch(fileUrl);
+        if (!res.ok) return { dataUri: '', isPdf: false };
+        const buf = Buffer.from(await res.arrayBuffer());
+        const ct = res.headers.get('content-type') || '';
+        let mime = ct.split(';')[0].trim();
+        if (!mime) {
+            const ext = fileUrl.split('.').pop()?.toLowerCase();
+            if (ext === 'pdf') mime = 'application/pdf';
+            else if (ext === 'png') mime = 'image/png';
+            else if (ext === 'gif') mime = 'image/gif';
+            else if (ext === 'webp') mime = 'image/webp';
+            else mime = 'image/jpeg';
+        }
+        const dataUri = `data:${mime};base64,${buf.toString('base64')}`;
+        const isPdf = mime === 'application/pdf';
+        return { dataUri, isPdf };
+    } catch {
+        return { dataUri: '', isPdf: false };
+    }
+}
 // Helper to convert logo to base64
 function getLogoBase64(): string {
     try {
@@ -126,14 +186,12 @@ class PDFGenerator {
 
     async generateAdmissionPDF(admissionData: any): Promise<Buffer> {
         try {
-            console.log('Starting PDF generation for:', admissionData.id);
+            console.log('Starting PDF generation for:', admissionData);
 
             // Get logo as base64
             const logoBase64 = getLogoBase64();
 
-            // Embed template directly in code to avoid file path issues
-            const templateHtml = `
-<!DOCTYPE html>
+            const templateHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -630,9 +688,76 @@ class PDFGenerator {
             </div>
             {{/if}}
         </div>
+        
     </div>
+    
+         {{#if Education_Details_10th_std_url}}
+            <div class="page-break"></div>
+            <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+                <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">10th Standard Marksheet:</h2>
+                <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                    <img src="{{Education_Details_10th_std_url}}" alt="10th Standard Certificate" style="max-width: 80%; max-height: 80%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                </div>
+            </div>
+            {{/if}}
+            
+            {{#if Education_Details_12th_std_url}}
+            <div class="page-break"></div>
+            <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+                <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">12th Standard Marksheet:</h2>
+                <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                    <img src="{{Education_Details_12th_std_url}}" alt="12th Standard Certificate" style="max-width: 80%; max-height: 80%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                </div>
+            </div>
+            {{/if}}
+     {{#if ugMarksheet.src}}
+     <div class="page-break"></div>
+     <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+         <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Under Graduate Marksheet:</h2>
+         <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+             {{#if ugMarksheet.isPdf}}
+             <object data="{{ugMarksheet.src}}" type="application/pdf" style="width: 80%; height: 80vh;"></object>
+             {{else}}
+             <img src="{{ugMarksheet.src}}" alt="Under Graduate Marksheet" style="max-width: 80%; max-height: 80%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+             {{/if}}
+         </div>
+     </div>
+     {{/if}}
+     
+     {{#if pgMarksheetList.length}}
+     {{#each pgMarksheetList}}
+     <div class="page-break"></div>
+     <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+      <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Post Graduate Marksheet {{add @index 1}}</h2>
+         <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+             {{#if isPdf}}
+             <object data="{{src}}" type="application/pdf" style="width: 80%; height: 80vh;"></object>
+             {{else}}
+             <img src="{{src}}" alt="Post Graduate Marksheet" style="max-width: 80%; max-height: 80%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+             {{/if}}
+         </div>
+     </div>
+     {{/each}}
+     {{/if}}
+     
+     {{#if workReferenceList.length}}
+     {{#each workReferenceList}}
+     <div class="page-break"></div>
+     <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+         <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Work Experience Reference Letter {{@index}}</h2>
+         <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+             {{#if isPdf}}
+             <object data="{{src}}" type="application/pdf" style="width: 80%; height: 80vh;"></object>
+             {{else}}
+             <img src="{{src}}" alt="Reference Letter" style="max-width: 80%; max-height: 80%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+             {{/if}}
+         </div>
+     </div>
+     {{/each}}
+     {{/if}}
 </body>
-</html>`;
+</html>
+`;
 
             console.log('Template loaded from embedded code');
 
@@ -737,7 +862,7 @@ class PDFGenerator {
     }
 
     // Helper method to format data
-    formatAdmissionData(admission: any) {
+    async formatAdmissionData(admission: any) {
         // Format language proficiency as array for template
         const languagesList = admission.Language_Proficiency?.map((lang: any) => ({
             language: lang.language || 'Unknown',
@@ -813,9 +938,88 @@ class PDFGenerator {
             passport_size_image = imgUrl ? (imgUrl.startsWith('http') ? imgUrl : `${baseUrl}${imgUrl}`) : '';
         }
 
+        // Get Education Details 10th std image URL and convert to base64
+        let Education_Details_10th_std_url = '';
+        if (admission.Education_Details?.Education_Details_10th_std) {
+            const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
+            const imgUrl = typeof admission.Education_Details.Education_Details_10th_std === 'string'
+                ? admission.Education_Details.Education_Details_10th_std
+                : admission.Education_Details.Education_Details_10th_std.url;
+            const fullUrl = imgUrl ? (imgUrl.startsWith('http') ? imgUrl : `${baseUrl}${imgUrl}`) : '';
+            Education_Details_10th_std_url = await getImageBase64(fullUrl);
+        }
+
+        // Get Education Details 12th std image URL and convert to base64
+        let Education_Details_12th_std_url = '';
+        if (admission.Education_Details?.Education_Details_12th_std) {
+            const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
+            const imgUrl = typeof admission.Education_Details.Education_Details_12th_std === 'string'
+                ? admission.Education_Details.Education_Details_12th_std
+                : admission.Education_Details.Education_Details_12th_std.url;
+            const fullUrl = imgUrl ? (imgUrl.startsWith('http') ? imgUrl : `${baseUrl}${imgUrl}`) : '';
+            Education_Details_12th_std_url = await getImageBase64(fullUrl);
+        }
+
+        let ugMarksheet = { src: '', isPdf: false };
+        if (admission.Under_Graduate?.marksheet) {
+            const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
+            const m = Array.isArray(admission.Under_Graduate.marksheet)
+                ? admission.Under_Graduate.marksheet[0]
+                : admission.Under_Graduate.marksheet;
+            const src = typeof m === 'string' ? m : m?.url;
+            const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
+            const file = await getFileDataUri(fullUrl);
+            ugMarksheet = { src: file.dataUri, isPdf: file.isPdf };
+        }
+
+        const pgMarksheetList: Array<{ src: string; isPdf: boolean }> = [];
+        if (Array.isArray(admission.Post_Graduate)) {
+            for (const pg of admission.Post_Graduate) {
+                if (pg?.marksheet) {
+                    const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
+                    const m = Array.isArray(pg.marksheet) ? pg.marksheet[0] : pg.marksheet;
+                    const src = typeof m === 'string' ? m : m?.url;
+                    const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
+                    const file = await getFileDataUri(fullUrl);
+                    if (file.dataUri) pgMarksheetList.push({ src: file.dataUri, isPdf: file.isPdf });
+                }
+            }
+        } else if (admission.Post_Graduate?.marksheet) {
+            const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
+            const m = Array.isArray(admission.Post_Graduate.marksheet)
+                ? admission.Post_Graduate.marksheet[0]
+                : admission.Post_Graduate.marksheet;
+            const src = typeof m === 'string' ? m : m?.url;
+            const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
+            const file = await getFileDataUri(fullUrl);
+            if (file.dataUri) pgMarksheetList.push({ src: file.dataUri, isPdf: file.isPdf });
+        }
+
+        const workReferenceList: Array<{ src: string; isPdf: boolean }> = [];
+        if (Array.isArray(admission.Work_Experience)) {
+            const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
+            for (const w of admission.Work_Experience) {
+                const ref = w?.reference_letter;
+                if (ref) {
+                    const refs = Array.isArray(ref) ? ref : [ref];
+                    for (const r of refs) {
+                        const src = typeof r === 'string' ? r : r?.url;
+                        const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
+                        const file = await getFileDataUri(fullUrl);
+                        if (file.dataUri) workReferenceList.push({ src: file.dataUri, isPdf: file.isPdf });
+                    }
+                }
+            }
+        }
+
         return {
             ...admission,
             passport_size_image,
+            Education_Details_10th_std_url,
+            Education_Details_12th_std_url,
+            ugMarksheet,
+            pgMarksheetList,
+            workReferenceList,
             fullName: `${admission.name_title || ''} ${admission.first_name || ''} ${admission.last_name || ''}`.trim(),
             mobileNumber: admission.mobile_no || 'Not Provided',
             addressInfo, // Now formatted as: address, city, state, district, pincode

@@ -761,7 +761,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
           const pdfGenerator = new PDFGenerator();
 
           // Format admission data
-          const formattedData = pdfGenerator.formatAdmissionData(admission);
+          const formattedData = await pdfGenerator.formatAdmissionData(admission);
 
           // Generate PDF buffer
           const pdfBuffer = await pdfGenerator.generateAdmissionPDF(formattedData);
@@ -1086,7 +1086,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
           const pdfGenerator = new PDFGenerator();
 
           // Format admission data
-          const formattedData = pdfGenerator.formatAdmissionData(admission);
+          const formattedData = await pdfGenerator.formatAdmissionData(admission);
 
           console.log('Generating PDF for admission:', admission.id);
           console.log('Formatted data:', JSON.stringify(formattedData, null, 2));
@@ -1260,7 +1260,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
           const pdfGenerator = new PDFGenerator();
 
           // Format admission data
-          const formattedData = pdfGenerator.formatAdmissionData(admission);
+          const formattedData = await pdfGenerator.formatAdmissionData(admission);
 
           // Generate PDF buffer
           const pdfBuffer = await pdfGenerator.generateAdmissionPDF(formattedData);
@@ -1585,7 +1585,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
           const pdfGenerator = new PDFGenerator();
 
           // Format admission data
-          const formattedData = pdfGenerator.formatAdmissionData(admission);
+          const formattedData = await pdfGenerator.formatAdmissionData(admission);
 
           console.log('Generating PDF for admission:', admission.id);
           console.log('Formatted data:', JSON.stringify(formattedData, null, 2));
