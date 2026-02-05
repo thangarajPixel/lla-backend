@@ -727,6 +727,7 @@ class PDFGenerator {
      {{#if pgMarksheetList.length}}
      {{#each pgMarksheetList}}
      <div class="page-break"></div>
+     
      <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
       <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Post Graduate Marksheet</h2>
          <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
