@@ -188,6 +188,10 @@
     },
     "captchaToken": {
       "type": "text"
+    },
+    "IsDelete": {
+      "type": "boolean",
+      "default": false
     }
   }
 }
