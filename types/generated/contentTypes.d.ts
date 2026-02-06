@@ -441,9 +441,6 @@ export interface ApiAboutAbout extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     about: Schema.Attribute.DynamicZone<
       ['about.about', 'about.legacy', 'about.founder', 'about.team']
     >;
@@ -472,9 +469,6 @@ export interface ApiAdmissionYearAdmissionYear
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     AcademicYear: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -503,9 +497,6 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     address: Schema.Attribute.Blocks;
     AdmissionYear: Schema.Attribute.String;
     blood_group: Schema.Attribute.String;
@@ -608,9 +599,6 @@ export interface ApiBlogBlog extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     Blog: Schema.Attribute.Component<'blog.blog', false>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -636,9 +624,6 @@ export interface ApiCampusCampus extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     campus: Schema.Attribute.DynamicZone<
       ['campus.menu', 'campus.facilities', 'home.gallery']
     >;
@@ -669,9 +654,6 @@ export interface ApiContactPageContactPage extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     BtnText: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -720,9 +702,6 @@ export interface ApiContactContact extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     captchaToken: Schema.Attribute.Text;
     Course: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
@@ -760,9 +739,6 @@ export interface ApiCourseListCourseList extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     admissions: Schema.Attribute.Relation<
       'oneToMany',
       'api::admission.admission'
@@ -812,9 +788,6 @@ export interface ApiCourseCourse extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     Course: Schema.Attribute.DynamicZone<['course.dip-professional']>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -843,9 +816,6 @@ export interface ApiEssentialEssential extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     admission_year: Schema.Attribute.Relation<
       'oneToOne',
       'api::admission-year.admission-year'
@@ -880,9 +850,6 @@ export interface ApiFacultyFaculty extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -919,9 +886,6 @@ export interface ApiFaqFaq extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -948,9 +912,6 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     Btn_txt: Schema.Attribute.String;
     Copy_right_txt: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;
@@ -997,9 +958,6 @@ export interface ApiGalleryGallery extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1030,9 +988,6 @@ export interface ApiHomeHome extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1071,9 +1026,6 @@ export interface ApiLifeAtLlaLifeAtLla extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1111,9 +1063,6 @@ export interface ApiMediaMedia extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1139,9 +1088,6 @@ export interface ApiNilgirisNilgiris extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1172,9 +1118,6 @@ export interface ApiPrivacyPolicyPrivacyPolicy extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1215,9 +1158,6 @@ export interface ApiSeoSeo extends Struct.SingleTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1243,9 +1183,6 @@ export interface ApiStateState extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     admissions: Schema.Attribute.Relation<
       'oneToMany',
       'api::admission.admission'
@@ -1276,9 +1213,6 @@ export interface ApiTermsAndConditionTermsAndCondition
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1320,9 +1254,6 @@ export interface ApiThankYouPageThankYouPage
     draftAndPublish: true;
   };
   attributes: {
-    _softDeletedAt: Schema.Attribute.DateTime & Schema.Attribute.Private;
-    _softDeletedById: Schema.Attribute.Integer & Schema.Attribute.Private;
-    _softDeletedByType: Schema.Attribute.String & Schema.Attribute.Private;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

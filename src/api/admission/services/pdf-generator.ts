@@ -3,39 +3,7 @@ import * as handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
-
-// Helper to convert image URL to base64
-async function getImageBase64(imageUrl: string): Promise<string> {
-    try {
-        if (!imageUrl) return '';
-
-        // If it's already a base64 string, return it
-        if (imageUrl.startsWith('data:image')) return imageUrl;
-
-        const response = await fetch(imageUrl);
-        if (!response.ok) {
-            console.error(`Failed to fetch image: ${imageUrl}`);
-            return '';
-        }
-
-        const buffer = await response.arrayBuffer();
-        const base64 = Buffer.from(buffer).toString('base64');
-
-        // Determine MIME type from URL extension
-        const extension = imageUrl.split('.').pop()?.toLowerCase();
-        let mimeType = 'image/jpeg'; // default
-
-        if (extension === 'png') mimeType = 'image/png';
-        else if (extension === 'gif') mimeType = 'image/gif';
-        else if (extension === 'webp') mimeType = 'image/webp';
-        else if (extension === 'pdf') mimeType = 'application/pdf';
-
-        return `data:${mimeType};base64,${base64}`;
-    } catch (error) {
-        console.error('Error converting image to base64:', error);
-        return '';
-    }
-}
+import { pdf } from 'pdf-to-img';
 
 async function getFileDataUri(fileUrl: string): Promise<{ dataUri: string; isPdf: boolean }> {
     try {
@@ -57,6 +25,30 @@ async function getFileDataUri(fileUrl: string): Promise<{ dataUri: string; isPdf
             else if (ext === 'webp') mime = 'image/webp';
             else mime = 'image/jpeg';
         }
+        
+        // Convert PDF to PNG image for proper rendering in Puppeteer
+        if (mime === 'application/pdf') {
+            try {
+                const document = await pdf(buf, { scale: 2.0 });
+                const images: Buffer[] = [];
+                
+                for await (const image of document) {
+                    images.push(image);
+                }
+                
+                // Use the first page of the PDF
+                if (images.length > 0) {
+                    const imageDataUri = `data:image/png;base64,${images[0].toString('base64')}`;
+                    return { dataUri: imageDataUri, isPdf: true };
+                }
+            } catch (pdfError) {
+                console.error('Error converting PDF to image:', pdfError);
+                // Fallback to original PDF data URI
+                const dataUri = `data:${mime};base64,${buf.toString('base64')}`;
+                return { dataUri, isPdf: true };
+            }
+        }
+        
         const dataUri = `data:${mime};base64,${buf.toString('base64')}`;
         const isPdf = mime === 'application/pdf';
         return { dataUri, isPdf };
@@ -691,22 +683,22 @@ class PDFGenerator {
         
     </div>
     
-         {{#if Education_Details_10th_std_url}}
+         {{#if Education_Details_10th_std_url.src}}
             <div class="page-break"></div>
             <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
                 <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">10th Standard Marksheet:</h2>
                 <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
-                    <img src="{{Education_Details_10th_std_url}}" alt="10th Standard Certificate" style="max-width: 80%; max-height: 80%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                    <img src="{{Education_Details_10th_std_url.src}}" alt="10th Standard Certificate" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
                 </div>
             </div>
             {{/if}}
             
-            {{#if Education_Details_12th_std_url}}
+            {{#if Education_Details_12th_std_url.src}}
             <div class="page-break"></div>
             <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
                 <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">12th Standard Marksheet:</h2>
                 <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
-                    <img src="{{Education_Details_12th_std_url}}" alt="12th Standard Certificate" style="max-width: 80%; max-height: 80%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                    <img src="{{Education_Details_12th_std_url.src}}" alt="12th Standard Certificate" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
                 </div>
             </div>
             {{/if}}
@@ -715,11 +707,7 @@ class PDFGenerator {
      <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
          <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Under Graduate Marksheet:</h2>
          <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
-             {{#if ugMarksheet.isPdf}}
-             <object data="{{ugMarksheet.src}}" type="application/pdf" style="width: 80%; height: 80vh;"></object>
-             {{else}}
-             <img src="{{ugMarksheet.src}}" alt="Under Graduate Marksheet" style="max-width: 80%; max-height: 80%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-             {{/if}}
+             <img src="{{ugMarksheet.src}}" alt="Under Graduate Marksheet" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
          </div>
      </div>
      {{/if}}
@@ -731,11 +719,7 @@ class PDFGenerator {
      <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
       <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Post Graduate Marksheet</h2>
          <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
-             {{#if isPdf}}
-             <object data="{{src}}" type="application/pdf" style="width: 80%; height: 80vh;"></object>
-             {{else}}
-             <img src="{{src}}" alt="Post Graduate Marksheet" style="max-width: 80%; max-height: 80%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-             {{/if}}
+             <img src="{{src}}" alt="Post Graduate Marksheet" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
          </div>
      </div>
      {{/each}}
@@ -747,11 +731,7 @@ class PDFGenerator {
      <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
          <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Work Experience Reference Letter</h2>
          <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
-             {{#if isPdf}}
-             <object data="{{src}}" type="application/pdf" style="width: 80%; height: 80vh;"></object>
-             {{else}}
-             <img src="{{src}}" alt="Reference Letter" style="max-width: 80%; max-height: 80%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-             {{/if}}
+             <img src="{{src}}" alt="Reference Letter" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
          </div>
      </div>
      {{/each}}
@@ -939,26 +919,32 @@ class PDFGenerator {
             passport_size_image = imgUrl ? (imgUrl.startsWith('http') ? imgUrl : `${baseUrl}${imgUrl}`) : '';
         }
 
-        // Get Education Details 10th std image URL and convert to base64
-        let Education_Details_10th_std_url = '';
+        // Get Education Details 10th std file URL and convert to data URI
+        let Education_Details_10th_std_url = { src: '', isPdf: false };
         if (admission.Education_Details?.Education_Details_10th_std) {
             const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
             const imgUrl = typeof admission.Education_Details.Education_Details_10th_std === 'string'
                 ? admission.Education_Details.Education_Details_10th_std
                 : admission.Education_Details.Education_Details_10th_std.url;
             const fullUrl = imgUrl ? (imgUrl.startsWith('http') ? imgUrl : `${baseUrl}${imgUrl}`) : '';
-            Education_Details_10th_std_url = await getImageBase64(fullUrl);
+            console.log('10th std URL:', fullUrl);
+            const file = await getFileDataUri(fullUrl);
+            console.log('10th std file result:', { hasDataUri: !!file.dataUri, isPdf: file.isPdf });
+            Education_Details_10th_std_url = { src: file.dataUri, isPdf: file.isPdf };
         }
 
-        // Get Education Details 12th std image URL and convert to base64
-        let Education_Details_12th_std_url = '';
+        // Get Education Details 12th std file URL and convert to data URI
+        let Education_Details_12th_std_url = { src: '', isPdf: false };
         if (admission.Education_Details?.Education_Details_12th_std) {
             const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
             const imgUrl = typeof admission.Education_Details.Education_Details_12th_std === 'string'
                 ? admission.Education_Details.Education_Details_12th_std
                 : admission.Education_Details.Education_Details_12th_std.url;
             const fullUrl = imgUrl ? (imgUrl.startsWith('http') ? imgUrl : `${baseUrl}${imgUrl}`) : '';
-            Education_Details_12th_std_url = await getImageBase64(fullUrl);
+            console.log('12th std URL:', fullUrl);
+            const file = await getFileDataUri(fullUrl);
+            console.log('12th std file result:', { hasDataUri: !!file.dataUri, isPdf: file.isPdf });
+            Education_Details_12th_std_url = { src: file.dataUri, isPdf: file.isPdf };
         }
 
         let ugMarksheet = { src: '', isPdf: false };

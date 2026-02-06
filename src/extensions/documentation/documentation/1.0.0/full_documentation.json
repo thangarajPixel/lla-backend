@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-02-05T12:20:31.043Z"
+    "x-generation-date": "2026-02-06T06:48:05.987Z"
   },
   "servers": [
     {
@@ -10074,16 +10074,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -10287,29 +10277,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -12539,16 +12509,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -13598,16 +13558,6 @@
                               }
                             }
                           }
-                        },
-                        "_softDeletedAt": {
-                          "type": "string",
-                          "format": "date-time"
-                        },
-                        "_softDeletedById": {
-                          "type": "integer"
-                        },
-                        "_softDeletedByType": {
-                          "type": "string"
                         }
                       }
                     },
@@ -13696,16 +13646,6 @@
                           }
                         }
                       }
-                    },
-                    "_softDeletedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "_softDeletedById": {
-                      "type": "integer"
-                    },
-                    "_softDeletedByType": {
-                      "type": "string"
                     }
                   }
                 }
@@ -13760,16 +13700,6 @@
                     }
                   }
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           },
@@ -13930,16 +13860,6 @@
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -13982,16 +13902,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -14397,29 +14307,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -14462,16 +14352,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -14625,29 +14505,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -15073,16 +14933,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -15278,29 +15128,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -16517,16 +16347,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -16987,29 +16807,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -17077,16 +16877,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -17542,29 +17332,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -17620,16 +17390,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -17785,29 +17545,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -18605,16 +18345,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -19398,16 +19128,6 @@
                           }
                         }
                       }
-                    },
-                    "_softDeletedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "_softDeletedById": {
-                      "type": "integer"
-                    },
-                    "_softDeletedByType": {
-                      "type": "string"
                     }
                   }
                 },
@@ -19559,16 +19279,6 @@
                           }
                         }
                       }
-                    },
-                    "_softDeletedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "_softDeletedById": {
-                      "type": "integer"
-                    },
-                    "_softDeletedByType": {
-                      "type": "string"
                     }
                   }
                 },
@@ -19657,16 +19367,6 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
@@ -19729,16 +19429,6 @@
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -19784,16 +19474,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -20163,16 +19843,6 @@
                     }
                   }
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           },
@@ -20288,29 +19958,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -20382,16 +20032,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -20603,29 +20243,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -20927,16 +20547,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -21374,29 +20984,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -21516,16 +21106,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -22700,29 +22280,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -22774,16 +22334,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -22955,29 +22505,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -23216,16 +22746,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -23477,29 +22997,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -24390,16 +23890,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -24577,29 +24067,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -24967,16 +24437,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -25130,29 +24590,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -25549,16 +24989,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -25730,29 +25160,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -25957,16 +25367,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -26396,29 +25796,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -26478,16 +25858,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -26899,29 +26269,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -27012,16 +26362,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -27802,16 +27142,6 @@
                           }
                         }
                       }
-                    },
-                    "_softDeletedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "_softDeletedById": {
-                      "type": "integer"
-                    },
-                    "_softDeletedByType": {
-                      "type": "string"
                     }
                   }
                 },
@@ -27963,16 +27293,6 @@
                           }
                         }
                       }
-                    },
-                    "_softDeletedAt": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "_softDeletedById": {
-                      "type": "integer"
-                    },
-                    "_softDeletedByType": {
-                      "type": "string"
                     }
                   }
                 },
@@ -28061,16 +27381,6 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
@@ -28125,16 +27435,6 @@
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -28189,16 +27489,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -28628,29 +27918,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
@@ -28723,16 +27993,6 @@
                   ],
                   "example": "string or id"
                 }
-              },
-              "_softDeletedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "_softDeletedById": {
-                "type": "integer"
-              },
-              "_softDeletedByType": {
-                "type": "string"
               }
             }
           }
@@ -29170,29 +28430,9 @@
                       }
                     }
                   }
-                },
-                "_softDeletedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "_softDeletedById": {
-                  "type": "integer"
-                },
-                "_softDeletedByType": {
-                  "type": "string"
                 }
               }
             }
-          },
-          "_softDeletedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "_softDeletedById": {
-            "type": "integer"
-          },
-          "_softDeletedByType": {
-            "type": "string"
           }
         }
       },
