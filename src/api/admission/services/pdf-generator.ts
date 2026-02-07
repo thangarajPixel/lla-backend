@@ -5,7 +5,7 @@ import * as path from 'path';
 import PDFDocument from 'pdfkit';
 import { pdf } from 'pdf-to-img';
 
-async function getFileDataUri(fileUrl: string): Promise<{ dataUri: string; isPdf: boolean }> {
+async function getFileDataUri(fileUrl: string): Promise<{ dataUri: string | string[]; isPdf: boolean }> {
     try {
         if (!fileUrl) return { dataUri: '', isPdf: false };
         if (fileUrl.startsWith('data:')) {
@@ -26,7 +26,7 @@ async function getFileDataUri(fileUrl: string): Promise<{ dataUri: string; isPdf
             else mime = 'image/jpeg';
         }
         
-        // Convert PDF to PNG image for proper rendering in Puppeteer
+        // Convert PDF to PNG images for proper rendering in Puppeteer (all pages)
         if (mime === 'application/pdf') {
             try {
                 const document = await pdf(buf, { scale: 2.0 });
@@ -36,10 +36,10 @@ async function getFileDataUri(fileUrl: string): Promise<{ dataUri: string; isPdf
                     images.push(image);
                 }
                 
-                // Use the first page of the PDF
+                // Return all pages of the PDF as an array of data URIs
                 if (images.length > 0) {
-                    const imageDataUri = `data:image/png;base64,${images[0].toString('base64')}`;
-                    return { dataUri: imageDataUri, isPdf: true };
+                    const imageDataUris = images.map(img => `data:image/png;base64,${img.toString('base64')}`);
+                    return { dataUri: imageDataUris, isPdf: true };
                 }
             } catch (pdfError) {
                 console.error('Error converting PDF to image:', pdfError);
@@ -684,56 +684,115 @@ class PDFGenerator {
     </div>
     
          {{#if Education_Details_10th_std_url.src}}
-            <div class="page-break"></div>
-            <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
-                <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">10th Standard Marksheet:</h2>
-                <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
-                    <img src="{{Education_Details_10th_std_url.src}}" alt="10th Standard Certificate" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+            {{#if Education_Details_10th_std_url.isArray}}
+                {{#each Education_Details_10th_std_url.src}}
+                <div class="page-break"></div>
+                <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+                    <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">10th Standard Marksheet (Page {{@index}} of {{../Education_Details_10th_std_url.src.length}}):</h2>
+                    <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                        <img src="{{this}}" alt="10th Standard Certificate" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                    </div>
                 </div>
-            </div>
+                {{/each}}
+            {{else}}
+                <div class="page-break"></div>
+                <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+                    <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">10th Standard Marksheet:</h2>
+                    <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                        <img src="{{Education_Details_10th_std_url.src}}" alt="10th Standard Certificate" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                    </div>
+                </div>
+            {{/if}}
             {{/if}}
             
             {{#if Education_Details_12th_std_url.src}}
-            <div class="page-break"></div>
-            <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
-                <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">12th Standard Marksheet:</h2>
-                <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
-                    <img src="{{Education_Details_12th_std_url.src}}" alt="12th Standard Certificate" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+            {{#if Education_Details_12th_std_url.isArray}}
+                {{#each Education_Details_12th_std_url.src}}
+                <div class="page-break"></div>
+                <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+                    <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">12th Standard Marksheet (Page {{@index}} of {{../Education_Details_12th_std_url.src.length}}):</h2>
+                    <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                        <img src="{{this}}" alt="12th Standard Certificate" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                    </div>
                 </div>
-            </div>
+                {{/each}}
+            {{else}}
+                <div class="page-break"></div>
+                <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+                    <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">12th Standard Marksheet:</h2>
+                    <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                        <img src="{{Education_Details_12th_std_url.src}}" alt="12th Standard Certificate" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                    </div>
+                </div>
+            {{/if}}
             {{/if}}
      {{#if ugMarksheet.src}}
-     <div class="page-break"></div>
-     <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
-         <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Under Graduate Marksheet:</h2>
-         <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
-             <img src="{{ugMarksheet.src}}" alt="Under Graduate Marksheet" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+     {{#if ugMarksheet.isArray}}
+         {{#each ugMarksheet.src}}
+         <div class="page-break"></div>
+         <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+             <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Under Graduate Marksheet (Page {{@index}} of {{../ugMarksheet.src.length}}):</h2>
+             <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                 <img src="{{this}}" alt="Under Graduate Marksheet" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+             </div>
          </div>
-     </div>
+         {{/each}}
+     {{else}}
+         <div class="page-break"></div>
+         <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+             <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Under Graduate Marksheet:</h2>
+             <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                 <img src="{{ugMarksheet.src}}" alt="Under Graduate Marksheet" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+             </div>
+         </div>
+     {{/if}}
      {{/if}}
      
      {{#if pgMarksheetList.length}}
      {{#each pgMarksheetList}}
-     <div class="page-break"></div>
-     
-     <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
-      <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Post Graduate Marksheet</h2>
-         <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
-             <img src="{{src}}" alt="Post Graduate Marksheet" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-         </div>
-     </div>
+         {{#if isArray}}
+             {{#each src}}
+             <div class="page-break"></div>
+             <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+                 <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Post Graduate Marksheet (Page {{@index}} of {{../src.length}})</h2>
+                 <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                     <img src="{{this}}" alt="Post Graduate Marksheet" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                 </div>
+             </div>
+             {{/each}}
+         {{else}}
+             <div class="page-break"></div>
+             <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+                 <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Post Graduate Marksheet</h2>
+                 <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                     <img src="{{src}}" alt="Post Graduate Marksheet" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                 </div>
+             </div>
+         {{/if}}
      {{/each}}
      {{/if}}
      
      {{#if workReferenceList.length}}
      {{#each workReferenceList}}
-     <div class="page-break"></div>
-     <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
-         <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Work Experience Reference Letter</h2>
-         <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
-             <img src="{{src}}" alt="Reference Letter" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
-         </div>
-     </div>
+         {{#if isArray}}
+             {{#each src}}
+             <div class="page-break"></div>
+             <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+                 <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Work Experience Reference Letter (Page {{@index}} of {{../src.length}})</h2>
+                 <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                     <img src="{{this}}" alt="Reference Letter" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                 </div>
+             </div>
+             {{/each}}
+         {{else}}
+             <div class="page-break"></div>
+             <div style="background: #fff; min-height: 100vh; padding: 40px; display: flex; flex-direction: column; align-items: center;">
+                 <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Work Experience Reference Letter</h2>
+                 <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
+                     <img src="{{src}}" alt="Reference Letter" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
+                 </div>
+             </div>
+         {{/if}}
      {{/each}}
      {{/if}}
 </body>
@@ -920,7 +979,7 @@ class PDFGenerator {
         }
 
         // Get Education Details 10th std file URL and convert to data URI
-        let Education_Details_10th_std_url = { src: '', isPdf: false };
+        let Education_Details_10th_std_url: { src: string | string[]; isPdf: boolean; isArray: boolean } = { src: '', isPdf: false, isArray: false };
         if (admission.Education_Details?.Education_Details_10th_std) {
             const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
             const imgUrl = typeof admission.Education_Details.Education_Details_10th_std === 'string'
@@ -930,11 +989,15 @@ class PDFGenerator {
             console.log('10th std URL:', fullUrl);
             const file = await getFileDataUri(fullUrl);
             console.log('10th std file result:', { hasDataUri: !!file.dataUri, isPdf: file.isPdf });
-            Education_Details_10th_std_url = { src: file.dataUri, isPdf: file.isPdf };
+            Education_Details_10th_std_url = { 
+                src: file.dataUri, 
+                isPdf: file.isPdf,
+                isArray: Array.isArray(file.dataUri)
+            };
         }
 
         // Get Education Details 12th std file URL and convert to data URI
-        let Education_Details_12th_std_url = { src: '', isPdf: false };
+        let Education_Details_12th_std_url: { src: string | string[]; isPdf: boolean; isArray: boolean } = { src: '', isPdf: false, isArray: false };
         if (admission.Education_Details?.Education_Details_12th_std) {
             const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
             const imgUrl = typeof admission.Education_Details.Education_Details_12th_std === 'string'
@@ -944,10 +1007,14 @@ class PDFGenerator {
             console.log('12th std URL:', fullUrl);
             const file = await getFileDataUri(fullUrl);
             console.log('12th std file result:', { hasDataUri: !!file.dataUri, isPdf: file.isPdf });
-            Education_Details_12th_std_url = { src: file.dataUri, isPdf: file.isPdf };
+            Education_Details_12th_std_url = { 
+                src: file.dataUri, 
+                isPdf: file.isPdf,
+                isArray: Array.isArray(file.dataUri)
+            };
         }
 
-        let ugMarksheet = { src: '', isPdf: false };
+        let ugMarksheet: { src: string | string[]; isPdf: boolean; isArray: boolean } = { src: '', isPdf: false, isArray: false };
         if (admission.Under_Graduate?.marksheet) {
             const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
             const m = Array.isArray(admission.Under_Graduate.marksheet)
@@ -956,10 +1023,14 @@ class PDFGenerator {
             const src = typeof m === 'string' ? m : m?.url;
             const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
             const file = await getFileDataUri(fullUrl);
-            ugMarksheet = { src: file.dataUri, isPdf: file.isPdf };
+            ugMarksheet = { 
+                src: file.dataUri, 
+                isPdf: file.isPdf,
+                isArray: Array.isArray(file.dataUri)
+            };
         }
 
-        const pgMarksheetList: Array<{ src: string; isPdf: boolean }> = [];
+        const pgMarksheetList: Array<{ src: string | string[]; isPdf: boolean; isArray: boolean }> = [];
         if (Array.isArray(admission.Post_Graduate)) {
             for (const pg of admission.Post_Graduate) {
                 if (pg?.marksheet) {
@@ -968,7 +1039,11 @@ class PDFGenerator {
                     const src = typeof m === 'string' ? m : m?.url;
                     const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
                     const file = await getFileDataUri(fullUrl);
-                    if (file.dataUri) pgMarksheetList.push({ src: file.dataUri, isPdf: file.isPdf });
+                    if (file.dataUri) pgMarksheetList.push({ 
+                        src: file.dataUri, 
+                        isPdf: file.isPdf,
+                        isArray: Array.isArray(file.dataUri)
+                    });
                 }
             }
         } else if (admission.Post_Graduate?.marksheet) {
@@ -979,10 +1054,14 @@ class PDFGenerator {
             const src = typeof m === 'string' ? m : m?.url;
             const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
             const file = await getFileDataUri(fullUrl);
-            if (file.dataUri) pgMarksheetList.push({ src: file.dataUri, isPdf: file.isPdf });
+            if (file.dataUri) pgMarksheetList.push({ 
+                src: file.dataUri, 
+                isPdf: file.isPdf,
+                isArray: Array.isArray(file.dataUri)
+            });
         }
 
-        const workReferenceList: Array<{ src: string; isPdf: boolean }> = [];
+        const workReferenceList: Array<{ src: string | string[]; isPdf: boolean; isArray: boolean }> = [];
         if (Array.isArray(admission.Work_Experience)) {
             const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
             for (const w of admission.Work_Experience) {
@@ -993,7 +1072,11 @@ class PDFGenerator {
                         const src = typeof r === 'string' ? r : r?.url;
                         const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
                         const file = await getFileDataUri(fullUrl);
-                        if (file.dataUri) workReferenceList.push({ src: file.dataUri, isPdf: file.isPdf });
+                        if (file.dataUri) workReferenceList.push({ 
+                            src: file.dataUri, 
+                            isPdf: file.isPdf,
+                            isArray: Array.isArray(file.dataUri)
+                        });
                     }
                 }
             }
