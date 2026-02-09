@@ -4,9 +4,10 @@ import * as fs from 'fs';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
 import PDFMerger from 'pdf-merger-js';
+import { PDFDocument as PDFLibDocument, rgb, StandardFonts } from 'pdf-lib';
 
-// Helper function to convert image to PDF in A4 format
-async function convertImageToPDF(imageBuffer: Buffer, mime: string): Promise<Buffer> {
+// Helper function to convert image to PDF in A4 format with optional title
+async function convertImageToPDF(imageBuffer: Buffer, mime: string, title?: string): Promise<Buffer> {
     return new Promise((resolve, reject) => {
         try {
             // A4 dimensions in points (72 points = 1 inch)
@@ -14,6 +15,7 @@ async function convertImageToPDF(imageBuffer: Buffer, mime: string): Promise<Buf
             const A4_WIDTH = 595.28;
             const A4_HEIGHT = 841.89;
             const MARGIN = 40; // 40 points margin on all sides
+            const TITLE_HEIGHT = title ? 60 : 0; // Space for title if provided
             
             const doc = new PDFDocument({ 
                 size: 'A4',
@@ -25,12 +27,30 @@ async function convertImageToPDF(imageBuffer: Buffer, mime: string): Promise<Buf
             doc.on('end', () => resolve(Buffer.concat(chunks)));
             doc.on('error', reject);
 
+            // Add title if provided
+            if (title) {
+                doc.fontSize(16)
+                   .fillColor('#4945ff')
+                   .font('Helvetica-Bold')
+                   .text(title, MARGIN, MARGIN, { 
+                       align: 'center',
+                       width: A4_WIDTH - (MARGIN * 2)
+                   });
+                
+                // Add a line under the title
+                doc.moveTo(MARGIN, MARGIN + 35)
+                   .lineTo(A4_WIDTH - MARGIN, MARGIN + 35)
+                   .strokeColor('#4945ff')
+                   .lineWidth(2)
+                   .stroke();
+            }
+
             // Get image dimensions
             const img = doc.openImage(imageBuffer);
             
-            // Calculate available space
+            // Calculate available space (accounting for title if present)
             const availableWidth = A4_WIDTH - (MARGIN * 2);
-            const availableHeight = A4_HEIGHT - (MARGIN * 2);
+            const availableHeight = A4_HEIGHT - (MARGIN * 2) - TITLE_HEIGHT;
             
             // Calculate scaling to fit image within A4 page while maintaining aspect ratio
             const widthRatio = availableWidth / img.width;
@@ -40,9 +60,9 @@ async function convertImageToPDF(imageBuffer: Buffer, mime: string): Promise<Buf
             const scaledWidth = img.width * scale;
             const scaledHeight = img.height * scale;
             
-            // Center the image on the page
+            // Center the image on the page (below title if present)
             const x = (A4_WIDTH - scaledWidth) / 2;
-            const y = (A4_HEIGHT - scaledHeight) / 2;
+            const y = MARGIN + TITLE_HEIGHT + ((availableHeight - scaledHeight) / 2);
             
             // Add image to page
             doc.image(imageBuffer, x, y, { 
@@ -55,6 +75,66 @@ async function convertImageToPDF(imageBuffer: Buffer, mime: string): Promise<Buf
             reject(error);
         }
     });
+}
+
+// Helper function to add title overlay on PDF (on the same page, not separate)
+async function addTitleToPDF(pdfDataUri: string, title: string): Promise<string> {
+    try {
+        if (!pdfDataUri || !pdfDataUri.startsWith('data:application/pdf')) {
+            return pdfDataUri;
+        }
+
+        // Extract base64 data
+        const base64Data = pdfDataUri.split(',')[1];
+        const pdfBytes = Buffer.from(base64Data, 'base64');
+
+        // Load the existing PDF
+        const pdfDoc = await PDFLibDocument.load(pdfBytes);
+        const pages = pdfDoc.getPages();
+        
+        if (pages.length === 0) {
+            return pdfDataUri;
+        }
+
+        // Get the first page
+        const firstPage = pages[0];
+        const { width, height } = firstPage.getSize();
+
+        // Load font
+        const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+        const fontSize = 14;
+        const textWidth = font.widthOfTextAtSize(title, fontSize);
+
+        // Add semi-transparent white background for title at top
+        const bgHeight = 50;
+        const topMargin = 10;
+        firstPage.drawRectangle({
+            x: 0,
+            y: height - bgHeight - topMargin,
+            width: width,
+            height: bgHeight,
+            color: rgb(1, 1, 1),
+            opacity: 0.98,
+        });
+
+        // Add title text centered at top
+        firstPage.drawText(title, {
+            x: (width - textWidth) / 2,
+            y: height - 35 - topMargin,
+            size: fontSize,
+            font: font,
+            color: rgb(0.286, 0.271, 1), // #4945ff
+        });
+
+        // Save the modified PDF
+        const modifiedPdfBytes = await pdfDoc.save();
+        
+        // Convert back to data URI
+        return `data:application/pdf;base64,${Buffer.from(modifiedPdfBytes).toString('base64')}`;
+    } catch (error) {
+        console.error('Error adding title to PDF:', error);
+        return pdfDataUri; // Return original on error
+    }
 }
 
 export async function getFileDataUri(fileUrl: string): Promise<{ dataUri: string | string[]; isPdf: boolean }> {
@@ -1093,10 +1173,17 @@ class PDFGenerator {
             console.log('10th std URL:', fullUrl);
             const file = await getFileDataUri(fullUrl);
             console.log('10th std file result:', { hasDataUri: !!file.dataUri, isPdf: file.isPdf });
+            
+            // Add title to PDF
+            let finalDataUri = file.dataUri;
+            if (file.isPdf && file.dataUri && typeof file.dataUri === 'string') {
+                finalDataUri = await addTitleToPDF(file.dataUri, '10th Standard Marksheet');
+            }
+            
             Education_Details_10th_std_url = { 
-                src: file.dataUri, 
+                src: finalDataUri, 
                 isPdf: file.isPdf,
-                isArray: Array.isArray(file.dataUri)
+                isArray: Array.isArray(finalDataUri)
             };
         }
 
@@ -1111,10 +1198,17 @@ class PDFGenerator {
             console.log('12th std URL:', fullUrl);
             const file = await getFileDataUri(fullUrl);
             console.log('12th std file result:', { hasDataUri: !!file.dataUri, isPdf: file.isPdf });
+            
+            // Add title to PDF
+            let finalDataUri = file.dataUri;
+            if (file.isPdf && file.dataUri && typeof file.dataUri === 'string') {
+                finalDataUri = await addTitleToPDF(file.dataUri, '12th Standard Marksheet');
+            }
+            
             Education_Details_12th_std_url = { 
-                src: file.dataUri, 
+                src: finalDataUri, 
                 isPdf: file.isPdf,
-                isArray: Array.isArray(file.dataUri)
+                isArray: Array.isArray(finalDataUri)
             };
         }
 
@@ -1127,10 +1221,18 @@ class PDFGenerator {
             const src = typeof m === 'string' ? m : m?.url;
             const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
             const file = await getFileDataUri(fullUrl);
+            
+            // Add title to PDF
+            let finalDataUri = file.dataUri;
+            if (file.isPdf && file.dataUri && typeof file.dataUri === 'string') {
+                const ugDegree = admission.Under_Graduate?.degree || 'Under Graduate';
+                finalDataUri = await addTitleToPDF(file.dataUri, `${ugDegree} Marksheet`);
+            }
+            
             ugMarksheet = { 
-                src: file.dataUri, 
+                src: finalDataUri, 
                 isPdf: file.isPdf,
-                isArray: Array.isArray(file.dataUri)
+                isArray: Array.isArray(finalDataUri)
             };
         }
 
@@ -1143,10 +1245,18 @@ class PDFGenerator {
                     const src = typeof m === 'string' ? m : m?.url;
                     const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
                     const file = await getFileDataUri(fullUrl);
-                    if (file.dataUri) pgMarksheetList.push({ 
-                        src: file.dataUri, 
+                    
+                    // Add title to PDF
+                    let finalDataUri = file.dataUri;
+                    if (file.isPdf && file.dataUri && typeof file.dataUri === 'string') {
+                        const pgDegree = pg?.degree || 'Post Graduate';
+                        finalDataUri = await addTitleToPDF(file.dataUri, `${pgDegree} Marksheet`);
+                    }
+                    
+                    if (finalDataUri) pgMarksheetList.push({ 
+                        src: finalDataUri, 
                         isPdf: file.isPdf,
-                        isArray: Array.isArray(file.dataUri)
+                        isArray: Array.isArray(finalDataUri)
                     });
                 }
             }
@@ -1158,16 +1268,25 @@ class PDFGenerator {
             const src = typeof m === 'string' ? m : m?.url;
             const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
             const file = await getFileDataUri(fullUrl);
-            if (file.dataUri) pgMarksheetList.push({ 
-                src: file.dataUri, 
+            
+            // Add title to PDF
+            let finalDataUri = file.dataUri;
+            if (file.isPdf && file.dataUri && typeof file.dataUri === 'string') {
+                const pgDegree = admission.Post_Graduate?.degree || 'Post Graduate';
+                finalDataUri = await addTitleToPDF(file.dataUri, `${pgDegree} Marksheet`);
+            }
+            
+            if (finalDataUri) pgMarksheetList.push({ 
+                src: finalDataUri, 
                 isPdf: file.isPdf,
-                isArray: Array.isArray(file.dataUri)
+                isArray: Array.isArray(finalDataUri)
             });
         }
 
         const workReferenceList: Array<{ src: string | string[]; isPdf: boolean; isArray: boolean }> = [];
         if (Array.isArray(admission.Work_Experience)) {
             const baseUrl = process.env.ADMIN_BASE_URL || 'http://localhost:8000';
+            let workIndex = 1;
             for (const w of admission.Work_Experience) {
                 const ref = w?.reference_letter;
                 if (ref) {
@@ -1176,13 +1295,22 @@ class PDFGenerator {
                         const src = typeof r === 'string' ? r : r?.url;
                         const fullUrl = src ? (src.startsWith('http') ? src : `${baseUrl}${src}`) : '';
                         const file = await getFileDataUri(fullUrl);
-                        if (file.dataUri) workReferenceList.push({ 
-                            src: file.dataUri, 
+                        
+                        // Add title to PDF
+                        let finalDataUri = file.dataUri;
+                        if (file.isPdf && file.dataUri && typeof file.dataUri === 'string') {
+                            const employer = w?.employer || 'Work Experience';
+                            finalDataUri = await addTitleToPDF(file.dataUri, `Work Experience - ${employer}`);
+                        }
+                        
+                        if (finalDataUri) workReferenceList.push({ 
+                            src: finalDataUri, 
                             isPdf: file.isPdf,
-                            isArray: Array.isArray(file.dataUri)
+                            isArray: Array.isArray(finalDataUri)
                         });
                     }
                 }
+                workIndex++;
             }
         }
 
