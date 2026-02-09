@@ -688,7 +688,7 @@ class PDFGenerator {
                 {{#each Education_Details_10th_std_url.src}}
                 <div class="page-break"></div>
                 <div style="background: #fff; min-height: 100vh;  display: flex; flex-direction: column; align-items: center;">
-                    <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">10th Standard Marksheet (Page {{@index}} of {{../Education_Details_10th_std_url.src.length}}):</h2>
+                    <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">10th Standard Marksheet (Page {{add @index 1}} of {{../Education_Details_10th_std_url.src.length}}):</h2>
                     <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
                         <img src="{{this}}" alt="10th Standard Certificate" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
                     </div>
@@ -710,7 +710,7 @@ class PDFGenerator {
                 {{#each Education_Details_12th_std_url.src}}
                 <div class="page-break"></div>
                 <div style="background: #fff; min-height: 100vh;  display: flex; flex-direction: column; align-items: center;">
-                    <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">12th Standard Marksheet (Page {{@index}} of {{../Education_Details_12th_std_url.src.length}}):</h2>
+                    <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">12th Standard Marksheet (Page {{add @index 1}} of {{../Education_Details_12th_std_url.src.length}}):</h2>
                     <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
                         <img src="{{this}}" alt="12th Standard Certificate" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
                     </div>
@@ -731,7 +731,7 @@ class PDFGenerator {
          {{#each ugMarksheet.src}}
          <div class="page-break"></div>
          <div style="background: #fff; min-height: 100vh;  display: flex; flex-direction: column; align-items: center;">
-             <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Under Graduate Marksheet (Page {{@index}} of {{../ugMarksheet.src.length}}):</h2>
+             <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Under Graduate Marksheet (Page {{add @index 1}} of {{../ugMarksheet.src.length}}):</h2>
              <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
                  <img src="{{this}}" alt="Under Graduate Marksheet" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
              </div>
@@ -754,7 +754,7 @@ class PDFGenerator {
              {{#each src}}
              <div class="page-break"></div>
              <div style="background: #fff; min-height: 100vh;  display: flex; flex-direction: column; align-items: center;">
-                 <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Post Graduate Marksheet (Page {{@index}} of {{../src.length}})</h2>
+                 <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Post Graduate Marksheet (Page {{add @index 1}} of {{../src.length}})</h2>
                  <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
                      <img src="{{this}}" alt="Post Graduate Marksheet" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
                  </div>
@@ -778,7 +778,7 @@ class PDFGenerator {
              {{#each src}}
              <div class="page-break"></div>
              <div style="background: #fff; min-height: 100vh;  display: flex; flex-direction: column; align-items: center;">
-                 <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Work Experience Reference Letter (Page {{@index}} of {{../src.length}})</h2>
+                 <h2 style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 30px; text-align: center;">Work Experience Reference Letter (Page {{add @index 1}} of {{../src.length}})</h2>
                  <div style="display: flex; justify-content: center; align-items: center; flex: 1;">
                      <img src="{{this}}" alt="Reference Letter" style="max-width: 90%; max-height: 90%; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);" />
                  </div>
@@ -800,6 +800,11 @@ class PDFGenerator {
 `;
 
             console.log('Template loaded from embedded code');
+
+            // Register helper to add 1 to index for page numbers
+            handlebars.registerHelper('add', function(a, b) {
+                return a + b;
+            });
 
             // Compile template
             const template = handlebars.compile(templateHtml);
