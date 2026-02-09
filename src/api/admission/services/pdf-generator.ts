@@ -5,11 +5,20 @@ import * as path from 'path';
 import PDFDocument from 'pdfkit';
 import PDFMerger from 'pdf-merger-js';
 
-// Helper function to convert image to PDF
+// Helper function to convert image to PDF in A4 format
 async function convertImageToPDF(imageBuffer: Buffer, mime: string): Promise<Buffer> {
     return new Promise((resolve, reject) => {
         try {
-            const doc = new PDFDocument({ autoFirstPage: false });
+            // A4 dimensions in points (72 points = 1 inch)
+            // A4 = 210mm x 297mm = 595.28 x 841.89 points
+            const A4_WIDTH = 595.28;
+            const A4_HEIGHT = 841.89;
+            const MARGIN = 40; // 40 points margin on all sides
+            
+            const doc = new PDFDocument({ 
+                size: 'A4',
+                margin: MARGIN
+            });
             const chunks: Buffer[] = [];
 
             doc.on('data', (chunk) => chunks.push(chunk));
@@ -19,9 +28,27 @@ async function convertImageToPDF(imageBuffer: Buffer, mime: string): Promise<Buf
             // Get image dimensions
             const img = doc.openImage(imageBuffer);
             
-            // Add page with image dimensions
-            doc.addPage({ size: [img.width, img.height] });
-            doc.image(imageBuffer, 0, 0, { width: img.width, height: img.height });
+            // Calculate available space
+            const availableWidth = A4_WIDTH - (MARGIN * 2);
+            const availableHeight = A4_HEIGHT - (MARGIN * 2);
+            
+            // Calculate scaling to fit image within A4 page while maintaining aspect ratio
+            const widthRatio = availableWidth / img.width;
+            const heightRatio = availableHeight / img.height;
+            const scale = Math.min(widthRatio, heightRatio);
+            
+            const scaledWidth = img.width * scale;
+            const scaledHeight = img.height * scale;
+            
+            // Center the image on the page
+            const x = (A4_WIDTH - scaledWidth) / 2;
+            const y = (A4_HEIGHT - scaledHeight) / 2;
+            
+            // Add image to page
+            doc.image(imageBuffer, x, y, { 
+                width: scaledWidth, 
+                height: scaledHeight 
+            });
             
             doc.end();
         } catch (error) {
