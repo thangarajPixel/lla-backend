@@ -35,6 +35,14 @@ export default {
     console.log('🗑️ LIFECYCLE BEFORE DELETE called');
     console.log('Params:', params);
     console.log('Where:', params.where);
+    const requestCtx = strapi.requestContext.get();
+  const method = requestCtx?.request?.method;
+
+  // UPDATE always comes as PUT / PATCH
+  if (method === 'PUT' || method === 'PATCH') {
+    console.log('⏭️ Delete triggered during UPDATE – skipping soft delete');
+    return;
+  }
     
     // Get the entity ID
     const entityId = params.where.id || params.where.documentId;
