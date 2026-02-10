@@ -671,13 +671,16 @@ export default factories.createCoreController('api::admission.admission', ({ str
         return ctx.notFound('Admission not found');
       }
       admission = entities[0];
+      if(admission.IsDelete === true){
+        return ctx.notFound('Admission not found');
+      }
     } else {
       // Find by documentId with full population
       admission = await strapi.entityService.findOne('api::admission.admission', id, {
         populate: populateConfig,
       });
 
-      if (!admission) {
+      if (!admission || admission.IsDelete === true) {
         return ctx.notFound('Admission not found');
       }
     }
