@@ -77,7 +77,7 @@ async function convertImageToPDF(imageBuffer: Buffer, mime: string, title?: stri
     });
 }
 
-// Helper function to add title overlay on PDF (on the same page, not separate)
+// Helper function to add title on same page with margin applied to PDF
 async function addTitleToPDF(pdfDataUri: string, title: string): Promise<string> {
     try {
         if (!pdfDataUri || !pdfDataUri.startsWith('data:application/pdf')) {
@@ -89,45 +89,76 @@ async function addTitleToPDF(pdfDataUri: string, title: string): Promise<string>
         const pdfBytes = Buffer.from(base64Data, 'base64');
 
         // Load the existing PDF
-        const pdfDoc = await PDFLibDocument.load(pdfBytes);
-        const pages = pdfDoc.getPages();
+        const existingPdfDoc = await PDFLibDocument.load(pdfBytes);
+        const existingPages = existingPdfDoc.getPages();
         
-        if (pages.length === 0) {
+        if (existingPages.length === 0) {
             return pdfDataUri;
         }
 
-        // Get the first page
-        const firstPage = pages[0];
-        const { width, height } = firstPage.getSize();
+        // Create a new PDF document
+        const newPdfDoc = await PDFLibDocument.create();
+        
+        // A4 dimensions
+        const A4_WIDTH = 595.28;
+        const A4_HEIGHT = 841.89;
+        const MARGIN = 40; // Same margin as image-to-PDF conversion
+        const TITLE_HEIGHT = 60; // Space for title at top
 
-        // Load font
-        const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-        const fontSize = 14;
-        const textWidth = font.widthOfTextAtSize(title, fontSize);
+        // Process all pages from existing PDF
+        for (let i = 0; i < existingPages.length; i++) {
+            const existingPage = existingPages[i];
+            const { width: origWidth, height: origHeight } = existingPage.getSize();
+            
+            // Create new page with A4 size
+            const newPage = newPdfDoc.addPage([A4_WIDTH, A4_HEIGHT]);
+            
+            // Add title only on first page
+            if (i === 0) {
+                const font = await newPdfDoc.embedFont(StandardFonts.HelveticaBold);
+                const fontSize = 16;
+                const textWidth = font.widthOfTextAtSize(title, fontSize);
 
-        // Add semi-transparent white background for title at top
-        const bgHeight = 50;
-        const topMargin = 10;
-        firstPage.drawRectangle({
-            x: 0,
-            y: height - bgHeight - topMargin,
-            width: width,
-            height: bgHeight,
-            color: rgb(1, 1, 1),
-            opacity: 0.98,
-        });
+                // Add title text centered at top
+                newPage.drawText(title, {
+                    x: (A4_WIDTH - textWidth) / 2,
+                    y: A4_HEIGHT - MARGIN - 10,
+                    size: fontSize,
+                    font: font,
+                    color: rgb(0.286, 0.271, 1), // #4945ff
+                });
+            }
+            
+            // Calculate available space with margin (and title space on first page)
+            const availableWidth = A4_WIDTH - (MARGIN * 2);
+            const topSpace = (i === 0) ? TITLE_HEIGHT : 0;
+            const availableHeight = A4_HEIGHT - (MARGIN * 2) - topSpace;
+            
+            // Calculate scaling to fit within margins
+            const widthRatio = availableWidth / origWidth;
+            const heightRatio = availableHeight / origHeight;
+            const scale = Math.min(widthRatio, heightRatio);
+            
+            const scaledWidth = origWidth * scale;
+            const scaledHeight = origHeight * scale;
+            
+            // Center the embedded page (below title on first page)
+            const x = MARGIN + (availableWidth - scaledWidth) / 2;
+            const y = MARGIN + (availableHeight - scaledHeight) / 2;
+            
+            // Embed the page from existing PDF
+            const [embeddedPage] = await newPdfDoc.embedPdf(existingPdfDoc, [i]);
+            
+            newPage.drawPage(embeddedPage, {
+                x: x,
+                y: y,
+                width: scaledWidth,
+                height: scaledHeight,
+            });
+        }
 
-        // Add title text centered at top
-        firstPage.drawText(title, {
-            x: (width - textWidth) / 2,
-            y: height - 35 - topMargin,
-            size: fontSize,
-            font: font,
-            color: rgb(0.286, 0.271, 1), // #4945ff
-        });
-
-        // Save the modified PDF
-        const modifiedPdfBytes = await pdfDoc.save();
+        // Save the new PDF
+        const modifiedPdfBytes = await newPdfDoc.save();
         
         // Convert back to data URI
         return `data:application/pdf;base64,${Buffer.from(modifiedPdfBytes).toString('base64')}`;
