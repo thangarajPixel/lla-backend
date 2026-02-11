@@ -876,6 +876,89 @@ export default factories.createCoreController('api::admission.admission', ({ str
           console.log('Post_Graduate:', admission.Post_Graduate);
           console.log('Education_Details:', admission.Education_Details);
 
+             if (admission.Work_Experience && Array.isArray(admission.Work_Experience)) {
+            console.log('Work_Experience exists (array), count:', admission.Work_Experience.length);
+
+            for (let index = 0; index < admission.Work_Experience.length; index++) {
+              const workExp = admission.Work_Experience[index];
+              console.log(`Work_Experience[${index}]:`, workExp);
+              console.log(`Work_Experience[${index}].reference_letter:`, workExp.reference_letter);
+
+              if (workExp.reference_letter) {
+                const referenceLetter = Array.isArray(workExp.reference_letter)
+                  ? workExp.reference_letter[0]
+                  : workExp.reference_letter;
+
+                console.log(`Work_Experience[${index}] reference_letter object:`, referenceLetter);
+
+                if (referenceLetter && referenceLetter.url) {
+                  try {
+                    const letterUrl = referenceLetter.url.startsWith('http')
+                      ? referenceLetter.url
+                      : `${baseUrl}${referenceLetter.url}`;
+
+                    console.log(`Fetching Work_Experience[${index}] reference letter:`, letterUrl);
+                    const letterResponse = await fetch(letterUrl);
+                    if (letterResponse.ok) {
+                      const letterBuffer = Buffer.from(await letterResponse.arrayBuffer());
+                      console.log(`Adding Work_Experience[${index}] reference letter to archive, size:`, letterBuffer.length);
+                      const filename = admission.Work_Experience.length > 1
+                        ? `documents/work_experience_reference_${index + 1}${referenceLetter.ext || '.pdf'}`
+                        : `documents/work_experience_reference${referenceLetter.ext || '.pdf'}`;
+                      archive.append(letterBuffer, { name: filename });
+                    } else {
+                      console.error(`Failed to fetch Work_Experience[${index}] reference letter, status:`, letterResponse.status);
+                    }
+                  } catch (err) {
+                    console.error(`Error fetching Work_Experience[${index}] reference letter:`, err);
+                  }
+                } else {
+                  console.log(`Work_Experience[${index}] reference letter has no URL`);
+                }
+              } else {
+                console.log(`No reference letter in Work_Experience[${index}]`);
+              }
+            }
+          } else if (admission.Work_Experience) {
+            // Single Work_Experience (not array)
+            console.log('Work_Experience exists (single object)');
+            console.log('Work_Experience.reference_letter:', admission.Work_Experience.reference_letter);
+
+            if (admission.Work_Experience.reference_letter) {
+              const referenceLetter = Array.isArray(admission.Work_Experience.reference_letter)
+                ? admission.Work_Experience.reference_letter[0]
+                : admission.Work_Experience.reference_letter;
+
+              console.log('Work_Experience reference_letter object:', referenceLetter);
+
+              if (referenceLetter && referenceLetter.url) {
+                try {
+                  const letterUrl = referenceLetter.url.startsWith('http')
+                    ? referenceLetter.url
+                    : `${baseUrl}${referenceLetter.url}`;
+
+                  console.log('Fetching Work_Experience reference letter:', letterUrl);
+                  const letterResponse = await fetch(letterUrl);
+                  if (letterResponse.ok) {
+                    const letterBuffer = Buffer.from(await letterResponse.arrayBuffer());
+                    console.log('Adding Work_Experience reference letter to archive, size:', letterBuffer.length);
+                    archive.append(letterBuffer, { name: `documents/work_experience_reference${referenceLetter.ext || '.pdf'}` });
+                  } else {
+                    console.error('Failed to fetch Work_Experience reference letter, status:', letterResponse.status);
+                  }
+                } catch (err) {
+                  console.error('Error fetching Work_Experience reference letter:', err);
+                }
+              } else {
+                console.log('Work_Experience reference letter has no URL');
+              }
+            } else {
+              console.log('No Work_Experience reference letter found');
+            }
+          } else {
+            console.log('No Work_Experience found');
+          }
+
           // Under Graduate marksheet
           if (admission.Under_Graduate) {
             console.log('Under_Graduate exists, checking marksheet...');
@@ -1374,6 +1457,89 @@ export default factories.createCoreController('api::admission.admission', ({ str
           console.log('Under_Graduate:', admission.Under_Graduate);
           console.log('Post_Graduate:', admission.Post_Graduate);
           console.log('Education_Details:', admission.Education_Details);
+          console.log('WorkExprience', admission.Work_Experience);
+             if (admission.Work_Experience && Array.isArray(admission.Work_Experience)) {
+            console.log('Work_Experience exists (array), count:', admission.Work_Experience.length);
+
+            for (let index = 0; index < admission.Work_Experience.length; index++) {
+              const workExp = admission.Work_Experience[index];
+              console.log(`Work_Experience[${index}]:`, workExp);
+              console.log(`Work_Experience[${index}].reference_letter:`, workExp.reference_letter);
+
+              if (workExp.reference_letter) {
+                const referenceLetter = Array.isArray(workExp.reference_letter)
+                  ? workExp.reference_letter[0]
+                  : workExp.reference_letter;
+
+                console.log(`Work_Experience[${index}] reference_letter object:`, referenceLetter);
+
+                if (referenceLetter && referenceLetter.url) {
+                  try {
+                    const letterUrl = referenceLetter.url.startsWith('http')
+                      ? referenceLetter.url
+                      : `${baseUrl}${referenceLetter.url}`;
+
+                    console.log(`Fetching Work_Experience[${index}] reference letter:`, letterUrl);
+                    const letterResponse = await fetch(letterUrl);
+                    if (letterResponse.ok) {
+                      const letterBuffer = Buffer.from(await letterResponse.arrayBuffer());
+                      console.log(`Adding Work_Experience[${index}] reference letter to archive, size:`, letterBuffer.length);
+                      const filename = admission.Work_Experience.length > 1
+                        ? `documents/work_experience_reference_${index + 1}${referenceLetter.ext || '.pdf'}`
+                        : `documents/work_experience_reference${referenceLetter.ext || '.pdf'}`;
+                      archive.append(letterBuffer, { name: filename });
+                    } else {
+                      console.error(`Failed to fetch Work_Experience[${index}] reference letter, status:`, letterResponse.status);
+                    }
+                  } catch (err) {
+                    console.error(`Error fetching Work_Experience[${index}] reference letter:`, err);
+                  }
+                } else {
+                  console.log(`Work_Experience[${index}] reference letter has no URL`);
+                }
+              } else {
+                console.log(`No reference letter in Work_Experience[${index}]`);
+              }
+            }
+          } else if (admission.Work_Experience) {
+            // Single Work_Experience (not array)
+            console.log('Work_Experience exists (single object)');
+            console.log('Work_Experience.reference_letter:', admission.Work_Experience.reference_letter);
+
+            if (admission.Work_Experience.reference_letter) {
+              const referenceLetter = Array.isArray(admission.Work_Experience.reference_letter)
+                ? admission.Work_Experience.reference_letter[0]
+                : admission.Work_Experience.reference_letter;
+
+              console.log('Work_Experience reference_letter object:', referenceLetter);
+
+              if (referenceLetter && referenceLetter.url) {
+                try {
+                  const letterUrl = referenceLetter.url.startsWith('http')
+                    ? referenceLetter.url
+                    : `${baseUrl}${referenceLetter.url}`;
+
+                  console.log('Fetching Work_Experience reference letter:', letterUrl);
+                  const letterResponse = await fetch(letterUrl);
+                  if (letterResponse.ok) {
+                    const letterBuffer = Buffer.from(await letterResponse.arrayBuffer());
+                    console.log('Adding Work_Experience reference letter to archive, size:', letterBuffer.length);
+                    archive.append(letterBuffer, { name: `documents/work_experience_reference${referenceLetter.ext || '.pdf'}` });
+                  } else {
+                    console.error('Failed to fetch Work_Experience reference letter, status:', letterResponse.status);
+                  }
+                } catch (err) {
+                  console.error('Error fetching Work_Experience reference letter:', err);
+                }
+              } else {
+                console.log('Work_Experience reference letter has no URL');
+              }
+            } else {
+              console.log('No Work_Experience reference letter found');
+            }
+          } else {
+            console.log('No Work_Experience found');
+          }
 
           // Under Graduate marksheet
           if (admission.Under_Graduate) {
