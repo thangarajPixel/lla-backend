@@ -18,6 +18,73 @@ export default {
     if (contentManagerPlugin && contentManagerPlugin.controllers && contentManagerPlugin.controllers['collection-types']) {
       const originalDelete = contentManagerPlugin.controllers['collection-types'].delete;
       const originalBulkDelete = contentManagerPlugin.controllers['collection-types'].bulkDelete;
+      const originalFind = contentManagerPlugin.controllers['collection-types'].find;
+      
+      // Override find to fix count for admission
+      contentManagerPlugin.controllers['collection-types'].find = async (ctx) => {
+        const { model } = ctx.params;
+
+        // For admission model, we need to adjust the count
+        if (model === 'api::admission.admission') {
+          console.log('========================================');
+          console.log('📊 CUSTOM FIND HANDLER for admission');
+          console.log('Query params:', ctx.request.query);
+          
+          // Call original find
+          await originalFind(ctx);
+          
+          // Get result from ctx.body (Strapi sets response in ctx.body)
+          const result = ctx.body;
+          
+          console.log('Result type:', typeof result);
+          console.log('Result keys:', result ? Object.keys(result) : 'null');
+          console.log('Result pagination:', result?.pagination);
+          console.log('Result results length:', result?.results?.length);
+          
+          // If result has pagination info, recalculate total based on IsDelete filter
+          if (result && result.pagination) {
+            try {
+              // Build count query with same filters as list query
+              const countWhere: any = { IsDelete: false };
+              
+              // Default: count only draft records (admin panel default view)
+              countWhere.publishedAt = { $null: true };
+              console.log('Counting draft records (default)');
+              
+              console.log('Count where clause:', countWhere);
+              
+              // Count only non-deleted records with same publication state
+              const actualCount = await strapi.db.query('api::admission.admission').count({
+                where: countWhere,
+              });
+              
+              console.log('Actual count from DB:', actualCount);
+              console.log('Original pagination total:', result.pagination.total);
+              
+              // Update pagination total
+              result.pagination.total = actualCount;
+              
+              console.log('✅ Admission count adjusted to:', actualCount);
+              console.log('========================================');
+              
+              // Set updated result back to ctx.body
+              ctx.body = result;
+              return;
+            } catch (error) {
+              console.error('❌ Error adjusting admission count:', error);
+              console.log('========================================');
+            }
+          } else {
+            console.log('⚠️ No pagination found in result');
+            console.log('========================================');
+          }
+          
+          return;
+        }
+        
+        // For other models, use default behavior
+        return await originalFind(ctx);
+      };
       
       // Override single delete
       contentManagerPlugin.controllers['collection-types'].delete = async (ctx) => {
@@ -133,6 +200,7 @@ export default {
 
       console.log('✅ Custom delete handler registered successfully');
       console.log('✅ Custom bulk delete handler registered successfully');
+      console.log('✅ Custom find handler registered successfully (count fix)');
       console.log('========================================');
     } else {
       console.error('❌ Failed to register custom delete handler - content-manager plugin not found');
