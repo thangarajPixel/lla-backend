@@ -115,17 +115,57 @@ async function addTitleToPDF(pdfDataUri: string, title: string): Promise<string>
             // Add title only on first page
             if (i === 0) {
                 const font = await newPdfDoc.embedFont(StandardFonts.HelveticaBold);
-                const fontSize = 16;
-                const textWidth = font.widthOfTextAtSize(title, fontSize);
-
-                // Add title text centered at top
-                newPage.drawText(title, {
-                    x: (A4_WIDTH - textWidth) / 2,
-                    y: A4_HEIGHT - MARGIN - 10,
-                    size: fontSize,
-                    font: font,
-                    color: rgb(0.286, 0.271, 1), // #4945ff
-                });
+                const fontSize = 14; // Reduced from 16
+                const maxWidth = A4_WIDTH - (MARGIN * 2); // Maximum width for text
+                
+                // Split title into lines if it's too long
+                const words = title.split(' ');
+                const lines: string[] = [];
+                let currentLine = '';
+                
+                for (const word of words) {
+                    const testLine = currentLine ? `${currentLine} ${word}` : word;
+                    const testWidth = font.widthOfTextAtSize(testLine, fontSize);
+                    
+                    if (testWidth > maxWidth && currentLine) {
+                        // Line is too long, push current line and start new one
+                        lines.push(currentLine);
+                        currentLine = word;
+                    } else {
+                        currentLine = testLine;
+                    }
+                }
+                
+                // Push the last line
+                if (currentLine) {
+                    lines.push(currentLine);
+                }
+                
+                // Limit to maximum 2 lines
+                if (lines.length > 2) {
+                    lines[1] = lines[1].substring(0, 50) + '...';
+                    lines.splice(2);
+                }
+                
+                // Draw each line
+                const lineHeight = fontSize + 4;
+                let startY = A4_HEIGHT - MARGIN - 10;
+                
+                for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+                    const line = lines[lineIndex];
+                    const textWidth = font.widthOfTextAtSize(line, fontSize);
+                    const x = (A4_WIDTH - textWidth) / 2; // Center each line
+                    const y = startY - (lineIndex * lineHeight);
+                    
+                    newPage.drawText(line, {
+                        x: x,
+                        y: y,
+                        size: fontSize,
+                        font: font,
+                        color: rgb(0.286, 0.271, 1), // #4945ff
+                        maxWidth: maxWidth,
+                    });
+                }
             }
             
             // Calculate available space with margin (and title space on first page)
