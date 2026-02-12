@@ -1033,7 +1033,7 @@ class PDFGenerator {
         }
     }
 
-    // Merge multiple PDFs into one
+    // Merge multiple PDFs into one using pdf-lib
     async mergePDFs(pdfBuffers: Buffer[]): Promise<Buffer> {
         try {
             if (!pdfBuffers || pdfBuffers.length === 0) {
@@ -1044,55 +1044,72 @@ class PDFGenerator {
                 return pdfBuffers[0];
             }
 
-            // Dynamic import for ES Module
-            const PDFMerger = (await import('pdf-merger-js')).default;
-            const merger = new PDFMerger();
+            // Use pdf-lib instead of pdf-merger-js (ES Module compatibility)
+            const mergedPdf = await PDFLibDocument.create();
 
             for (const buffer of pdfBuffers) {
-                await merger.add(buffer);
+                try {
+                    const pdf = await PDFLibDocument.load(buffer);
+                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    copiedPages.forEach((page) => {
+                        mergedPdf.addPage(page);
+                    });
+                } catch (err) {
+                    console.error('Error loading PDF buffer:', err);
+                    // Skip invalid PDFs
+                }
             }
 
-            const mergedPdfBuffer = await merger.saveAsBuffer();
-            return Buffer.from(mergedPdfBuffer);
+            const mergedPdfBytes = await mergedPdf.save();
+            return Buffer.from(mergedPdfBytes);
         } catch (error) {
             console.error('Error merging PDFs:', error);
             throw new Error(`Failed to merge PDFs: ${error.message}`);
         }
     }
 
-    // Merge PDF files from URLs or file paths
+    // Merge PDF files from URLs or file paths using pdf-lib
     async mergePDFsFromUrls(pdfUrls: string[]): Promise<Buffer> {
         try {
             if (!pdfUrls || pdfUrls.length === 0) {
                 throw new Error('No PDF URLs provided for merging');
             }
 
-            // Dynamic import for ES Module
-            const PDFMerger = (await import('pdf-merger-js')).default;
-            const merger = new PDFMerger();
+            const mergedPdf = await PDFLibDocument.create();
 
             for (const url of pdfUrls) {
-                if (url.startsWith('data:application/pdf')) {
-                    // Handle data URI
-                    const base64Data = url.split(',')[1];
-                    const buffer = Buffer.from(base64Data, 'base64');
-                    await merger.add(buffer);
-                } else if (url.startsWith('http://') || url.startsWith('https://')) {
-                    // Handle remote URL
-                    const response = await fetch(url);
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch PDF from ${url}`);
+                try {
+                    let buffer: Buffer;
+
+                    if (url.startsWith('data:application/pdf')) {
+                        // Handle data URI
+                        const base64Data = url.split(',')[1];
+                        buffer = Buffer.from(base64Data, 'base64');
+                    } else if (url.startsWith('http://') || url.startsWith('https://')) {
+                        // Handle remote URL
+                        const response = await fetch(url);
+                        if (!response.ok) {
+                            throw new Error(`Failed to fetch PDF from ${url}`);
+                        }
+                        buffer = Buffer.from(await response.arrayBuffer());
+                    } else {
+                        // Handle local file path
+                        buffer = fs.readFileSync(url);
                     }
-                    const buffer = Buffer.from(await response.arrayBuffer());
-                    await merger.add(buffer);
-                } else {
-                    // Handle local file path
-                    await merger.add(url);
+
+                    const pdf = await PDFLibDocument.load(buffer);
+                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    copiedPages.forEach((page) => {
+                        mergedPdf.addPage(page);
+                    });
+                } catch (err) {
+                    console.error(`Error loading PDF from ${url}:`, err);
+                    // Skip invalid PDFs
                 }
             }
 
-            const mergedPdfBuffer = await merger.saveAsBuffer();
-            return Buffer.from(mergedPdfBuffer);
+            const mergedPdfBytes = await mergedPdf.save();
+            return Buffer.from(mergedPdfBytes);
         } catch (error) {
             console.error('Error merging PDFs from URLs:', error);
             throw new Error(`Failed to merge PDFs from URLs: ${error.message}`);
