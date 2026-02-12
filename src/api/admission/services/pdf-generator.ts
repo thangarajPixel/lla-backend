@@ -3,7 +3,6 @@ import * as handlebars from 'handlebars';
 import * as fs from 'fs';
 import * as path from 'path';
 import PDFDocument from 'pdfkit';
-import PDFMerger from 'pdf-merger-js';
 import { PDFDocument as PDFLibDocument, rgb, StandardFonts } from 'pdf-lib';
 
 // Helper function to convert image to PDF in A4 format with optional title
@@ -1045,6 +1044,8 @@ class PDFGenerator {
                 return pdfBuffers[0];
             }
 
+            // Dynamic import for ES Module
+            const PDFMerger = (await import('pdf-merger-js')).default;
             const merger = new PDFMerger();
 
             for (const buffer of pdfBuffers) {
@@ -1066,6 +1067,8 @@ class PDFGenerator {
                 throw new Error('No PDF URLs provided for merging');
             }
 
+            // Dynamic import for ES Module
+            const PDFMerger = (await import('pdf-merger-js')).default;
             const merger = new PDFMerger();
 
             for (const url of pdfUrls) {
