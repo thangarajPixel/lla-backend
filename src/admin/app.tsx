@@ -780,7 +780,7 @@ export default {
                     }
                   }}
                 >
-                  <SingleSelectOption value="Completed">Paid</SingleSelectOption>
+                  <SingleSelectOption value="Paid">Paid</SingleSelectOption>
                   <SingleSelectOption value="UnPaid">UnPaid</SingleSelectOption>
                   <SingleSelectOption value="Pending">Pending</SingleSelectOption>
                 </SingleSelect>
