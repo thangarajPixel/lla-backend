@@ -51,12 +51,8 @@ export default {
       // 'zh-Hans',
       // 'zh',
     ],
-    info: {
-      name: 'Light & Life Academy-admin',
-      displayName: 'Light & Life Academy',
-    },
     head: {
-      title: 'Light & Life Academy Admin',
+      title: 'Light & Life Academy Admin 1',
     },
     translations: {
       en: {
@@ -64,12 +60,48 @@ export default {
         "Auth.form.welcome.subtitle": "Log in to your Light & Life Academy account",
         "app.components.LeftMenu.navbrand.title": "Light & Life Academy Dashboard",
         "app.components.LeftMenu.navbrand.workplace": "Light & Life Academy",
-        "app.page.title": "Light & Life Academy",
+        "Settings.application.strapi.admin.title": "Light & Life Academy Admin",
+        "app.components.HomePage.welcome": "Welcome to Light & Life Academy!",
+        "app.components.HomePage.welcome.again": "Welcome back!",
       },
     },
- 
+    notifications: {
+      releases: false,
+    },
+
   },
   bootstrap(app: any) {
+    document.title = "Light & Life Academy Admin";
+    const updateTitle = () => {
+      if (document.title.includes('Strapi')) {
+        document.title = document.title.replace(/Strapi/gi, 'Light & Life Academy');
+      }
+      // Replace common patterns
+      if (document.title === 'Homepage | Light & Life Academy') {
+        document.title = 'Light & Life Academy Admin';
+      }
+      if (document.title.includes('Content Manager')) {
+        document.title = document.title.replace('Content Manager', 'Light & Life Academy Admin');
+      }
+    };
+
+    // Run on initial load
+    updateTitle();
+
+    // Watch for title changes using MutationObserver
+    const titleElement = document.querySelector('title');
+    if (titleElement) {
+      const observer = new MutationObserver(updateTitle);
+      observer.observe(titleElement, {
+        childList: true,
+        characterData: true,
+        subtree: true,
+      });
+    }
+
+    // Also watch on route changes
+    setInterval(updateTitle, 500);
+
     app.getPlugin('content-manager').injectComponent('listView', 'tableHead', {
       name: 'CustomTableHead',
       Component: () => null, // We'll handle this via CSS and event delegation
@@ -91,13 +123,13 @@ export default {
         // Format mobile_no as string in the table display
         React.useEffect(() => {
           if (!isAdmissionPage) return;
-          
+
           const formatMobileNumbers = () => {
             // Target all mobile_no cells in the table
             const mobileCells = document.querySelectorAll('table tbody tr td');
             mobileCells.forEach(cell => {
-               const el = cell as HTMLElement;
-                 el.style.fontSize = "15px"; 
+              const el = cell as HTMLElement;
+              el.style.fontSize = "15px";
               const text = el.textContent?.trim();
               // Check if it looks like a mobile number (10 digits or more)
               if (text && /^\d{10,}$/.test(text.replace(/,/g, ''))) {
@@ -122,9 +154,9 @@ export default {
         // Initialize dropdown values based on URL parameters
         React.useEffect(() => {
           if (!isAdmissionPage) return;
-          
+
           const urlParams = new URLSearchParams(window.location.search);
-          
+
           // Check for step filters in URL (handle URL encoding)
           if (urlParams.get('filters[step_1][$eq]') === '1' || urlParams.get('filters[step_1][%24eq]') === '1') {
             setStepValue('Step1');
@@ -138,7 +170,7 @@ export default {
 
           // Check for AdmissionYear filter in URL (handle URL encoding)
           const admissionYear = urlParams.get('filters[AdmissionYear][$eq]') || urlParams.get('filters[AdmissionYear][%24eq]');
-          
+
           if (admissionYear) {
             setYearValue(admissionYear);
           } else {
@@ -196,10 +228,10 @@ export default {
                 overflow: visible !important;
               }
             `;
-            
+
             // Mark body as admission page for CSS targeting
             document.body.setAttribute('data-admission-page', 'true');
-            
+
             document.head.appendChild(style);
 
             const handleTableClick = (event: MouseEvent) => {
@@ -291,14 +323,14 @@ export default {
                 if (!recordId) {
                   for (let i = 0; i < row.attributes.length; i++) {
                     const attr = row.attributes[i];
-                   if (attr.value) {
+                    if (attr.value) {
                       const normalized = attr.value.replace(/,/g, '');
                       if (/^\d+$/.test(normalized)) {
-                       recordId = String(Number(normalized));
-                      console.log('Found numeric ID in row attribute:', attr.name, recordId);
-                      break;
+                        recordId = String(Number(normalized));
+                        console.log('Found numeric ID in row attribute:', attr.name, recordId);
+                        break;
+                      }
                     }
-                   }
                   }
                 }
 
@@ -315,13 +347,13 @@ export default {
                       console.log(`Found DocumentId in column ${index}:`, cellText);
                     }
                     // Check if it's a numeric ID
-                   else if (!finalId) {
-                        const normalized = cellText.replace(/,/g, '');
-                        if (/^\d+$/.test(normalized) && normalized !== '0' && normalized !== '1') {
-                          finalId = normalized;
-                          console.log(`Found numeric ID in column ${index}:`, finalId);
-                        }
+                    else if (!finalId) {
+                      const normalized = cellText.replace(/,/g, '');
+                      if (/^\d+$/.test(normalized) && normalized !== '0' && normalized !== '1') {
+                        finalId = normalized;
+                        console.log(`Found numeric ID in column ${index}:`, finalId);
                       }
+                    }
                   }
                 });
 
@@ -413,8 +445,8 @@ export default {
             if (admissionStatusColumnIndex >= 0) {
               const statusCells = document.querySelectorAll(`table tbody tr td:nth-child(${admissionStatusColumnIndex + 1})`);
               statusCells.forEach(cell => {
-                 const el = cell as HTMLElement;
-                 el.style.fontSize = "15px";   // change to 18px / 20px if needed
+                const el = cell as HTMLElement;
+                el.style.fontSize = "15px";   // change to 18px / 20px if needed
                 const text = el.textContent?.trim();
                 // Check for specific status values and rename
                 if (text === 'Completed') {
@@ -442,12 +474,12 @@ export default {
         // Add PDF download buttons to status column
         React.useEffect(() => {
           if (!isAdmissionPage) return;
-          
+
           const timer = setTimeout(() => {
             const addPdfButtons = () => {
               // Remove any existing PDF buttons first
               document.querySelectorAll('.pdf-download-btn').forEach(btn => btn.remove());
-              
+
               // Target MOBILE_NO column (second to last column)
               const mobileCells = document.querySelectorAll('table tbody tr td:nth-last-child(2)');
               mobileCells.forEach(cell => {
@@ -474,7 +506,7 @@ export default {
 
                 // Check Step4 status by looking for step_4 column or checking step status
                 let isStep4Completed = false;
-                
+
                 // Method 1: Look for step_4 column (boolean true/false)
                 allCells.forEach((cell, index) => {
                   const cellText = cell.textContent?.trim().toLowerCase();
@@ -511,7 +543,7 @@ export default {
                     </svg>
                     
                   `; // SVG download icon with text
-                  
+
                   // Set button style based on Step4 status
                   const baseStyle = `
                     margin-top:7px;
@@ -526,7 +558,7 @@ export default {
                     font-weight: 500 !important;
                     transition: all 0.2s ease !important;
                   `;
-                  
+
                   if (isStep4Completed) {
                     // Enabled state
                     pdfBtn.style.cssText = baseStyle + `
@@ -534,14 +566,14 @@ export default {
                       color: white !important;
                       cursor: pointer !important;
                     `;
-                    
+
                     // Add hover effect for enabled button
                     pdfBtn.onmouseenter = () => {
                       pdfBtn.style.background = '#3730a3 !important';
                       pdfBtn.style.transform = 'translateY(-1px) !important';
                       pdfBtn.style.boxShadow = '0 2px 8px rgba(73, 69, 255, 0.3) !important';
                     };
-                    
+
                     pdfBtn.onmouseleave = () => {
                       pdfBtn.style.background = '#4945ff !important';
                       pdfBtn.style.transform = 'translateY(0) !important';
@@ -557,9 +589,9 @@ export default {
                       // Download PDF using anchor element
                       const adminBaseUrl = process.env.ADMIN_BASE_URL || '';
                       const pdfUrl = `${adminBaseUrl}/api/admissions/${rowId}/pdf?type=admin`;
-                      
+
                       console.log('PDF URL:', pdfUrl);
-                      
+
                       // Create temporary anchor element for download
                       const link = document.createElement('a');
                       link.href = pdfUrl;
@@ -577,9 +609,9 @@ export default {
                       cursor: not-allowed !important;
                       opacity: 0.6 !important;
                     `;
-                    
+
                     pdfBtn.title = 'Download available only after Step 4 completion';
-                    
+
                     pdfBtn.onclick = (e) => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -643,8 +675,8 @@ export default {
           // Method 2: Try to get value from search input field
           if (!searchValue) {
             const searchInput = document.querySelector('input[placeholder*="Search"]') as HTMLInputElement ||
-                               document.querySelector('input[type="search"]') as HTMLInputElement ||
-                               document.querySelector('input[name="search"]') as HTMLInputElement;
+              document.querySelector('input[type="search"]') as HTMLInputElement ||
+              document.querySelector('input[name="search"]') as HTMLInputElement;
             if (searchInput && searchInput.value) {
               searchValue = searchInput.value;
             }
@@ -652,9 +684,9 @@ export default {
 
           // Method 3: Check for _q parameter (Strapi's default search param)
           if (!searchValue) {
-            searchValue = currentUrl.searchParams.get('_q') || 
-                         currentUrl.searchParams.get('filters[_q]') ||
-                         currentUrl.searchParams.get('search');
+            searchValue = currentUrl.searchParams.get('_q') ||
+              currentUrl.searchParams.get('filters[_q]') ||
+              currentUrl.searchParams.get('search');
           }
 
           if (searchValue) {
@@ -841,35 +873,35 @@ export default {
                   setStepValue('');
                   setYearValue('');
                   setPaymentStatusValue('');
-                  
+
                   // Clear search input field
                   const searchInput = document.querySelector('input[placeholder*="Search"]') as HTMLInputElement ||
-                                     document.querySelector('input[type="search"]') as HTMLInputElement ||
-                                     document.querySelector('input[name="search"]') as HTMLInputElement;
+                    document.querySelector('input[type="search"]') as HTMLInputElement ||
+                    document.querySelector('input[name="search"]') as HTMLInputElement;
                   if (searchInput) {
                     searchInput.value = '';
                     // Trigger input event to update Strapi's internal state
                     searchInput.dispatchEvent(new Event('input', { bubbles: true }));
                     searchInput.dispatchEvent(new Event('change', { bubbles: true }));
                   }
-                  
+
                   const currentUrl = new URL(window.location.href);
                   const keysToDelete: string[] = [];
                   currentUrl.searchParams.forEach((value, key) => {
                     // Remove step, AdmissionYear, payment status, and search filters
-                    if (key.includes('step_') || 
-                        key.includes('AdmissionYear') || 
-                        key.includes('Payment_Status') ||
-                        key.includes('search') || 
-                        key.includes('containsi') ||
-                        key.includes('_q') ||
-                        key.includes('filters')) {
+                    if (key.includes('step_') ||
+                      key.includes('AdmissionYear') ||
+                      key.includes('Payment_Status') ||
+                      key.includes('search') ||
+                      key.includes('containsi') ||
+                      key.includes('_q') ||
+                      key.includes('filters')) {
                       keysToDelete.push(key);
                     }
                   });
                   keysToDelete.forEach(key => currentUrl.searchParams.delete(key));
                   currentUrl.searchParams.set('page', '1');
-                  
+
                   console.log('Filters cleared, redirecting to:', currentUrl.toString());
                   window.location.href = currentUrl.toString();
                 }}
