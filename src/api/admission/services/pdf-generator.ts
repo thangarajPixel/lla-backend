@@ -115,8 +115,8 @@ async function addTitleToPDF(pdfDataUri: string, title: string): Promise<string>
             // Add title only on first page
             if (i === 0) {
                 const font = await newPdfDoc.embedFont(StandardFonts.HelveticaBold);
-                const fontSize = 14; // Reduced from 16
-                const maxWidth = A4_WIDTH - (MARGIN * 2); // Maximum width for text
+                const fontSize = 14;
+                const maxWidth = A4_WIDTH - (MARGIN * 2);
                 
                 // Split title into lines if it's too long
                 const words = title.split(' ');
@@ -127,10 +127,47 @@ async function addTitleToPDF(pdfDataUri: string, title: string): Promise<string>
                     const testLine = currentLine ? `${currentLine} ${word}` : word;
                     const testWidth = font.widthOfTextAtSize(testLine, fontSize);
                     
-                    if (testWidth > maxWidth && currentLine) {
-                        // Line is too long, push current line and start new one
-                        lines.push(currentLine);
-                        currentLine = word;
+                    if (testWidth > maxWidth) {
+                        if (currentLine) {
+                            // Push current line and start new one with the word
+                            lines.push(currentLine);
+                            
+                            // Check if the word itself is too long
+                            const wordWidth = font.widthOfTextAtSize(word, fontSize);
+                            if (wordWidth > maxWidth) {
+                                // Word is too long, break it character by character
+                                let charLine = '';
+                                for (const char of word) {
+                                    const testCharLine = charLine + char;
+                                    const charWidth = font.widthOfTextAtSize(testCharLine, fontSize);
+                                    
+                                    if (charWidth > maxWidth && charLine) {
+                                        lines.push(charLine);
+                                        charLine = char;
+                                    } else {
+                                        charLine = testCharLine;
+                                    }
+                                }
+                                currentLine = charLine;
+                            } else {
+                                currentLine = word;
+                            }
+                        } else {
+                            // Current line is empty, word itself is too long
+                            let charLine = '';
+                            for (const char of word) {
+                                const testCharLine = charLine + char;
+                                const charWidth = font.widthOfTextAtSize(testCharLine, fontSize);
+                                
+                                if (charWidth > maxWidth && charLine) {
+                                    lines.push(charLine);
+                                    charLine = char;
+                                } else {
+                                    charLine = testCharLine;
+                                }
+                            }
+                            currentLine = charLine;
+                        }
                     } else {
                         currentLine = testLine;
                     }
@@ -141,13 +178,7 @@ async function addTitleToPDF(pdfDataUri: string, title: string): Promise<string>
                     lines.push(currentLine);
                 }
                 
-                // Limit to maximum 2 lines
-                if (lines.length > 2) {
-                    lines[1] = lines[1].substring(0, 50) + '...';
-                    lines.splice(2);
-                }
-                
-                // Draw each line
+                // Draw each line (no limit, show all lines)
                 const lineHeight = fontSize + 4;
                 let startY = A4_HEIGHT - MARGIN - 10;
                 
@@ -163,7 +194,6 @@ async function addTitleToPDF(pdfDataUri: string, title: string): Promise<string>
                         size: fontSize,
                         font: font,
                         color: rgb(0.286, 0.271, 1), // #4945ff
-                        maxWidth: maxWidth,
                     });
                 }
             }
@@ -544,6 +574,8 @@ class PDFGenerator {
             margin-bottom: 8px;
             font-size: 11px;
             align-items: flex-start;
+            width: 100%;
+            overflow: hidden;
         }
         
         .field-label {
@@ -551,6 +583,7 @@ class PDFGenerator {
             font-weight: 400;
             flex-shrink: 0;
             width: 35%;
+            min-width: 35%;
         }
         
         .field-value {
@@ -559,6 +592,13 @@ class PDFGenerator {
             text-align: right;
             flex: 1;
             word-wrap: break-word;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            max-width: 65%;
+            width: 65%;
+            white-space: normal;
+            overflow: hidden;
+            hyphens: auto;
         }
         
         .language-grid {
