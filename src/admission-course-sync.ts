@@ -190,7 +190,7 @@ console.log(admission,'reftetret');
       registereddate: formatDateForMySQL(admission.createdAt),
       ip_address: admission.IpAddress ?? "",
       update_date: formatDateForMySQL(admission.updatedAt),
-      ref_url: '', // Not available in current schema
+      ref_url: admission.LeadUrl || '',
       description: admission.Message || '',
       Payment_Status: admission.Payment_Status || '',
       profileimage: (admission as any).passport_size_image?.url || '',
@@ -222,7 +222,7 @@ console.log(admission,'reftetret');
       Work_Experience:(admission as any).Work_Experience || [],
       Upload_Your_Portfolio:(admission as any).Upload_Your_Portfolio || []
     };
-    console.log('🔍 Prepared admission data for sync:', admissionData.reg_id);
+    console.log('🔍 Prepared admission data for sync:', admissionData);
     // Step 4: Check if record exists and update or create in llawp_lla_admission
     const [existingRows] = await connection.execute(
       'SELECT lla_id, document_id FROM llawp_lla_admission WHERE document_id = ?',
