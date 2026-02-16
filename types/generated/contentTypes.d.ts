@@ -527,6 +527,7 @@ export interface ApiAdmissionAdmission extends Struct.CollectionTypeSchema {
       true
     >;
     last_name: Schema.Attribute.String;
+    LeadUrl: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',

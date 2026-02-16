@@ -13,7 +13,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-02-11T08:35:07.540Z"
+    "x-generation-date": "2026-02-16T05:40:04.290Z"
   },
   "servers": [
     {
@@ -12493,6 +12493,9 @@
               "IsDelete": {
                 "type": "boolean"
               },
+              "LeadUrl": {
+                "type": "string"
+              },
               "locale": {
                 "type": "string"
               },
@@ -13596,6 +13599,9 @@
                     "IsDelete": {
                       "type": "boolean"
                     },
+                    "LeadUrl": {
+                      "type": "string"
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -13809,6 +13815,9 @@
           },
           "IsDelete": {
             "type": "boolean"
+          },
+          "LeadUrl": {
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -19316,6 +19325,9 @@
                 },
                 "IsDelete": {
                   "type": "boolean"
+                },
+                "LeadUrl": {
+                  "type": "string"
                 },
                 "createdAt": {
                   "type": "string",
@@ -27330,6 +27342,9 @@
                 },
                 "IsDelete": {
                   "type": "boolean"
+                },
+                "LeadUrl": {
+                  "type": "string"
                 },
                 "createdAt": {
                   "type": "string",

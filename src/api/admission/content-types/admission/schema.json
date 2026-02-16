@@ -192,6 +192,9 @@
     "IsDelete": {
       "type": "boolean",
       "default": false
+    },
+    "LeadUrl": {
+      "type": "text"
     }
   }
 }
