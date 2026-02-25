@@ -250,7 +250,7 @@ export default factories.createCoreController('api::admission.admission', ({ str
         console.log('Course:', admissionWithCourse?.Course?.Name);
 
         const emailService = require('../services/email').default;
-        await emailService.sendRegistrationLinkEmail(admissionWithCourse, admissionWithCourse?.Course);
+        emailService.sendRegistrationLinkEmail(admissionWithCourse, admissionWithCourse?.Course);
         console.log('✅ Registration link email sent successfully');
       } catch (emailError) {
         console.error('❌ Failed to send registration link email:', emailError);
