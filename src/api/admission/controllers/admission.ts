@@ -1988,7 +1988,8 @@ export default factories.createCoreController('api::admission.admission', ({ str
 
   async checkEmailUnique(ctx) {
     try {
-      const { email, id, year } = ctx.request.body;
+      // const { email, id, year } = ctx.request.body;
+      const { email, id, year, courseId } = ctx.request.body;
 
       console.log('========================================');
       console.log('📧 Checking email uniqueness per course');
@@ -2000,11 +2001,17 @@ export default factories.createCoreController('api::admission.admission', ({ str
       if (!email) {
         return ctx.badRequest('Email is required');
       }
+      if (!courseId) {
+  return ctx.badRequest('Course is required');
+}
 
       const filters: any = {
-        email: email,
-        AdmissionYear: year,
-      };
+  email: email,
+  AdmissionYear: year,
+  Course: {
+    id: parseInt(courseId),
+  },
+};
       // If ID is provided (for edit), get document_id and exclude all records with that document_id
       if (id) {
         // First, find the record by ID to get its document_id
